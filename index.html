@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Dash - သင့်လုပ်ငန်းအတွက် အကောင်းဆုံး ငွေစာရင်း App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Noto+Sans+Myanmar:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans Myanmar', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .font-poppins {
+            font-family: 'Poppins', sans-serif;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', 'Noto Sans Myanmar', sans-serif;
+        }
+        .gradient-text {
+            background-image: linear-gradient(to right, #7c3aed, #db2777);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .btn-primary {
+            background-image: linear-gradient(to right, #7c3aed, #db2777);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px rgba(124, 58, 237, 0.4);
+        }
+        .feature-card {
+            background-color: #1e293b; /* slate-800 */
+            border: 1px solid #334155; /* slate-700 */
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: #7c3aed;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .hero-bg {
+            background-color: #ffffff;
+            background-image: radial-gradient(#e0e7ff 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Header / Navigation -->
+    <header class="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center shadow-md">
+                    <i class="fas fa-chart-pie text-white text-xl"></i>
+                </div>
+                <span class="text-2xl font-bold font-poppins text-slate-900">Sales Dash</span>
+            </a>
+            <!-- CTA Button -->
+            <a href="#download-section" class="btn-primary text-white font-bold py-2 px-6 rounded-full hidden md:inline-block">
+                Download ရယူရန်
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main>
+        <section class="py-24 md:py-32 hero-bg">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 leading-tight" style="text-shadow: 0px 2px 4px rgba(0,0,0,0.05);">
+                    သင့်လုပ်ငန်းရဲ့ <span class="gradient-text">ငွေစာရင်း</span> ကို <br> အချိန်မရွေး၊ နေရာမရွေး စီမံခန့်ခွဲပါ
+                </h1>
+                <p class="mt-6 text-lg text-slate-600 max-w-2xl mx-auto">
+                    အသေးစားလုပ်ငန်းရှင်များနဲ့ online shop ပိုင်ရှင်များအတွက် အထူးထုတ်လုပ်ထားတဲ့ ရိုးရှင်းပြီး စွမ်းဆောင်ရည်မြင့်မားတဲ့ အရောင်းစာရင်းမှတ် App။
+                </p>
+                <div class="mt-10">
+                    <a href="#download-section" class="btn-primary text-white font-bold py-4 px-10 rounded-full text-lg">
+                        အခမဲ့ စတင်သုံးစွဲကြည့်ပါ
+                    </a>
+                </div>
+                <div class="mt-16">
+                    <img src="https://i.postimg.cc/4yH13Pkb/Screenshot-2025-07-20-at-10-41-26-PM.png" alt="Sales Dashboard App Screenshot" class="mx-auto rounded-2xl shadow-2xl max-w-4xl w-full border-4 border-white" onerror="this.onerror=null;this.src='https://placehold.co/1200x675/e2e8f0/718096?text=Image+Not+Found';">
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-20 bg-slate-900">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white">လုပ်ငန်းရှင်တိုင်းအတွက် အဓိက Feature များ</h2>
+                    <p class="mt-4 text-slate-400">သင့်လုပ်ငန်းကို ပိုမိုလွယ်ကူစေမယ့် စွမ်းဆောင်ရည်များ</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Feature 1: Cloud Sync -->
+                    <div class="p-8 rounded-2xl text-center feature-card">
+                        <div class="w-16 h-16 bg-purple-500/10 rounded-full mx-auto flex items-center justify-center ring-8 ring-purple-500/20">
+                            <i class="fas fa-cloud-arrow-up text-3xl text-purple-400"></i>
+                        </div>
+                        <h3 class="mt-6 text-xl font-bold text-white">Cloud Sync</h3>
+                        <p class="mt-2 text-slate-400">ဖုန်းပြောင်းသုံးရင်တောင် data မပျောက်အောင် အလိုအလျောက် သိမ်းဆည်းပေးခြင်း။</p>
+                    </div>
+                    <!-- Feature 2: Offline Access -->
+                    <div class="p-8 rounded-2xl text-center feature-card">
+                        <div class="w-16 h-16 bg-orange-500/10 rounded-full mx-auto flex items-center justify-center ring-8 ring-orange-500/20">
+                            <i class="fas fa-wifi-slash text-3xl text-orange-400"></i>
+                        </div>
+                        <h3 class="mt-6 text-xl font-bold text-white">Offline Access</h3>
+                        <p class="mt-2 text-slate-400">အင်တာနက်မရှိချိန်မှာတောင် စာရင်းသွင်းနိုင်ပြီး online ပြန်ဖြစ်ချိန်တွင် sync လုပ်ပေးခြင်း။</p>
+                    </div>
+                    <!-- Feature 3: PDF Report -->
+                    <div class="p-8 rounded-2xl text-center feature-card">
+                        <div class="w-16 h-16 bg-pink-500/10 rounded-full mx-auto flex items-center justify-center ring-8 ring-pink-500/20">
+                            <i class="fas fa-file-invoice-dollar text-3xl text-pink-400"></i>
+                        </div>
+                        <h3 class="mt-6 text-xl font-bold text-white">PDF Report</h3>
+                        <p class="mt-2 text-slate-400">လချုပ်စာရင်းတွေကို PDF အဖြစ် အလွယ်တကူ ထုတ်ယူနိုင်ခြင်း။</p>
+                    </div>
+                    <!-- Feature 4: Profit Calculation -->
+                    <div class="p-8 rounded-2xl text-center feature-card">
+                        <div class="w-16 h-16 bg-green-500/10 rounded-full mx-auto flex items-center justify-center ring-8 ring-green-500/20">
+                            <i class="fas fa-magnifying-glass-dollar text-3xl text-green-400"></i>
+                        </div>
+                        <h3 class="mt-6 text-xl font-bold text-white">အမြတ်တွက်ချက်ခြင်း</h3>
+                        <p class="mt-2 text-slate-400">ရောင်းဈေးနဲ့ မတည်ဈေးထည့်ရုံဖြင့် အမြတ်ကို ချက်ချင်းသိနိုင်ခြင်း။</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Download Section -->
+        <section id="download-section" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900">ဘယ်နေရာမှာမဆို အသုံးပြုနိုင်ပါပြီ</h2>
+                    <p class="mt-4 text-slate-600">သင့်အတွက် အဆင်ပြေဆုံး platform မှာ Sales Dash ကို အသုံးပြုလိုက်ပါ။</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                    <!-- Web App -->
+                    <div class="bg-gradient-to-br from-indigo-50 to-purple-100 p-8 rounded-2xl text-center border border-slate-200 transition-transform hover:scale-105">
+                        <i class="fas fa-globe text-5xl text-indigo-500"></i>
+                        <h3 class="mt-6 text-2xl font-bold">Web Application</h3>
+                        <p class="mt-2 text-slate-600 mb-6">မည်သည့် browser ကမဆို တိုက်ရိုက်အသုံးပြုရန်။</p>
+                        <a href="#" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-full inline-block hover:bg-indigo-700 transition-colors">
+                            Launch App
+                        </a>
+                    </div>
+                    <!-- Android App -->
+                    <div class="bg-gradient-to-br from-green-50 to-teal-100 p-8 rounded-2xl text-center border border-slate-200 transition-transform hover:scale-105">
+                        <i class="fab fa-android text-5xl text-green-500"></i>
+                        <h3 class="mt-6 text-2xl font-bold">Android App</h3>
+                        <p class="mt-2 text-slate-600 mb-6">Google Play Store မှ download ရယူရန်။</p>
+                        <a href="https://play.google.com/store" target="_blank" class="bg-slate-800 text-white font-bold py-3 px-6 rounded-full inline-flex items-center gap-3 hover:bg-slate-900 transition-colors">
+                            <i class="fab fa-google-play text-xl"></i>
+                            <div>
+                                <p class="text-xs -mb-1">GET IT ON</p>
+                                <p class="text-lg font-semibold">Google Play</p>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- iOS App -->
+                    <div class="bg-gradient-to-br from-slate-100 to-gray-200 p-8 rounded-2xl text-center border border-slate-200 transition-transform hover:scale-105">
+                        <i class="fab fa-apple text-5xl text-slate-500"></i>
+                        <h3 class="mt-6 text-2xl font-bold">iOS App</h3>
+                        <p class="mt-2 text-slate-600 mb-6">App Store မှ download ရယူရန်။</p>
+                        <a href="https://www.apple.com/app-store/" target="_blank" class="bg-black text-white font-bold py-3 px-6 rounded-full inline-flex items-center gap-3 hover:bg-gray-800 transition-colors">
+                            <i class="fab fa-apple text-2xl"></i>
+                            <div>
+                                <p class="text-xs -mb-1">Download on the</p>
+                                <p class="text-xl font-semibold">App Store</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-12 rounded-2xl shadow-2xl text-center">
+                    <div class="w-24 h-24 bg-white/20 rounded-full mx-auto flex items-center justify-center">
+                        <i class="fas fa-handshake-angle text-5xl text-white"></i>
+                    </div>
+                    <h2 class="mt-8 text-3xl md:text-4xl font-bold">ကျွန်ုပ်တို့၏ ရည်မှန်းချက်</h2>
+                    <p class="mt-4 text-purple-200 max-w-2xl mx-auto text-lg">
+                        ကျွန်ုပ်တို့သည် မြန်မာနိုင်ငံရှိ အသေးစားနှင့် အလတ်စားလုပ်ငန်းရှင်များအတွက် နည်းပညာကို အသုံးပြု၍ သူတို့၏နေ့စဉ်လုပ်ငန်းဆောင်တာများကို ပိုမိုလွယ်ကူစေရန် ရည်ရွယ်ပါသည်။ Sales Dash သည် ရှုပ်ထွေးသော စာရင်းအင်းများကို ရိုးရှင်းလွယ်ကူစွာ စီမံခန့်ခွဲနိုင်ရန် ဖန်တီးထားသော ကျွန်ုပ်တို့၏ ပထမဆုံးခြေလှမ်းဖြစ်ပါသည်။
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-white">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>&copy; 2025 Sales Dash. All rights reserved.</p>
+            <p class="text-sm text-slate-400 mt-2">သင့်လုပ်ငန်းအတွက် အကောင်းဆုံး စာရင်းကိုင်</p>
+        </div>
+    </footer>
+
+</body>
+</html>
