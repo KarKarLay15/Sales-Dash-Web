@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         :root {
             --bg-color: #f4f7fe;
@@ -85,6 +86,10 @@
             --tw-ring-color: var(--primary-color);
             border-color: var(--primary-color);
         }
+        .form-input.invalid {
+            border-color: #ef4444; /* red-500 */
+            --tw-ring-color: #ef4444;
+        }
 
         .modal {
             transition: opacity 0.25s ease;
@@ -156,8 +161,18 @@
     </style>
 </head>
 <body>
-    <!-- MODIFICATION: New Auth Section Layout -->
-    <div id="auth-section" class="min-h-screen bg-slate-50 dark:bg-gray-900 grid lg:grid-cols-2">
+    <!-- Initial loading screen -->
+    <div id="initial-loader" class="fixed inset-0 flex flex-col items-center justify-center bg-[var(--bg-color)] z-[100]">
+        <div class="flex items-center gap-4 mb-4">
+            <i class="fas fa-chart-line text-4xl text-[var(--primary-color)]"></i>
+            <h1 class="text-4xl font-bold">SalesDash</h1>
+        </div>
+        <div class="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-[var(--primary-color)]"></div>
+        <p class="mt-4 text-[var(--text-muted-color)]">Loading your dashboard...</p>
+    </div>
+
+    <!-- Auth Section -->
+    <div id="auth-section" class="min-h-screen bg-slate-50 dark:bg-gray-900 grid lg:grid-cols-2 hidden">
         <!-- Left Info Panel -->
         <div class="hidden lg:flex flex-col justify-center items-center bg-gradient-to-br from-indigo-600 to-purple-700 text-white p-12">
             <div class="max-w-md text-center">
@@ -243,13 +258,13 @@
     <div id="app" class="container mx-auto p-2 sm:p-4 md:p-6 lg:p-8 max-w-7xl hidden">
         <header class="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-10 gap-4">
             <div>
-                <h1 class="text-3xl md:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary-start-color)] to-[var(--primary-end-color)]">Sales Dashboard</h1>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary-start-color)] to-[var(--primary-end-color)]">Sales Dashboard</h1>
                 <div class="flex items-center gap-2 mt-2">
                     <div id="connection-status" class="w-3 h-3 rounded-full bg-gray-400 transition-colors" title="Connecting..."></div>
                     <p id="user-email-display" class="text-[var(--text-muted-color)] text-sm"></p>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 sm:gap-4">
                 <div class="theme-switch-wrapper flex items-center gap-3">
                     <i class="fas fa-sun text-yellow-500"></i>
                     <label class="theme-switch" for="app-theme-toggle">
@@ -259,9 +274,8 @@
                     <i class="fas fa-moon text-indigo-300"></i>
                 </div>
                 
-                <!-- MODIFICATION: New "More" Dropdown Menu -->
                 <div class="relative">
-                    <button id="more-menu-btn" class="bg-gray-200 dark:bg-gray-700 text-[var(--text-color)] font-bold py-2 px-4 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition flex items-center gap-2">
+                    <button id="more-menu-btn" class="bg-gray-200 dark:bg-gray-700 text-[var(--text-color)] font-bold py-2 px-3 sm:px-4 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition flex items-center gap-2">
                         <span>More</span>
                         <i class="fas fa-chevron-down text-xs"></i>
                     </button>
@@ -301,37 +315,47 @@
 
         <main id="main-content">
             <!-- Summary Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
-                 <div class="card p-4 sm:p-6 rounded-2xl fade-in relative overflow-hidden">
-                    <i class="fa-solid fa-sack-dollar absolute -right-4 -top-4 text-8xl text-green-500/10"></i>
-                    <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-sm tracking-wider">ယနေ့ရောင်းရငွေ</h3>
-                    <p id="today-total" class="text-3xl font-bold text-green-500">0 MMK</p>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-8">
+                 <div class="card p-3 sm:p-6 rounded-2xl fade-in relative overflow-hidden">
+                    <i class="fa-solid fa-sack-dollar absolute -right-4 -top-4 text-7xl sm:text-8xl text-green-500/10"></i>
+                    <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-xs sm:text-sm tracking-wider">ယနေ့ရောင်းရငွေ</h3>
+                    <p id="today-total" class="text-xl sm:text-3xl font-bold text-green-500">0 MMK</p>
                 </div>
-                 <div class="card p-4 sm:p-6 rounded-2xl fade-in relative overflow-hidden" style="animation-delay: 100ms;">
-                    <i class="fa-solid fa-arrow-trend-up absolute -right-4 -top-4 text-8xl text-teal-500/10"></i>
-                    <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-sm tracking-wider">ယနေ့အမြတ်</h3>
-                    <p id="today-profit" class="text-3xl font-bold text-teal-500">0 MMK</p>
+                 <div class="card p-3 sm:p-6 rounded-2xl fade-in relative overflow-hidden" style="animation-delay: 100ms;">
+                    <i class="fa-solid fa-arrow-trend-up absolute -right-4 -top-4 text-7xl sm:text-8xl text-teal-500/10"></i>
+                    <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-xs sm:text-sm tracking-wider">ယနေ့အမြတ်</h3>
+                    <p id="today-profit" class="text-xl sm:text-3xl font-bold text-teal-500">0 MMK</p>
                 </div>
-                 <div class="card p-4 sm:p-6 rounded-2xl fade-in relative overflow-hidden" style="animation-delay: 200ms;">
-                    <i class="fa-solid fa-chart-line absolute -right-4 -top-4 text-8xl text-blue-500/10"></i>
-                    <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-sm tracking-wider">ယခုလရောင်းရငွေ</h3>
-                    <p id="month-total" class="text-3xl font-bold text-blue-500">0 MMK</p>
+                 <div class="card p-3 sm:p-6 rounded-2xl fade-in relative overflow-hidden" style="animation-delay: 200ms;">
+                    <i class="fa-solid fa-chart-line absolute -right-4 -top-4 text-7xl sm:text-8xl text-blue-500/10"></i>
+                    <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-xs sm:text-sm tracking-wider">ယခုလရောင်းရငွေ</h3>
+                    <p id="month-total" class="text-xl sm:text-3xl font-bold text-blue-500">0 MMK</p>
                 </div>
-                 <div class="card p-4 sm:p-6 rounded-2xl fade-in relative overflow-hidden" style="animation-delay: 300ms;">
-                    <i class="fa-solid fa-chart-pie absolute -right-4 -top-4 text-8xl text-indigo-500/10"></i>
-                    <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-sm tracking-wider">ယခုလအမြတ်</h3>
-                    <p id="month-profit" class="text-3xl font-bold text-indigo-500">0 MMK</p>
+                 <div class="card p-3 sm:p-6 rounded-2xl fade-in relative overflow-hidden" style="animation-delay: 300ms;">
+                    <i class="fa-solid fa-chart-pie absolute -right-4 -top-4 text-7xl sm:text-8xl text-indigo-500/10"></i>
+                    <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-xs sm:text-sm tracking-wider">ယခုလအမြတ်</h3>
+                    <p id="month-profit" class="text-xl sm:text-3xl font-bold text-indigo-500">0 MMK</p>
                 </div>
             </div>
 
             <!-- Tabs -->
             <div class="mb-8 border-b border-[var(--border-color)]">
-                <nav class="flex space-x-4 sm:space-x-8" aria-label="Tabs">
-                    <button id="tab-daily" class="tab active py-4 px-1 font-medium text-base sm:text-lg">
+                <nav class="flex space-x-4 sm:space-x-8 overflow-x-auto pb-2">
+                    <button id="tab-daily" class="tab active pb-3 pt-4 px-1 font-medium text-sm sm:text-base whitespace-nowrap">
                         <i class="fas fa-calendar-day mr-2"></i>နေ့စဉ်စာရင်း
                     </button>
-                    <button id="tab-monthly" class="tab py-4 px-1 font-medium text-base sm:text-lg text-[var(--text-muted-color)]">
+                    <button id="tab-monthly" class="tab pb-3 pt-4 px-1 font-medium text-sm sm:text-base text-[var(--text-muted-color)] whitespace-nowrap">
                         <i class="fas fa-table mr-2"></i>လချုပ်စာရင်း
+                    </button>
+                    <button id="tab-customers" class="tab pb-3 pt-4 px-1 font-medium text-sm sm:text-base text-[var(--text-muted-color)] whitespace-nowrap">
+                        <i class="fas fa-users mr-2"></i>ဝယ်သူများ
+                    </button>
+                    <!-- FEATURE: Expenses Tab -->
+                    <button id="tab-expenses" class="tab pb-3 pt-4 px-1 font-medium text-sm sm:text-base text-[var(--text-muted-color)] whitespace-nowrap">
+                        <i class="fas fa-file-invoice-dollar mr-2"></i>အသုံးစရိတ်
+                    </button>
+                    <button id="tab-analysis" class="tab pb-3 pt-4 px-1 font-medium text-sm sm:text-base text-[var(--text-muted-color)] whitespace-nowrap">
+                        <i class="fas fa-chart-bar mr-2"></i>သုံးသပ်ချက်
                     </button>
                 </nav>
             </div>
@@ -340,11 +364,16 @@
             <div id="daily-view">
                 <!-- Add Sale Form -->
                 <div class="card p-4 sm:p-6 md:p-8 rounded-2xl mb-8 fade-in" style="animation-delay: 400ms;">
-                    <h2 class="text-2xl font-bold mb-6 border-b border-[var(--border-color)] pb-4">အရောင်းအသစ်ထည့်ရန်</h2>
-                    <form id="add-sale-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                    <h2 class="text-xl sm:text-2xl font-bold mb-6 border-b border-[var(--border-color)] pb-4">အရောင်းအသစ်ထည့်ရန်</h2>
+                    <form id="add-sale-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                         <div>
                             <label for="sale-date" class="block text-sm font-medium text-[var(--text-muted-color)] mb-1">ရက်စွဲ</label>
                             <input type="date" id="sale-date" class="form-input w-full px-4 py-2 rounded-lg focus:ring-2" required>
+                        </div>
+                        <div>
+                            <label for="sale-customer" class="block text-sm font-medium text-[var(--text-muted-color)] mb-1">ဝယ်သူအမည်</label>
+                            <input type="text" id="sale-customer" list="customer-list" placeholder="ဝယ်သူအသစ် သို့မဟုတ် ရွေးချယ်ပါ" class="form-input w-full px-4 py-2 rounded-lg focus:ring-2">
+                            <datalist id="customer-list"></datalist>
                         </div>
                         <div>
                             <label for="product-name" class="block text-sm font-medium text-[var(--text-muted-color)] mb-1">Product</label>
@@ -368,8 +397,8 @@
                             <label for="cost" class="block text-sm font-medium text-[var(--text-muted-color)] mb-1">ကုန်ကျငွေ (တစ်ခု)</label>
                             <input type="number" id="cost" min="0" value="0" class="form-input w-full px-4 py-2 rounded-lg focus:ring-2" required>
                         </div>
-                        <div class="md:col-span-2 lg:col-span-3">
-                            <button type="submit" id="add-sale-btn" class="btn btn-primary-solid w-full text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 flex items-center justify-center gap-2">
+                        <div class="lg:col-span-4 md:col-span-2">
+                            <button type="submit" id="add-sale-btn" class="btn btn-primary-solid w-full text-white font-bold py-2 px-4 sm:py-3 rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 flex items-center justify-center gap-2">
                                 <i class="fas fa-plus-circle"></i>
                                 <span>စာရင်းသွင်းမည်</span>
                             </button>
@@ -380,27 +409,27 @@
                 <!-- Sales List -->
                 <div class="p-1 fade-in" style="animation-delay: 500ms;">
                     <div class="flex flex-col md:flex-row justify-between md:items-center mb-6 gap-4">
-                        <h2 class="text-2xl font-bold">အရောင်းစာရင်း</h2>
+                        <h2 class="text-xl sm:text-2xl font-bold">အရောင်းစာရင်း</h2>
                         <div class="flex flex-wrap items-center gap-4 p-2 card rounded-xl">
                             <div class="relative flex-grow">
                                 <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted-color)]"></i>
-                                <input type="text" id="search-input" placeholder="Search product or plan..." class="form-input w-full pl-10 pr-4 py-2 rounded-lg focus:ring-1">
+                                <input type="text" id="search-input" placeholder="Search..." class="form-input w-full pl-10 pr-4 py-2 rounded-lg focus:ring-1">
                             </div>
                             <div class="flex items-center space-x-2">
                                <label for="filter-start-date" class="text-sm font-medium text-[var(--text-muted-color)]">From:</label>
-                               <input type="date" id="filter-start-date" class="form-input px-3 py-2 rounded-lg focus:ring-1 w-36">
+                               <input type="date" id="filter-start-date" class="form-input px-3 py-2 rounded-lg focus:ring-1 w-32 sm:w-36">
                             </div>
                             <div class="flex items-center space-x-2">
                                <label for="filter-end-date" class="text-sm font-medium text-[var(--text-muted-color)]">To:</label>
-                               <input type="date" id="filter-end-date" class="form-input px-3 py-2 rounded-lg focus:ring-1 w-36">
+                               <input type="date" id="filter-end-date" class="form-input px-3 py-2 rounded-lg focus:ring-1 w-32 sm:w-36">
                             </div>
                             <button id="clear-filter-btn" class="text-sm text-[var(--primary-start-color)] hover:underline">Clear</button>
                             <div class="flex gap-2">
-                                <button id="export-csv-btn" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300 text-sm flex items-center gap-2" title="Export filtered results">
+                                <button id="export-csv-btn" class="bg-green-600 text-white font-bold py-2 px-3 sm:px-4 rounded-lg hover:bg-green-700 transition duration-300 text-sm flex items-center gap-2" title="Export filtered results">
                                     <i class="fas fa-file-csv"></i>
                                    <span class="hidden sm:inline">Export Filtered</span>
                                 </button>
-                                <button id="export-all-csv-btn" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300 text-sm flex items-center gap-2" title="Export all records">
+                                <button id="export-all-csv-btn" class="bg-blue-600 text-white font-bold py-2 px-3 sm:px-4 rounded-lg hover:bg-blue-700 transition duration-300 text-sm flex items-center gap-2" title="Export all records">
                                     <i class="fas fa-file-alt"></i>
                                    <span class="hidden sm:inline">Export All</span>
                                 </button>
@@ -410,7 +439,7 @@
                     <div id="sales-list-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
                         <!-- Sale cards will be inserted here -->
                     </div>
-                    <div id="pagination-controls" class="flex justify-center items-center mt-8 space-x-2">
+                    <div id="pagination-controls" class="flex justify-center items-center mt-8 space-x-1 sm:space-x-2">
                         <!-- Pagination buttons will be inserted here -->
                     </div>
                     <div id="no-sales-message" class="text-center py-16 text-[var(--text-muted-color)] card rounded-2xl hidden">
@@ -424,8 +453,8 @@
             <!-- Monthly View Content -->
             <div id="monthly-view" class="hidden fade-in">
                  <div class="w-full">
-                    <h2 class="text-2xl font-bold mb-4">လချုပ်စာရင်း</h2>
-                    <div id="monthly-summary-table-container" class="card rounded-2xl overflow-hidden">
+                    <h2 class="text-xl sm:text-2xl font-bold mb-4">လချုပ်စာရင်း</h2>
+                    <div id="monthly-summary-table-container" class="card rounded-2xl overflow-x-auto">
                         <!-- Monthly summary table will be here -->
                     </div>
                  </div>
@@ -434,12 +463,163 @@
                         <p class="text-lg font-semibold">လချုပ်စာရင်း မရှိသေးပါ</p>
                     </div>
             </div>
+            
+            <!-- Customers View Content -->
+            <div id="customers-view" class="hidden fade-in">
+                <!-- Add Customer Form -->
+                <div class="card p-4 sm:p-6 md:p-8 rounded-2xl mb-8">
+                    <h2 class="text-xl sm:text-2xl font-bold mb-6 border-b border-[var(--border-color)] pb-4">ဝယ်သူအသစ်ထည့်ရန်</h2>
+                    <form id="add-customer-form" class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                        <div>
+                            <label for="customer-name" class="block text-sm font-medium text-[var(--text-muted-color)] mb-1">အမည်</label>
+                            <input type="text" id="customer-name" placeholder="Customer Name" class="form-input w-full px-4 py-2 rounded-lg focus:ring-2" required>
+                        </div>
+                        <div>
+                            <label for="customer-phone" class="block text-sm font-medium text-[var(--text-muted-color)] mb-1">ဖုန်းနံပါတ် (Optional)</label>
+                            <input type="text" id="customer-phone" placeholder="09..." class="form-input w-full px-4 py-2 rounded-lg focus:ring-2">
+                        </div>
+                        <div class="md:col-span-3">
+                            <button type="submit" id="add-customer-btn" class="btn btn-primary-solid w-full text-white font-bold py-2 px-4 sm:py-3 rounded-lg flex items-center justify-center gap-2">
+                                <i class="fas fa-user-plus"></i>
+                                <span>ဝယ်သူအသစ်ထည့်မည်</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Customers List -->
+                <div class="p-1">
+                    <div class="flex flex-col md:flex-row justify-between md:items-center mb-6 gap-4">
+                        <h2 class="text-xl sm:text-2xl font-bold">ဝယ်သူများစာရင်း</h2>
+                        <div class="relative flex-grow max-w-md">
+                            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted-color)]"></i>
+                            <input type="text" id="customer-search-input" placeholder="အမည် သို့မဟုတ် ဖုန်းဖြင့်ရှာပါ..." class="form-input w-full pl-10 pr-4 py-2 rounded-lg focus:ring-1">
+                        </div>
+                    </div>
+                    <div id="customers-list-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                        <!-- Customer cards will be inserted here -->
+                    </div>
+                    <div id="no-customers-message" class="text-center py-16 text-[var(--text-muted-color)] card rounded-2xl hidden">
+                        <i class="fas fa-users-slash text-5xl mb-4"></i>
+                        <p class="text-lg font-semibold">ဝယ်သူစာရင်းမရှိသေးပါ</p>
+                        <p class="text-sm mt-2">အပေါ်ရှိ Form မှ ဝယ်သူအသစ်များ စတင်ထည့်သွင်းနိုင်ပါသည်</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FEATURE: Expenses View Content -->
+            <div id="expenses-view" class="hidden fade-in">
+                <!-- Add Expense Form -->
+                <div class="card p-4 sm:p-6 md:p-8 rounded-2xl mb-8">
+                    <h2 class="text-xl sm:text-2xl font-bold mb-6 border-b border-[var(--border-color)] pb-4">အသုံးစရိတ်အသစ်ထည့်ရန်</h2>
+                    <form id="add-expense-form" class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                        <div>
+                            <label for="expense-date" class="block text-sm font-medium text-[var(--text-muted-color)] mb-1">ရက်စွဲ</label>
+                            <input type="date" id="expense-date" class="form-input w-full px-4 py-2 rounded-lg focus:ring-2" required>
+                        </div>
+                        <div>
+                            <label for="expense-category" class="block text-sm font-medium text-[var(--text-muted-color)] mb-1">အမျိုးအစား</label>
+                            <input type="text" id="expense-category" list="expense-category-list" placeholder="ဥပမာ: ကြော်ငြာခ" class="form-input w-full px-4 py-2 rounded-lg focus:ring-2" required>
+                            <datalist id="expense-category-list">
+                                <option value="ကြော်ငြာခ"></option>
+                                <option value="ရုံးသုံးပစ္စည်း"></option>
+                                <option value="ဝန်ထမ်းလစာ"></option>
+                                <option value="အခြား"></option>
+                            </datalist>
+                        </div>
+                         <div>
+                            <label for="expense-amount" class="block text-sm font-medium text-[var(--text-muted-color)] mb-1">ပမာဏ</label>
+                            <input type="number" id="expense-amount" min="0" placeholder="0" class="form-input w-full px-4 py-2 rounded-lg focus:ring-2" required>
+                        </div>
+                        <div class="md:col-span-3">
+                             <label for="expense-description" class="block text-sm font-medium text-[var(--text-muted-color)] mb-1">မှတ်ချက် (Optional)</label>
+                            <textarea id="expense-description" rows="2" placeholder="အသေးစိတ်အချက်အလက်" class="form-input w-full px-4 py-2 rounded-lg focus:ring-2"></textarea>
+                        </div>
+                        <div class="md:col-span-3">
+                            <button type="submit" id="add-expense-btn" class="btn btn-primary-solid w-full text-white font-bold py-2 px-4 sm:py-3 rounded-lg flex items-center justify-center gap-2">
+                                <i class="fas fa-plus-circle"></i>
+                                <span>အသုံးစရိတ်ထည့်မည်</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Expenses List -->
+                <div class="p-1">
+                    <h2 class="text-xl sm:text-2xl font-bold mb-6">အသုံးစရိတ်စာရင်း</h2>
+                    <div id="expenses-list-container" class="space-y-4">
+                        <!-- Expense items will be inserted here -->
+                    </div>
+                    <div id="no-expenses-message" class="text-center py-16 text-[var(--text-muted-color)] card rounded-2xl hidden">
+                        <i class="fas fa-receipt text-5xl mb-4"></i>
+                        <p class="text-lg font-semibold">အသုံးစရိတ်စာရင်းမရှိသေးပါ</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis View Content -->
+            <div id="analysis-view" class="hidden fade-in">
+                <!-- FEATURE: New Summary Cards for Analysis -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8">
+                    <div class="card p-4 sm:p-6 rounded-2xl fade-in relative overflow-hidden">
+                        <i class="fa-solid fa-money-bill-wave absolute -right-4 -top-4 text-7xl sm:text-8xl text-red-500/10"></i>
+                        <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-xs sm:text-sm tracking-wider">စုစုပေါင်းအသုံးစရိတ်</h3>
+                        <p id="total-expenses" class="text-xl sm:text-3xl font-bold text-red-500">0 MMK</p>
+                    </div>
+                    <div class="card p-4 sm:p-6 rounded-2xl fade-in relative overflow-hidden" style="animation-delay: 100ms;">
+                        <i class="fa-solid fa-piggy-bank absolute -right-4 -top-4 text-7xl sm:text-8xl text-green-500/10"></i>
+                        <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-xs sm:text-sm tracking-wider">အသားတင်အမြတ်</h3>
+                        <p id="net-profit" class="text-xl sm:text-3xl font-bold text-green-500">0 MMK</p>
+                    </div>
+                    <div class="card p-4 sm:p-6 rounded-2xl fade-in relative overflow-hidden" style="animation-delay: 200ms;">
+                        <i class="fa-solid fa-users absolute -right-4 -top-4 text-7xl sm:text-8xl text-blue-500/10"></i>
+                        <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-xs sm:text-sm tracking-wider">စုစုပေါင်းဝယ်သူ</h3>
+                        <p id="total-customers" class="text-xl sm:text-3xl font-bold text-blue-500">0</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Sales Trend Chart -->
+                    <div class="card p-4 sm:p-6 rounded-2xl">
+                        <h3 class="text-lg font-bold mb-4">ရောင်းအားပြဇယား (ပြီးခဲ့သည့် ရက် ၃၀)</h3>
+                        <div class="h-80">
+                            <canvas id="salesTrendChart"></canvas>
+                        </div>
+                    </div>
+                    <!-- Top Selling Products Chart -->
+                    <div class="card p-4 sm:p-6 rounded-2xl">
+                        <h3 class="text-lg font-bold mb-4">အရောင်းရဆုံး Product များ</h3>
+                        <div class="h-80">
+                            <canvas id="productSalesChart"></canvas>
+                        </div>
+                    </div>
+                    <!-- Monthly Profit Chart -->
+                    <div class="card p-4 sm:p-6 rounded-2xl">
+                        <h3 class="text-lg font-bold mb-4">လအလိုက် အမြတ်အစွန်း</h3>
+                        <div class="h-80">
+                             <canvas id="monthlyProfitChart"></canvas>
+                        </div>
+                    </div>
+                    <!-- Expense Category Chart -->
+                    <div class="card p-4 sm:p-6 rounded-2xl">
+                        <h3 class="text-lg font-bold mb-4">အသုံးစရိတ်အမျိုးအစားများ</h3>
+                        <div class="h-80 flex items-center justify-center">
+                            <canvas id="expenseCategoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                 <div id="no-analysis-data" class="text-center py-16 text-[var(--text-muted-color)] card rounded-2xl hidden mt-8">
+                    <i class="fas fa-chart-pie text-5xl mb-4"></i>
+                    <p class="text-lg font-semibold">သုံးသပ်ချက်ပြသရန် Data မလုံလောက်ပါ</p>
+                    <p class="text-sm mt-2">အရောင်းစာရင်းများထည့်သွင်းပြီးနောက် ဤနေရာတွင် Chart များ ပေါ်လာပါမည်</p>
+                </div>
+            </div>
+
         </main>
     </div>
     
-    <!-- Edit Modal -->
+    <!-- Edit Sale Modal -->
     <div id="edit-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-center justify-center p-4">
-        <div class="w-full max-w-lg p-5 shadow-lg rounded-2xl card border-[var(--border-color)]">
+        <div class="w-full max-w-lg p-4 sm:p-5 shadow-lg rounded-2xl card border-[var(--border-color)]">
             <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-3 mb-4">
                  <h3 class="text-xl font-bold">အရောင်းစာရင်းပြင်ဆင်ရန်</h3>
                  <button id="close-modal-btn" class="text-[var(--text-muted-color)] hover:text-[var(--text-color)] text-2xl">&times;</button>
@@ -482,12 +662,25 @@
 
     <!-- Profile Settings Modal -->
     <div id="profile-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-start sm:items-center justify-center p-4">
-        <div class="w-full max-w-lg p-5 shadow-lg rounded-2xl card border-[var(--border-color)] max-h-[90vh] overflow-y-auto my-8 sm:my-0">
+        <div class="w-full max-w-lg p-4 sm:p-5 shadow-lg rounded-2xl card border-[var(--border-color)] max-h-[90vh] overflow-y-auto my-8 sm:my-0">
             <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-3 mb-4">
                  <h3 class="text-xl font-bold">Profile Settings</h3>
                  <button id="close-profile-modal-btn" class="text-[var(--text-muted-color)] hover:text-[var(--text-color)] text-2xl">&times;</button>
             </div>
             
+            <div class="mb-6">
+                <h4 class="font-semibold text-lg">Your User ID</h4>
+                <p class="text-sm text-[var(--text-muted-color)] mt-1 mb-2">This is your unique ID. You might need it for support or future collaborative features.</p>
+                <div class="flex items-center gap-2 p-2 rounded-lg bg-[var(--bg-color)]">
+                    <input type="text" id="user-id-display" readonly class="flex-grow bg-transparent text-sm text-[var(--text-muted-color)] outline-none">
+                    <button id="copy-user-id-btn" class="btn text-sm py-1 px-3 bg-[var(--card-bg-color)] hover:bg-gray-200 dark:hover:bg-gray-600">
+                        <i class="fas fa-copy mr-1"></i> Copy
+                    </button>
+                </div>
+            </div>
+
+            <div class="border-t border-[var(--border-color)] my-6"></div>
+
             <!-- Change Password Form -->
             <form id="change-password-form" class="space-y-4">
                 <h4 class="font-semibold text-lg">Change Password</h4>
@@ -545,22 +738,96 @@
         </div>
     </div>
     
-    <!-- MODIFICATION: New Modals for More Menu -->
+    <!-- Customer Detail/Edit Modal -->
+    <div id="customer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-start sm:items-center justify-center p-4">
+        <div class="w-full max-w-2xl p-4 sm:p-5 shadow-lg rounded-2xl card border-[var(--border-color)] max-h-[90vh] overflow-y-auto my-8 sm:my-0">
+            <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-3 mb-4">
+                 <h3 class="text-xl font-bold">ဝယ်သူအချက်အလက်</h3>
+                 <button id="close-customer-modal-btn" class="text-[var(--text-muted-color)] hover:text-[var(--text-color)] text-2xl">&times;</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Left side: Edit Form -->
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">ပြင်ဆင်ရန်</h4>
+                    <form id="edit-customer-form" class="space-y-4">
+                        <input type="hidden" id="edit-customer-id">
+                        <div>
+                            <label for="edit-customer-name" class="block text-sm font-medium text-[var(--text-muted-color)]">အမည်</label>
+                            <input type="text" id="edit-customer-name" class="mt-1 w-full form-input px-4 py-2 rounded-lg focus:ring-2" required>
+                        </div>
+                        <div>
+                            <label for="edit-customer-phone" class="block text-sm font-medium text-[var(--text-muted-color)]">ဖုန်းနံပါတ်</label>
+                            <input type="text" id="edit-customer-phone" class="mt-1 w-full form-input px-4 py-2 rounded-lg focus:ring-2">
+                        </div>
+                        <div class="pt-2 flex justify-end gap-3">
+                            <button type="button" id="delete-customer-btn" class="btn bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700">Delete</button>
+                            <button type="submit" id="save-customer-btn" class="btn bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700">Save</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Right side: Purchase History -->
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">ဝယ်ယူမှုမှတ်တမ်း</h4>
+                    <div id="customer-purchase-history" class="space-y-3 max-h-80 overflow-y-auto pr-2">
+                        <!-- Purchase history will be injected here -->
+                    </div>
+                    <div id="no-purchase-history" class="text-center py-10 text-[var(--text-muted-color)] hidden">
+                        <i class="fas fa-receipt text-4xl mb-3"></i>
+                        <p>ဝယ်ယူမှုမှတ်တမ်းမရှိသေးပါ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEATURE: Edit Expense Modal -->
+    <div id="edit-expense-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-center justify-center p-4">
+        <div class="w-full max-w-lg p-4 sm:p-5 shadow-lg rounded-2xl card border-[var(--border-color)]">
+            <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-3 mb-4">
+                 <h3 class="text-xl font-bold">အသုံးစရိတ်ပြင်ဆင်ရန်</h3>
+                 <button id="close-edit-expense-modal-btn" class="text-[var(--text-muted-color)] hover:text-[var(--text-color)] text-2xl">&times;</button>
+            </div>
+            <form id="edit-expense-form" class="space-y-4">
+                <input type="hidden" id="edit-expense-id">
+                <div>
+                    <label for="edit-expense-date" class="block text-sm font-medium text-[var(--text-muted-color)]">ရက်စွဲ</label>
+                    <input type="date" id="edit-expense-date" class="mt-1 w-full form-input px-4 py-2 rounded-lg focus:ring-2" required>
+                </div>
+                <div>
+                    <label for="edit-expense-category" class="block text-sm font-medium text-[var(--text-muted-color)]">အမျိုးအစား</label>
+                    <input type="text" id="edit-expense-category" class="mt-1 w-full form-input px-4 py-2 rounded-lg focus:ring-2" required>
+                </div>
+                <div>
+                    <label for="edit-expense-amount" class="block text-sm font-medium text-[var(--text-muted-color)]">ပမာဏ</label>
+                    <input type="number" id="edit-expense-amount" min="0" class="mt-1 w-full form-input px-4 py-2 rounded-lg focus:ring-2" required>
+                </div>
+                <div>
+                    <label for="edit-expense-description" class="block text-sm font-medium text-[var(--text-muted-color)]">မှတ်ချက်</label>
+                    <textarea id="edit-expense-description" rows="2" class="mt-1 w-full form-input px-4 py-2 rounded-lg focus:ring-2"></textarea>
+                </div>
+                <div class="pt-4 flex justify-end gap-3">
+                    <button type="button" id="cancel-edit-expense-btn" class="bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold py-2 px-4 rounded-lg hover:bg-gray-300">မလုပ်တော့ပါ</button>
+                    <button type="submit" id="save-edit-expense-btn" class="btn bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
     <!-- About Modal -->
     <div id="about-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-center justify-center p-4">
-        <div class="w-full max-w-lg p-6 shadow-lg rounded-2xl card border-[var(--border-color)]">
+        <div class="w-full max-w-lg p-4 sm:p-6 shadow-lg rounded-2xl card border-[var(--border-color)]">
             <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-3 mb-4">
                  <h3 class="text-xl font-bold">About SalesDash</h3>
                  <button id="close-about-modal-btn" class="text-[var(--text-muted-color)] hover:text-[var(--text-color)] text-2xl">&times;</button>
             </div>
             <div class="space-y-4 text-sm">
-                <p><span class="font-semibold">Version:</span> 1.2.0 (New Login UI & More Menu)</p>
+                <p><span class="font-semibold">Version:</span> 2.5.0 (Expense Management)</p>
                 <h4 class="font-semibold text-lg mt-4">What's New in SalesDash</h4>
                 <ul class="list-disc list-inside space-y-2 text-[var(--text-muted-color)]">
-                    <li>Login Page အတွက် ခေတ်မီသော ဒီဇိုင်းအသစ်။</li>
-                    <li>Profile Pop-up ကို Mobile device များတွင် ပိုမိုကောင်းမွန်အောင်ပြုပြင်ထားခြင်း။</li>
-                    <li>"More" Menu အသစ်နှင့် အချက်အလက်အသစ်များ ထပ်တိုးထားခြင်း။</li>
-                    <li>အသေးစား UI ပြင်ဆင်မှုများနှင့် စွမ်းဆောင်ရည်မြှင့်တင်မှုများ။</li>
+                    <li>အသုံးစရိတ်များကို စီမံခန့်ခွဲနိုင်သော feature အသစ်။</li>
+                    <li>အသားတင်အမြတ်ကို တွက်ချက်ပြသပေးခြင်း။</li>
+                    <li>အသုံးစရိတ်အမျိုးအစားများကို Chart ဖြင့် ကြည့်ရှုနိုင်ခြင်း။</li>
                 </ul>
             </div>
              <div class="pt-4 mt-4 flex justify-end">
@@ -571,7 +838,7 @@
     
     <!-- Security Modal -->
     <div id="security-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-center justify-center p-4">
-        <div class="w-full max-w-lg p-6 shadow-lg rounded-2xl card border-[var(--border-color)]">
+        <div class="w-full max-w-lg p-4 sm:p-6 shadow-lg rounded-2xl card border-[var(--border-color)]">
             <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-3 mb-4">
                  <h3 class="text-xl font-bold">Security</h3>
                  <button id="close-security-modal-btn" class="text-[var(--text-muted-color)] hover:text-[var(--text-color)] text-2xl">&times;</button>
@@ -588,7 +855,7 @@
 
     <!-- Privacy Modal -->
     <div id="privacy-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-center justify-center p-4">
-        <div class="w-full max-w-lg p-6 shadow-lg rounded-2xl card border-[var(--border-color)]">
+        <div class="w-full max-w-lg p-4 sm:p-6 shadow-lg rounded-2xl card border-[var(--border-color)]">
             <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-3 mb-4">
                  <h3 class="text-xl font-bold">Personal Data & Privacy</h3>
                  <button id="close-privacy-modal-btn" class="text-[var(--text-muted-color)] hover:text-[var(--text-color)] text-2xl">&times;</button>
@@ -605,13 +872,13 @@
     
     <!-- Developer Modal -->
     <div id="developer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-center justify-center p-4">
-        <div class="w-full max-w-lg p-6 shadow-lg rounded-2xl card border-[var(--border-color)]">
+        <div class="w-full max-w-lg p-4 sm:p-6 shadow-lg rounded-2xl card border-[var(--border-color)]">
             <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-3 mb-4">
                  <h3 class="text-xl font-bold">Developer Information</h3>
                  <button id="close-developer-modal-btn" class="text-[var(--text-muted-color)] hover:text-[var(--text-color)] text-2xl">&times;</button>
             </div>
             <div class="space-y-4 text-sm text-[var(--text-muted-color)]">
-                <p>ဤ Sales Dashboard Application ကို KarKar(Unlocker) မှ မွမ်းမံတည်ဆောက်ထားပါသည်။</p>
+                <p>ဤ Sales Dashboard Application ကို KarKar(Unlocker) မှ မူလတည်ဆောက်ခဲ့ပြီး Gemini မှ ပြန်လည်မွမ်းမံထားပါသည်။</p>
                 <p>အကြံပြုချက်များ၊ အကူအညီများလိုအပ်ပါက သို့မဟုတ် လုပ်ဆောင်ချက်အသစ်များထပ်မံတောင်းဆိုလိုပါက ပြောကြားနိုင်ပါသည်။</p>
             </div>
              <div class="pt-4 mt-4 flex justify-end">
@@ -622,7 +889,7 @@
 
     <!-- Confirmation Modal -->
     <div id="confirm-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-center justify-center p-4">
-        <div class="w-full max-w-md p-6 shadow-lg rounded-2xl card border-[var(--border-color)] text-center">
+        <div class="w-full max-w-md p-4 sm:p-6 shadow-lg rounded-2xl card border-[var(--border-color)] text-center">
             <div class="mb-4">
                 <i class="fas fa-exclamation-triangle text-4xl text-yellow-500"></i>
             </div>
@@ -643,12 +910,7 @@
     <!-- =============================================================== -->
     <!-- START: Firebase Configuration -->
     <!-- =============================================================== -->
-    <!-- To run this on your own website (like GitHub Pages), you need to -->
-    <!-- create your own Firebase project and paste your configuration   -->
-    <!-- object here. Get it from:                                       -->
-    <!-- Firebase Console > Project Settings > General > Your apps > SDK setup and configuration -->
     <script>
-        // PASTE YOUR FIREBASE CONFIG OBJECT HERE
         window.firebaseConfig = {
           apiKey: "AIzaSyDpPITUwHiRlxbC16gR7mBAhubEYtPhENQ",
           authDomain: "sales-dashboard-1100a.firebaseapp.com",
@@ -662,134 +924,214 @@
     <!-- END: Firebase Configuration -->
     <!-- =============================================================== -->
 
-
     <script type="module">
-        // Import Firebase services
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInWithCustomToken, updatePassword, EmailAuthProvider, reauthenticateWithCredential, updateEmail, deleteUser } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, doc, deleteDoc, updateDoc, serverTimestamp, enableIndexedDbPersistence, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, doc, deleteDoc, updateDoc, serverTimestamp, enableIndexedDbPersistence, getDocs, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Secure Firebase Initialization ---
+            // --- Firebase Initialization ---
             let app, auth, db;
             let firebaseConfig;
 
-            // Priority 1: Use config provided by the environment (e.g., Canvas)
             if (typeof __firebase_config !== 'undefined' && __firebase_config) {
                 firebaseConfig = JSON.parse(__firebase_config);
-            } 
-            // Priority 2: Use config provided by the user in the HTML
-            else if (window.firebaseConfig) {
+            } else if (window.firebaseConfig) {
                 firebaseConfig = window.firebaseConfig;
-            } 
-            // If no config is found, stop the app.
-            else {
-                console.error("Firebase configuration is missing. Please provide it in the HTML file.");
-                document.body.innerHTML = `<div class="min-h-screen flex items-center justify-center bg-red-100 text-red-700 p-4 text-center"><strong>Application Error:</strong> Firebase configuration is missing. Please follow the instructions in the HTML file to add your Firebase project configuration.</div>`;
+            } else {
+                console.error("Firebase configuration is missing.");
+                document.body.innerHTML = `<div class="min-h-screen flex items-center justify-center bg-red-100 text-red-700 p-4 text-center"><strong>Application Error:</strong> Firebase configuration is missing. Please add your Firebase project configuration to the script tag in the HTML file.</div>`;
                 return;
             }
 
             try {
-                // Initialize Firebase with the determined config
                 app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
             } catch (error) {
                 console.error("Firebase initialization failed:", error);
-                document.body.innerHTML = `<div class="min-h-screen flex items-center justify-center bg-red-100 text-red-700 p-4 text-center"><strong>Application Error:</strong> Could not initialize Firebase. Please check if your configuration is correct.</div>`;
+                document.body.innerHTML = `<div class="min-h-screen flex items-center justify-center bg-red-100 text-red-700 p-4 text-center"><strong>Application Error:</strong> Could not initialize Firebase. Check if your configuration is correct.</div>`;
                 return;
             }
-
-            // Disable right-click context menu
-            document.addEventListener('contextmenu', event => event.preventDefault());
-
-            // Enable Offline Persistence
-            enableIndexedDbPersistence(db)
-                .catch((err) => {
-                    if (err.code == 'failed-precondition') {
-                        console.warn('Multiple tabs open, persistence can only be enabled in one tab at a time.');
-                    } else if (err.code == 'unimplemented') {
-                        console.warn('The current browser does not support all of the features required to enable persistence.');
-                    }
-                });
-
-            let allSales = [];
-            let filteredSales = [];
-            let unsubscribeFromSales;
-            let confirmCallback = null;
-            let currentPage = 1;
-            const ITEMS_PER_PAGE = 9;
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-
-            const el = (id) => document.getElementById(id);
-
-            // --- Element Cache ---
-            const authSection = el('auth-section'), appSection = el('app'), loginForm = el('login-form'),
-                  emailInput = el('email'), passwordInput = el('password'), loginBtn = el('login-btn'),
-                  registerBtn = el('register-btn'), logoutBtn = el('logout-btn'), authError = el('auth-error'),
-                  userEmailDisplay = el('user-email-display'), dropdownUserEmail = el('dropdown-user-email'), 
-                  addSaleForm = el('add-sale-form'),
-                  saleDateInput = el('sale-date'), productNameInput = el('product-name'),
-                  vpnPlanInput = el('vpn-plan'), quantityInput = el('quantity'), priceInput = el('price'),
-                  costInput = el('cost'), salesListContainer = el('sales-list-container'),
-                  todayTotalEl = el('today-total'), todayProfitEl = el('today-profit'),
-                  monthTotalEl = el('month-total'), monthProfitEl = el('month-profit'),
-                  noSalesMessage = el('no-sales-message'), 
-                  filterStartDateInput = el('filter-start-date'), filterEndDateInput = el('filter-end-date'),
-                  searchInput = el('search-input'),
-                  clearFilterBtn = el('clear-filter-btn'), 
-                  exportCsvBtn = el('export-csv-btn'),
-                  exportAllCsvBtn = el('export-all-csv-btn'),
-                  authThemeToggle = el('auth-theme-toggle'),
-                  appThemeToggle = el('app-theme-toggle'),
-                  editModal = el('edit-modal'),
-                  editSaleForm = el('edit-sale-form'), editSaleIdInput = el('edit-sale-id'),
-                  editSaleDateInput = el('edit-sale-date'), editProductNameInput = el('edit-product-name'),
-                  editVpnPlanInput = el('edit-vpn-plan'), editQuantityInput = el('edit-quantity'),
-                  editPriceInput = el('edit-price'), editCostInput = el('edit-cost'),
-                  cancelEditBtn = el('cancel-edit-btn'), closeModalBtn = el('close-modal-btn'),
-                  saveEditBtn = el('save-edit-btn'), addSaleBtn = el('add-sale-btn'),
-                  tabDaily = el('tab-daily'), tabMonthly = el('tab-monthly'), dailyView = el('daily-view'),
-                  monthlyView = el('monthly-view'), monthlySummaryTableContainer = el('monthly-summary-table-container'),
-                  noMonthlyDataMessage = el('no-monthly-data-message'), confirmModal = el('confirm-modal'),
-                  confirmTitle = el('confirm-title'), confirmText = el('confirm-text'),
-                  confirmCancelBtn = el('confirm-cancel-btn'), confirmOkBtn = el('confirm-ok-btn'),
-                  toastEl = el('toast'), productDatalist = el('product-list'), planDatalist = el('plan-list'),
-                  paginationControls = el('pagination-controls'),
-                  connectionStatusEl = el('connection-status'),
-                  profileModal = el('profile-modal'),
-                  closeProfileModalBtn = el('close-profile-modal-btn'),
-                  changePasswordForm = el('change-password-form'),
-                  currentPasswordInput = el('current-password'),
-                  newPasswordInput = el('new-password'),
-                  savePasswordBtn = el('save-password-btn'),
-                  changeEmailForm = el('change-email-form'),
-                  newEmailInput = el('new-email'),
-                  saveEmailBtn = el('save-email-btn'),
-                  deleteAccountForm = el('delete-account-form'),
-                  deletePasswordInput = el('delete-password'),
-                  deleteAccountBtn = el('delete-account-btn'),
-                  moreMenuBtn = el('more-menu-btn'),
-                  moreMenuDropdown = el('more-menu-dropdown'),
-                  menuProfileBtn = el('menu-profile-btn'),
-                  menuSecurityBtn = el('menu-security-btn'),
-                  menuPrivacyBtn = el('menu-privacy-btn'),
-                  menuAboutBtn = el('menu-about-btn'),
-                  menuDeveloperBtn = el('menu-developer-btn'),
-                  aboutModal = el('about-modal'), closeAboutModalBtn = el('close-about-modal-btn'), aboutModalOkBtn = el('about-modal-ok-btn'),
-                  securityModal = el('security-modal'), closeSecurityModalBtn = el('close-security-modal-btn'), securityModalOkBtn = el('security-modal-ok-btn'),
-                  privacyModal = el('privacy-modal'), closePrivacyModalBtn = el('close-privacy-modal-btn'), privacyModalOkBtn = el('privacy-modal-ok-btn'),
-                  developerModal = el('developer-modal'), closeDeveloperModalBtn = el('close-developer-modal-btn'), developerModalOkBtn = el('developer-modal-ok-btn');
-
-
-            // --- Utility Functions ---
-            const formatCurrency = (amount) => `${Math.round(amount).toLocaleString()} MMK`;
             
-            const toggleButtonLoading = (button, isLoading) => {
-                const btnText = button.querySelector('.btn-text');
-                const spinner = button.querySelector('.spinner');
-                if (button) {
+            // --- Application State ---
+            const state = {
+                allSales: [],
+                allCustomers: [],
+                allExpenses: [],
+                filteredSales: [],
+                filteredCustomers: [],
+                unsubscribeFromSales: null,
+                unsubscribeFromCustomers: null,
+                unsubscribeFromExpenses: null,
+                confirmCallback: null,
+                currentPage: 1,
+                itemsPerPage: 9,
+                appId: typeof __app_id !== 'undefined' ? __app_id : 'default-app-id',
+                isAuthReady: false,
+                charts: {}, // To hold chart instances
+            };
+
+            // --- DOM Element Cache ---
+            const DOM = {
+                initialLoader: document.getElementById('initial-loader'),
+                authSection: document.getElementById('auth-section'),
+                appSection: document.getElementById('app'),
+                loginForm: document.getElementById('login-form'),
+                emailInput: document.getElementById('email'),
+                passwordInput: document.getElementById('password'),
+                loginBtn: document.getElementById('login-btn'),
+                registerBtn: document.getElementById('register-btn'),
+                logoutBtn: document.getElementById('logout-btn'),
+                authError: document.getElementById('auth-error'),
+                userEmailDisplay: document.getElementById('user-email-display'),
+                dropdownUserEmail: document.getElementById('dropdown-user-email'),
+                addSaleForm: document.getElementById('add-sale-form'),
+                saleDateInput: document.getElementById('sale-date'),
+                productNameInput: document.getElementById('product-name'),
+                vpnPlanInput: document.getElementById('vpn-plan'),
+                quantityInput: document.getElementById('quantity'),
+                priceInput: document.getElementById('price'),
+                costInput: document.getElementById('cost'),
+                salesListContainer: document.getElementById('sales-list-container'),
+                todayTotalEl: document.getElementById('today-total'),
+                todayProfitEl: document.getElementById('today-profit'),
+                monthTotalEl: document.getElementById('month-total'),
+                monthProfitEl: document.getElementById('month-profit'),
+                noSalesMessage: document.getElementById('no-sales-message'),
+                filterStartDateInput: document.getElementById('filter-start-date'),
+                filterEndDateInput: document.getElementById('filter-end-date'),
+                searchInput: document.getElementById('search-input'),
+                clearFilterBtn: document.getElementById('clear-filter-btn'),
+                exportCsvBtn: document.getElementById('export-csv-btn'),
+                exportAllCsvBtn: document.getElementById('export-all-csv-btn'),
+                authThemeToggle: document.getElementById('auth-theme-toggle'),
+                appThemeToggle: document.getElementById('app-theme-toggle'),
+                editModal: document.getElementById('edit-modal'),
+                editSaleForm: document.getElementById('edit-sale-form'),
+                editSaleIdInput: document.getElementById('edit-sale-id'),
+                editSaleDateInput: document.getElementById('edit-sale-date'),
+                editProductNameInput: document.getElementById('edit-product-name'),
+                editVpnPlanInput: document.getElementById('edit-vpn-plan'),
+                editQuantityInput: document.getElementById('edit-quantity'),
+                editPriceInput: document.getElementById('edit-price'),
+                editCostInput: document.getElementById('edit-cost'),
+                cancelEditBtn: document.getElementById('cancel-edit-btn'),
+                closeModalBtn: document.getElementById('close-modal-btn'),
+                saveEditBtn: document.getElementById('save-edit-btn'),
+                addSaleBtn: document.getElementById('add-sale-btn'),
+                tabDaily: document.getElementById('tab-daily'),
+                tabMonthly: document.getElementById('tab-monthly'),
+                dailyView: document.getElementById('daily-view'),
+                monthlyView: document.getElementById('monthly-view'),
+                monthlySummaryTableContainer: document.getElementById('monthly-summary-table-container'),
+                noMonthlyDataMessage: document.getElementById('no-monthly-data-message'),
+                confirmModal: document.getElementById('confirm-modal'),
+                confirmTitle: document.getElementById('confirm-title'),
+                confirmText: document.getElementById('confirm-text'),
+                confirmCancelBtn: document.getElementById('confirm-cancel-btn'),
+                confirmOkBtn: document.getElementById('confirm-ok-btn'),
+                toastEl: document.getElementById('toast'),
+                productDatalist: document.getElementById('product-list'),
+                planDatalist: document.getElementById('plan-list'),
+                paginationControls: document.getElementById('pagination-controls'),
+                connectionStatusEl: document.getElementById('connection-status'),
+                profileModal: document.getElementById('profile-modal'),
+                closeProfileModalBtn: document.getElementById('close-profile-modal-btn'),
+                changePasswordForm: document.getElementById('change-password-form'),
+                currentPasswordInput: document.getElementById('current-password'),
+                newPasswordInput: document.getElementById('new-password'),
+                savePasswordBtn: document.getElementById('save-password-btn'),
+                changeEmailForm: document.getElementById('change-email-form'),
+                newEmailInput: document.getElementById('new-email'),
+                saveEmailBtn: document.getElementById('save-email-btn'),
+                deleteAccountForm: document.getElementById('delete-account-form'),
+                deletePasswordInput: document.getElementById('delete-password'),
+                deleteAccountBtn: document.getElementById('delete-account-btn'),
+                moreMenuBtn: document.getElementById('more-menu-btn'),
+                moreMenuDropdown: document.getElementById('more-menu-dropdown'),
+                menuProfileBtn: document.getElementById('menu-profile-btn'),
+                menuSecurityBtn: document.getElementById('menu-security-btn'),
+                menuPrivacyBtn: document.getElementById('menu-privacy-btn'),
+                menuAboutBtn: document.getElementById('menu-about-btn'),
+                menuDeveloperBtn: document.getElementById('menu-developer-btn'),
+                aboutModal: document.getElementById('about-modal'),
+                closeAboutModalBtn: document.getElementById('close-about-modal-btn'),
+                aboutModalOkBtn: document.getElementById('about-modal-ok-btn'),
+                securityModal: document.getElementById('security-modal'),
+                closeSecurityModalBtn: document.getElementById('close-security-modal-btn'),
+                securityModalOkBtn: document.getElementById('security-modal-ok-btn'),
+                privacyModal: document.getElementById('privacy-modal'),
+                closePrivacyModalBtn: document.getElementById('close-privacy-modal-btn'),
+                privacyModalOkBtn: document.getElementById('privacy-modal-ok-btn'),
+                developerModal: document.getElementById('developer-modal'),
+                closeDeveloperModalBtn: document.getElementById('close-developer-modal-btn'),
+                developerModalOkBtn: document.getElementById('developer-modal-ok-btn'),
+                userIdDisplay: document.getElementById('user-id-display'),
+                copyUserIdBtn: document.getElementById('copy-user-id-btn'),
+
+                // CRM Elements
+                tabCustomers: document.getElementById('tab-customers'),
+                customersView: document.getElementById('customers-view'),
+                addCustomerForm: document.getElementById('add-customer-form'),
+                customerNameInput: document.getElementById('customer-name'),
+                customerPhoneInput: document.getElementById('customer-phone'),
+                addCustomerBtn: document.getElementById('add-customer-btn'),
+                customersListContainer: document.getElementById('customers-list-container'),
+                noCustomersMessage: document.getElementById('no-customers-message'),
+                customerSearchInput: document.getElementById('customer-search-input'),
+                saleCustomerInput: document.getElementById('sale-customer'),
+                customerDatalist: document.getElementById('customer-list'),
+                customerModal: document.getElementById('customer-modal'),
+                closeCustomerModalBtn: document.getElementById('close-customer-modal-btn'),
+                editCustomerForm: document.getElementById('edit-customer-form'),
+                editCustomerId: document.getElementById('edit-customer-id'),
+                editCustomerName: document.getElementById('edit-customer-name'),
+                editCustomerPhone: document.getElementById('edit-customer-phone'),
+                deleteCustomerBtn: document.getElementById('delete-customer-btn'),
+                saveCustomerBtn: document.getElementById('save-customer-btn'),
+                customerPurchaseHistory: document.getElementById('customer-purchase-history'),
+                noPurchaseHistory: document.getElementById('no-purchase-history'),
+
+                // Analysis Elements
+                tabAnalysis: document.getElementById('tab-analysis'),
+                analysisView: document.getElementById('analysis-view'),
+                noAnalysisData: document.getElementById('no-analysis-data'),
+                totalExpensesEl: document.getElementById('total-expenses'),
+                netProfitEl: document.getElementById('net-profit'),
+                totalCustomersEl: document.getElementById('total-customers'),
+
+                // Expense Elements
+                tabExpenses: document.getElementById('tab-expenses'),
+                expensesView: document.getElementById('expenses-view'),
+                addExpenseForm: document.getElementById('add-expense-form'),
+                expenseDateInput: document.getElementById('expense-date'),
+                expenseCategoryInput: document.getElementById('expense-category'),
+                expenseAmountInput: document.getElementById('expense-amount'),
+                expenseDescriptionInput: document.getElementById('expense-description'),
+                addExpenseBtn: document.getElementById('add-expense-btn'),
+                expensesListContainer: document.getElementById('expenses-list-container'),
+                noExpensesMessage: document.getElementById('no-expenses-message'),
+                editExpenseModal: document.getElementById('edit-expense-modal'),
+                closeEditExpenseModalBtn: document.getElementById('close-edit-expense-modal-btn'),
+                editExpenseForm: document.getElementById('edit-expense-form'),
+                editExpenseId: document.getElementById('edit-expense-id'),
+                editExpenseDate: document.getElementById('edit-expense-date'),
+                editExpenseCategory: document.getElementById('edit-expense-category'),
+                editExpenseAmount: document.getElementById('edit-expense-amount'),
+                editExpenseDescription: document.getElementById('edit-expense-description'),
+                cancelEditExpenseBtn: document.getElementById('cancel-edit-expense-btn'),
+                saveEditExpenseBtn: document.getElementById('save-edit-expense-btn'),
+            };
+
+            // --- UI Module ---
+            const ui = {
+                formatCurrency: (amount) => `${Math.round(amount).toLocaleString()} MMK`,
+                
+                toggleButtonLoading: (button, isLoading) => {
+                    if (!button) return;
+                    const btnText = button.querySelector('.btn-text');
+                    const spinner = button.querySelector('.spinner');
                     button.disabled = isLoading;
                     if (isLoading) {
                         if (btnText) btnText.style.display = 'none';
@@ -798,693 +1140,1181 @@
                         if (btnText) btnText.style.display = '';
                         if (spinner) spinner.classList.add('hidden');
                     }
-                }
-            };
+                },
 
-            const showToast = (message, type = 'success') => {
-                const bgColor = type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-[var(--toast-bg)]';
-                const icon = type === 'error' ? 'fa-times-circle' : 'fa-check-circle';
-                
-                toastEl.innerHTML = `
-                    <div class="flex items-center p-4 ${bgColor} text-white rounded-lg shadow-lg">
-                        <i class="fas ${icon} mr-3 text-xl"></i>
-                        <div class="flex-1 text-sm font-medium">${message}</div>
-                    </div>
-                `;
-                toastEl.classList.remove('hidden', 'toast-out');
-                toastEl.classList.add('toast-in');
-
-                setTimeout(() => {
-                    toastEl.classList.remove('toast-in');
-                    toastEl.classList.add('toast-out');
-                }, 3000);
-            };
-            
-            const updateConnectionStatus = (online) => {
-                if (online) {
-                    connectionStatusEl.classList.remove('bg-yellow-500', 'bg-gray-400');
-                    connectionStatusEl.classList.add('bg-green-500');
-                    connectionStatusEl.title = 'Online';
-                } else {
-                    connectionStatusEl.classList.remove('bg-green-500', 'bg-gray-400');
-                    connectionStatusEl.classList.add('bg-yellow-500');
-                    connectionStatusEl.title = 'Offline - Changes will sync when back online';
-                }
-            };
-
-            // --- Auth Event Handlers ---
-            const setAuthFormState = (isBusy) => {
-                loginBtn.disabled = isBusy;
-                registerBtn.disabled = isBusy;
-                toggleButtonLoading(loginBtn, isBusy);
-            };
-
-            const handleLogin = async (e) => {
-                e.preventDefault();
-                authError.textContent = '';
-                authError.classList.remove('text-green-500', 'text-red-500');
-                setAuthFormState(true);
-
-                try {
-                    await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-                } catch (error) {
-                    authError.textContent = getAuthErrorMessage(error.code);
-                    authError.classList.add('text-red-500');
-                } finally {
-                    setAuthFormState(false);
-                }
-            };
-
-            const handleRegister = async () => {
-                authError.textContent = '';
-                authError.classList.remove('text-green-500', 'text-red-500');
-                setAuthFormState(true);
-
-                try {
-                    await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-                    await signOut(auth);
+                showToast: (message, type = 'success') => {
+                    const bgColor = type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-[var(--toast-bg)]';
+                    const icon = type === 'error' ? 'fa-times-circle' : 'fa-check-circle';
                     
-                    authError.textContent = 'Registration successful. Please log in.';
-                    authError.classList.add('text-green-500');
-                    loginForm.reset();
-                } catch (error) {
-                    authError.textContent = getAuthErrorMessage(error.code);
-                    authError.classList.add('text-red-500');
-                } finally {
-                    setAuthFormState(false);
-                }
-            };
-            
-            function getAuthErrorMessage(code) {
-                switch (code) {
-                    case 'auth/invalid-email': return 'Invalid email address.';
-                    case 'auth/user-not-found': return 'No account found with this email.';
-                    case 'auth/wrong-password': return 'Incorrect password.';
-                    case 'auth/weak-password': return 'Password should be at least 6 characters.';
-                    case 'auth/email-already-in-use': return 'This email is already registered.';
-                    case 'auth/requires-recent-login': return 'This action is sensitive and requires recent authentication. Please log in again.';
-                    default: return 'An unknown error occurred.';
-                }
-            }
+                    DOM.toastEl.innerHTML = `
+                        <div class="flex items-center p-4 ${bgColor} text-white rounded-lg shadow-lg">
+                            <i class="fas ${icon} mr-3 text-xl"></i>
+                            <div class="flex-1 text-sm font-medium">${message}</div>
+                        </div>
+                    `;
+                    DOM.toastEl.classList.remove('hidden', 'toast-out');
+                    DOM.toastEl.classList.add('toast-in');
 
-            // --- Theme Management ---
-            const applyTheme = (theme) => {
-                document.documentElement.className = theme;
-                authThemeToggle.checked = theme === 'dark';
-                appThemeToggle.checked = theme === 'dark';
-            };
+                    setTimeout(() => {
+                        DOM.toastEl.classList.remove('toast-in');
+                        DOM.toastEl.classList.add('toast-out');
+                    }, 3000);
+                },
 
-            const toggleTheme = () => {
-                const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
-                localStorage.setItem('theme', newTheme);
-                applyTheme(newTheme);
-            };
-
-            // --- UI Rendering & Updates ---
-            const setDefaultDate = () => saleDateInput.value = new Date().toISOString().split('T')[0];
-            
-            const updateDashboardUI = () => {
-                applyFiltersAndRender();
-                updateSummaryCards();
-                updateMonthlySummary();
-                updateDatalists();
-            };
-            
-            const applyFiltersAndRender = () => {
-                const startDate = filterStartDateInput.value;
-                const endDate = filterEndDateInput.value;
-                const searchTerm = searchInput.value.toLowerCase();
-
-                filteredSales = allSales.filter(sale => {
-                    const saleDate = new Date(sale.date);
-                    const start = startDate ? new Date(startDate) : null;
-                    const end = endDate ? new Date(endDate) : null;
-                    
-                    if (start && saleDate < start) return false;
-                    if (end && saleDate > end) return false;
-
-                    const matchesSearch = searchTerm === '' ||
-                        sale.product.toLowerCase().includes(searchTerm) ||
-                        sale.plan.toLowerCase().includes(searchTerm);
-
-                    return matchesSearch;
-                });
-                
-                currentPage = 1; // Reset to first page after filtering
-                renderPaginatedSales();
-                renderPaginationControls();
-            };
-
-            function updateSummaryCards() {
-                let todayTotal = 0, todayProfit = 0, monthTotal = 0, monthProfit = 0;
-                const today = new Date();
-                const todayString = today.toISOString().split('T')[0];
-                const currentMonthString = today.toISOString().slice(0, 7);
-
-                allSales.forEach(sale => {
-                    const total = sale.quantity * sale.price;
-                    const profit = (sale.price - (sale.cost || 0)) * sale.quantity;
-                    
-                    if (sale.date === todayString) {
-                        todayTotal += total;
-                        todayProfit += profit;
+                updateConnectionStatus: (online) => {
+                    const el = DOM.connectionStatusEl;
+                    if (online) {
+                        el.classList.remove('bg-yellow-500', 'bg-gray-400');
+                        el.classList.add('bg-green-500');
+                        el.title = 'Online';
+                    } else {
+                        el.classList.remove('bg-green-500', 'bg-gray-400');
+                        el.classList.add('bg-yellow-500');
+                        el.title = 'Offline - Changes will sync when back online';
                     }
-                    if (sale.date && sale.date.startsWith(currentMonthString)) {
-                        monthTotal += total;
-                        monthProfit += profit;
-                    }
-                });
-                
-                todayTotalEl.textContent = formatCurrency(todayTotal);
-                todayProfitEl.textContent = formatCurrency(todayProfit);
-                monthTotalEl.textContent = formatCurrency(monthTotal);
-                monthProfitEl.textContent = formatCurrency(monthProfit);
-            }
+                },
 
-            function renderPaginatedSales() {
-                const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-                const endIndex = startIndex + ITEMS_PER_PAGE;
-                const salesToRender = filteredSales.slice(startIndex, endIndex);
+                applyTheme: (theme) => {
+                    document.documentElement.className = theme;
+                    DOM.authThemeToggle.checked = theme === 'dark';
+                    DOM.appThemeToggle.checked = theme === 'dark';
+                },
 
-                salesListContainer.innerHTML = '';
-                noSalesMessage.classList.toggle('hidden', filteredSales.length > 0);
+                toggleTheme: () => {
+                    const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+                    localStorage.setItem('theme', newTheme);
+                    ui.applyTheme(newTheme);
+                    ui.renderAnalysisCharts(); // Re-render charts with new theme colors
+                },
 
-                salesToRender.forEach((sale, index) => {
-                    const profit = (sale.price - (sale.cost || 0)) * sale.quantity;
-                    const card = document.createElement('div');
-                    card.className = 'card rounded-xl p-5 flex flex-col space-y-4 fade-in';
-                    card.style.animationDelay = `${index * 50}ms`;
+                openModal: (modal) => modal.classList.remove('hidden'),
+                closeModal: (modal) => modal.classList.add('hidden'),
+
+                showConfirmModal: (title, text, onConfirm) => {
+                    DOM.confirmTitle.textContent = title;
+                    DOM.confirmText.textContent = text;
+                    state.confirmCallback = onConfirm;
+                    ui.openModal(DOM.confirmModal);
+                },
+
+                updateDashboard: () => {
+                    ui.applyFiltersAndRender();
+                    ui.updateSummaryCards();
+                    ui.updateMonthlySummary();
+                    ui.updateDatalists();
+                    ui.renderCustomersList();
+                    ui.renderExpensesList();
+                    ui.renderAnalysisCharts();
+                },
+
+                applyFiltersAndRender: () => {
+                    const startDate = DOM.filterStartDateInput.value;
+                    const endDate = DOM.filterEndDateInput.value;
+                    const searchTerm = DOM.searchInput.value.toLowerCase();
+
+                    state.filteredSales = state.allSales.filter(sale => {
+                        const saleDate = new Date(sale.date);
+                        const start = startDate ? new Date(startDate) : null;
+                        const end = endDate ? new Date(endDate) : null;
+                        
+                        if (start && saleDate < start) return false;
+                        if (end && saleDate > end) return false;
+
+                        return searchTerm === '' ||
+                            sale.product.toLowerCase().includes(searchTerm) ||
+                            sale.plan.toLowerCase().includes(searchTerm) ||
+                            (sale.customerName && sale.customerName.toLowerCase().includes(searchTerm));
+                    });
                     
-                    card.innerHTML = `
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="font-bold text-lg">${sale.product}</p>
-                                <p class="text-sm text-[var(--text-muted-color)]">${sale.plan}</p>
-                            </div>
-                            <div class="text-right flex-shrink-0">
-                                <p class="text-xs text-[var(--text-muted-color)]">${sale.date}</p>
-                                <div class="mt-2">
-                                    <button data-id="${sale.id}" class="edit-btn text-indigo-400 hover:text-indigo-600 w-8 h-8 rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900/50"><i class="fas fa-pencil-alt"></i></button>
-                                    <button data-id="${sale.id}" class="delete-btn text-red-400 hover:text-red-600 w-8 h-8 rounded-full hover:bg-red-100 dark:hover:bg-red-900/50"><i class="fas fa-trash-alt"></i></button>
+                    state.currentPage = 1;
+                    ui.renderPaginatedSales();
+                    ui.renderPaginationControls();
+                },
+
+                updateSummaryCards: () => {
+                    let todayTotal = 0, todayProfit = 0, monthTotal = 0, monthProfit = 0;
+                    const today = new Date();
+                    const todayString = today.toISOString().split('T')[0];
+                    const currentMonthString = today.toISOString().slice(0, 7);
+
+                    state.allSales.forEach(sale => {
+                        const total = sale.quantity * sale.price;
+                        const profit = (sale.price - (sale.cost || 0)) * sale.quantity;
+                        
+                        if (sale.date === todayString) {
+                            todayTotal += total;
+                            todayProfit += profit;
+                        }
+                        if (sale.date && sale.date.startsWith(currentMonthString)) {
+                            monthTotal += total;
+                            monthProfit += profit;
+                        }
+                    });
+                    
+                    DOM.todayTotalEl.textContent = ui.formatCurrency(todayTotal);
+                    DOM.todayProfitEl.textContent = ui.formatCurrency(todayProfit);
+                    DOM.monthTotalEl.textContent = ui.formatCurrency(monthTotal);
+                    DOM.monthProfitEl.textContent = ui.formatCurrency(monthProfit);
+
+                    // Analysis summary cards
+                    const totalExpenses = state.allExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+                    const grossProfit = state.allSales.reduce((sum, sale) => sum + (sale.price - sale.cost) * sale.quantity, 0);
+                    const netProfit = grossProfit - totalExpenses;
+                    DOM.totalExpensesEl.textContent = ui.formatCurrency(totalExpenses);
+                    DOM.netProfitEl.textContent = ui.formatCurrency(netProfit);
+                    DOM.totalCustomersEl.textContent = state.allCustomers.length;
+                },
+
+                renderPaginatedSales: () => {
+                    const startIndex = (state.currentPage - 1) * state.itemsPerPage;
+                    const endIndex = startIndex + state.itemsPerPage;
+                    const salesToRender = state.filteredSales.slice(startIndex, endIndex);
+
+                    DOM.salesListContainer.innerHTML = '';
+                    DOM.noSalesMessage.classList.toggle('hidden', state.filteredSales.length > 0);
+
+                    salesToRender.forEach((sale, index) => {
+                        const profit = (sale.price - (sale.cost || 0)) * sale.quantity;
+                        const card = document.createElement('div');
+                        card.className = 'card rounded-xl p-4 sm:p-5 flex flex-col space-y-4 fade-in';
+                        card.style.animationDelay = `${index * 50}ms`;
+                        
+                        const customerHTML = sale.customerName 
+                            ? `<div class="flex items-center gap-2 text-sm text-indigo-500 dark:text-indigo-400">
+                                <i class="fas fa-user"></i>
+                                <span>${sale.customerName}</span>
+                               </div>`
+                            : '';
+
+                        card.innerHTML = `
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-bold text-base sm:text-lg">${sale.product}</p>
+                                    <p class="text-sm text-[var(--text-muted-color)]">${sale.plan}</p>
+                                </div>
+                                <div class="text-right flex-shrink-0">
+                                    <p class="text-xs text-[var(--text-muted-color)]">${sale.date}</p>
+                                    <div class="mt-2">
+                                        <button data-id="${sale.id}" class="edit-btn text-indigo-400 hover:text-indigo-600 w-8 h-8 rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900/50"><i class="fas fa-pencil-alt"></i></button>
+                                        <button data-id="${sale.id}" class="delete-btn text-red-400 hover:text-red-600 w-8 h-8 rounded-full hover:bg-red-100 dark:hover:bg-red-900/50"><i class="fas fa-trash-alt"></i></button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="border-t border-[var(--border-color)] my-2"></div>
-                        <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                            <span class="text-[var(--text-muted-color)]">အရေအတွက်:</span>
-                            <span class="font-medium text-right">${sale.quantity}</span>
-                            <span class="text-[var(--text-muted-color)]">ရောင်းဈေး:</span>
-                            <span class="font-medium text-right">${formatCurrency(sale.price)}</span>
-                            <span class="text-[var(--text-muted-color)]">ကုန်ကျငွေ:</span>
-                            <span class="font-medium text-right">${formatCurrency(sale.cost || 0)}</span>
-                        </div>
-                        <div class="border-t border-[var(--border-color)] my-2"></div>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="font-semibold text-base">အမြတ်:</span>
-                            <span class="font-bold text-lg ${profit >= 0 ? 'text-green-500' : 'text-red-500'}">${formatCurrency(profit)}</span>
-                        </div>
-                    `;
-                    salesListContainer.appendChild(card);
-                });
-            }
-
-            function renderPaginationControls() {
-                paginationControls.innerHTML = '';
-                const pageCount = Math.ceil(filteredSales.length / ITEMS_PER_PAGE);
-                if (pageCount <= 1) return;
-
-                for (let i = 1; i <= pageCount; i++) {
-                    const button = document.createElement('button');
-                    button.textContent = i;
-                    button.className = `pagination-btn btn rounded-lg p-2 ${i === currentPage ? 'active' : 'bg-[var(--card-bg-color)]'}`;
-                    button.addEventListener('click', () => {
-                        currentPage = i;
-                        renderPaginatedSales();
-                        renderPaginationControls();
+                            ${customerHTML}
+                            <div class="border-t border-[var(--border-color)] my-2"></div>
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-xs sm:text-sm">
+                                <span class="text-[var(--text-muted-color)]">အရေအတွက်:</span>
+                                <span class="font-medium text-right">${sale.quantity}</span>
+                                <span class="text-[var(--text-muted-color)]">ရောင်းဈေး:</span>
+                                <span class="font-medium text-right">${ui.formatCurrency(sale.price)}</span>
+                                <span class="text-[var(--text-muted-color)]">ကုန်ကျငွေ:</span>
+                                <span class="font-medium text-right">${ui.formatCurrency(sale.cost || 0)}</span>
+                            </div>
+                            <div class="border-t border-[var(--border-color)] my-2"></div>
+                            <div class="flex justify-between items-center mt-2">
+                                <span class="font-semibold text-sm sm:text-base">အမြတ်:</span>
+                                <span class="font-bold text-base sm:text-lg ${profit >= 0 ? 'text-green-500' : 'text-red-500'}">${ui.formatCurrency(profit)}</span>
+                            </div>
+                        `;
+                        DOM.salesListContainer.appendChild(card);
                     });
-                    paginationControls.appendChild(button);
-                }
-            }
-            
-            function calculateMonthlySummary() {
-                const monthlyData = {};
-                allSales.forEach(sale => {
-                    const month = sale.date.substring(0, 7);
-                    if (!monthlyData[month]) {
-                        monthlyData[month] = { total: 0, profit: 0, count: 0 };
+                },
+
+                renderPaginationControls: () => {
+                    DOM.paginationControls.innerHTML = '';
+                    const pageCount = Math.ceil(state.filteredSales.length / state.itemsPerPage);
+                    if (pageCount <= 1) return;
+
+                    for (let i = 1; i <= pageCount; i++) {
+                        const button = document.createElement('button');
+                        button.textContent = i;
+                        button.className = `pagination-btn btn rounded-lg p-2 ${i === state.currentPage ? 'active' : 'bg-[var(--card-bg-color)]'}`;
+                        button.addEventListener('click', () => {
+                            state.currentPage = i;
+                            ui.renderPaginatedSales();
+                            ui.renderPaginationControls();
+                        });
+                        DOM.paginationControls.appendChild(button);
                     }
-                    monthlyData[month].total += sale.price * sale.quantity;
-                    monthlyData[month].profit += (sale.price - sale.cost) * sale.quantity;
-                    monthlyData[month].count += sale.quantity;
-                });
-                return Object.entries(monthlyData)
-                             .map(([month, data]) => ({ month, ...data }))
-                             .sort((a, b) => a.month.localeCompare(b.month));
-            }
+                },
 
-            function updateMonthlySummary() {
-                const summaryData = calculateMonthlySummary();
-                renderMonthlyTable(summaryData.slice().reverse());
-                const hasData = summaryData.length > 0;
-                monthlyView.querySelector('.w-full').classList.toggle('hidden', !hasData);
-                noMonthlyDataMessage.classList.toggle('hidden', hasData);
-            }
+                updateMonthlySummary: () => {
+                    const monthlyData = {};
+                    state.allSales.forEach(sale => {
+                        const month = sale.date.substring(0, 7);
+                        if (!monthlyData[month]) {
+                            monthlyData[month] = { total: 0, profit: 0 };
+                        }
+                        monthlyData[month].total += sale.price * sale.quantity;
+                        monthlyData[month].profit += (sale.price - sale.cost) * sale.quantity;
+                    });
+                    const summaryData = Object.entries(monthlyData)
+                                 .map(([month, data]) => ({ month, ...data }))
+                                 .sort((a, b) => b.month.localeCompare(a.month));
 
-            function renderMonthlyTable(data) {
-                let tableHTML = `
-                    <table class="w-full text-sm text-left">
-                        <thead class="text-xs text-[var(--text-muted-color)] uppercase bg-[var(--bg-color)]">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">လ</th>
-                                <th scope="col" class="px-6 py-3 text-right">ရောင်းရငွေ</th>
-                                <th scope="col" class="px-6 py-3 text-right">အမြတ်</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-                data.forEach(item => {
-                    tableHTML += `
-                        <tr class="border-b border-[var(--border-color)]">
-                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">${item.month}</th>
-                            <td class="px-6 py-4 text-right">${formatCurrency(item.total)}</td>
-                            <td class="px-6 py-4 text-right font-bold ${item.profit >= 0 ? 'text-green-500' : 'text-red-500'}">${formatCurrency(item.profit)}</td>
-                        </tr>
+                    const hasData = summaryData.length > 0;
+                    DOM.monthlyView.querySelector('.w-full').classList.toggle('hidden', !hasData);
+                    DOM.noMonthlyDataMessage.classList.toggle('hidden', hasData);
+
+                    let tableHTML = `
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-[var(--text-muted-color)] uppercase bg-[var(--bg-color)]">
+                                <tr>
+                                    <th scope="col" class="px-4 sm:px-6 py-3">လ</th>
+                                    <th scope="col" class="px-4 sm:px-6 py-3 text-right">ရောင်းရငွေ</th>
+                                    <th scope="col" class="px-4 sm:px-6 py-3 text-right">အမြတ်</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                     `;
-                });
-                tableHTML += `</tbody></table>`;
-                monthlySummaryTableContainer.innerHTML = tableHTML;
-            }
-
-            function updateDatalists() {
-                const products = [...new Set(allSales.map(s => s.product))];
-                const plans = [...new Set(allSales.map(s => s.plan))];
-                productDatalist.innerHTML = products.map(p => `<option value="${p}"></option>`).join('');
-                planDatalist.innerHTML = plans.map(p => `<option value="${p}"></option>`).join('');
-            }
-            
-            // --- Modal Management ---
-            const openModal = (modal) => modal.classList.remove('hidden');
-            const closeModal = (modal) => modal.classList.add('hidden');
-
-            const openEditModal = (sale) => {
-                editSaleIdInput.value = sale.id; editSaleDateInput.value = sale.date;
-                editProductNameInput.value = sale.product || ''; editVpnPlanInput.value = sale.plan || '';
-                editQuantityInput.value = sale.quantity; editPriceInput.value = sale.price;
-                editCostInput.value = sale.cost || 0;
-                openModal(editModal);
-            };
-
-            const closeEditModal = () => {
-                closeModal(editModal);
-                editSaleForm.reset();
-            };
-            
-            const openProfileModal = () => {
-                openModal(profileModal);
-                changePasswordForm.reset();
-                changeEmailForm.reset();
-                deleteAccountForm.reset();
-            };
-
-            const showConfirmModal = (title, text, onConfirm) => {
-                confirmTitle.textContent = title;
-                confirmText.textContent = text;
-                confirmCallback = onConfirm;
-                openModal(confirmModal);
-            };
-
-            const closeConfirmModal = () => {
-                closeModal(confirmModal);
-                confirmCallback = null;
-            };
-
-            // --- Firestore Handlers ---
-            async function handleAddSale(e) {
-                e.preventDefault();
-                const user = auth.currentUser;
-                if (!user) return;
-
-                toggleButtonLoading(addSaleBtn, true);
-                
-                const newSale = {
-                    date: saleDateInput.value,
-                    product: productNameInput.value.trim() || 'N/A',
-                    plan: vpnPlanInput.value.trim(),
-                    quantity: parseInt(quantityInput.value),
-                    price: parseFloat(priceInput.value),
-                    cost: parseFloat(costInput.value) || 0,
-                    timestamp: serverTimestamp()
-                };
-                
-                try {
-                    await addDoc(collection(db, 'artifacts', appId, 'users', user.uid, 'sales'), newSale);
-                    showToast("စာရင်းသွင်းခြင်း အောင်မြင်ပါသည်။", "success");
-                    addSaleForm.reset();
-                    setDefaultDate();
-                    productNameInput.value = 'VPN'; 
-                    vpnPlanInput.value = '1 Month'; 
-                    quantityInput.value = '1';
-                    priceInput.value = '';
-                    costInput.value = '0';
-                } catch (error) {
-                    console.error("Error adding document: ", error);
-                    showToast("စာရင်းသွင်းရာတွင် အမှားအယွင်းဖြစ်သွားပါသည်။", "error");
-                } finally {
-                    toggleButtonLoading(addSaleBtn, false);
-                }
-            }
-            
-            function handleListClick(e) {
-                const button = e.target.closest('button');
-                if (!button) return;
-                const saleId = button.dataset.id;
-                if (!saleId) return;
-
-                if (button.classList.contains('delete-btn')) {
-                    showConfirmModal('စာရင်းဖျက်ရန်', 'ဤစာရင်းကို ဖျက်ရန်သေချာပါသလား?', () => {
-                        const user = auth.currentUser;
-                        if (!user) return;
-                        deleteDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'sales', saleId))
-                            .then(() => {
-                                showToast("စာရင်းကိုအောင်မြင်စွာဖျက်ပြီးပါပြီ။", "success");
-                            })
-                            .catch((error) => {
-                                console.error("Error deleting document: ", error);
-                                showToast("စာရင်းဖျက်ရာတွင် အမှားအယွင်းဖြစ်သွားပါသည်။", "error");
-                            });
+                    summaryData.forEach(item => {
+                        tableHTML += `
+                            <tr class="border-b border-[var(--border-color)]">
+                                <th scope="row" class="px-4 sm:px-6 py-4 font-medium whitespace-nowrap">${item.month}</th>
+                                <td class="px-4 sm:px-6 py-4 text-right">${ui.formatCurrency(item.total)}</td>
+                                <td class="px-4 sm:px-6 py-4 text-right font-bold ${item.profit >= 0 ? 'text-green-500' : 'text-red-500'}">${ui.formatCurrency(item.profit)}</td>
+                            </tr>
+                        `;
                     });
-                }
-                if (button.classList.contains('edit-btn')) {
-                    const saleToEdit = allSales.find(sale => sale.id === saleId);
-                    if (saleToEdit) openEditModal(saleToEdit);
-                }
-            }
+                    tableHTML += `</tbody></table>`;
+                    DOM.monthlySummaryTableContainer.innerHTML = tableHTML;
+                },
 
-            async function handleUpdateSale(e) {
-                e.preventDefault();
-                const saleId = editSaleIdInput.value;
-                const user = auth.currentUser;
-                if (!user) return;
-
-                toggleButtonLoading(saveEditBtn, true);
-                
-                const saleRef = doc(db, 'artifacts', appId, 'users', user.uid, 'sales', saleId);
-                const updatedData = {
-                    date: editSaleDateInput.value,
-                    product: editProductNameInput.value.trim() || 'N/A',
-                    plan: editVpnPlanInput.value.trim(),
-                    quantity: parseInt(editQuantityInput.value),
-                    price: parseFloat(editPriceInput.value),
-                    cost: parseFloat(editCostInput.value) || 0,
-                };
-
-                try {
-                    await updateDoc(saleRef, updatedData);
-                    showToast("စာရင်းပြင်ဆင်ခြင်း အောင်မြင်ပါသည်။", "success");
-                    closeEditModal();
-                } catch (error) {
-                    console.error("Error updating document: ", error);
-                    showToast("စာရင်းပြင်ဆင်ရာတွင် အမှားအယွင်းဖြစ်သွားပါသည်။", "error");
-                } finally {
-                    toggleButtonLoading(saveEditBtn, false);
-                }
-            }
-            
-            function handleExport(dataSource, type) {
-                if (dataSource.length === 0) {
-                    showToast(`"${type}" export လုပ်ရန် data မရှိပါ။`, 'error');
-                    return;
-                }
-                const headers = ['ID', 'Date', 'Product', 'Plan', 'Quantity', 'Price', 'Cost', 'Total', 'Profit'];
-                const rows = dataSource.map(sale => {
-                    const total = sale.quantity * sale.price;
-                    const profit = (sale.price - (sale.cost || 0)) * sale.quantity;
-                    return [sale.id, sale.date, sale.product, sale.plan, sale.quantity, sale.price, sale.cost || 0, total, profit]
-                           .map(val => `"${String(val).replace(/"/g, '""')}"`).join(',');
-                });
-                const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows].join('\n');
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", `sales_export_${type}_${new Date().toISOString().split('T')[0]}.csv`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-
-            function setupRealtimeListener(userId) {
-                console.log(`Setting up real-time listener for user: ${userId} and appId: ${appId}`);
-                const salesCollectionForUser = collection(db, 'artifacts', appId, 'users', userId, 'sales');
-                const q = query(salesCollectionForUser);
-                
-                if (unsubscribeFromSales) unsubscribeFromSales();
-
-                unsubscribeFromSales = onSnapshot(q, (querySnapshot) => {
-                    const isOffline = querySnapshot.metadata.fromCache;
-                    updateConnectionStatus(!isOffline);
-                    console.log(`Received ${querySnapshot.docs.length} sales records from Firestore. From cache: ${isOffline}`);
-
-                    allSales = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                updateDatalists: () => {
+                    const products = [...new Set(state.allSales.map(s => s.product))];
+                    const plans = [...new Set(state.allSales.map(s => s.plan))];
+                    DOM.productDatalist.innerHTML = products.map(p => `<option value="${p}"></option>`).join('');
+                    DOM.planDatalist.innerHTML = plans.map(p => `<option value="${p}"></option>`).join('');
                     
-                    allSales.sort((a, b) => {
-                        const dateA = a.timestamp ? a.timestamp.toDate() : new Date(a.date);
-                        const dateB = b.timestamp ? b.timestamp.toDate() : new Date(b.date);
-                        return dateB - dateA;
+                    const customers = state.allCustomers.map(c => c.name);
+                    DOM.customerDatalist.innerHTML = customers.map(c => `<option value="${c}"></option>`).join('');
+                },
+                
+                renderCustomersList: () => {
+                    const searchTerm = DOM.customerSearchInput.value.toLowerCase();
+                    state.filteredCustomers = state.allCustomers.filter(customer => {
+                        return customer.name.toLowerCase().includes(searchTerm) || 
+                               (customer.phone && customer.phone.toLowerCase().includes(searchTerm));
                     });
 
-                    updateDashboardUI();
-                }, (error) => {
-                    console.error("Firestore real-time listener error:", error);
-                    showToast("Error fetching data. Check console for details.", "error");
-                    updateConnectionStatus(false);
-                });
-            }
+                    DOM.customersListContainer.innerHTML = '';
+                    DOM.noCustomersMessage.classList.toggle('hidden', state.filteredCustomers.length > 0);
 
-            // --- Profile Management ---
-            const handleChangePassword = async (e) => {
-                e.preventDefault();
-                const user = auth.currentUser;
-                const currentPassword = currentPasswordInput.value;
-                const newPassword = newPasswordInput.value;
+                    state.filteredCustomers.forEach(customer => {
+                        const card = document.createElement('div');
+                        card.className = 'card rounded-xl p-4 flex items-center justify-between hover:shadow-lg cursor-pointer';
+                        card.dataset.id = customer.id;
 
-                if (!user) return;
-                if (newPassword.length < 6) {
-                    showToast("New password must be at least 6 characters.", "error");
-                    return;
-                }
+                        card.innerHTML = `
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+                                    <i class="fas fa-user text-xl text-indigo-500"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold">${customer.name}</p>
+                                    <p class="text-sm text-[var(--text-muted-color)]">${customer.phone || 'No phone'}</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right text-[var(--text-muted-color)]"></i>
+                        `;
+                        DOM.customersListContainer.appendChild(card);
+                    });
+                },
 
-                toggleButtonLoading(savePasswordBtn, true);
+                renderCustomerModal: (customer) => {
+                    DOM.editCustomerId.value = customer.id;
+                    DOM.editCustomerName.value = customer.name;
+                    DOM.editCustomerPhone.value = customer.phone || '';
 
-                try {
-                    const credential = EmailAuthProvider.credential(user.email, currentPassword);
-                    await reauthenticateWithCredential(user, credential);
-                    await updatePassword(user, newPassword);
-                    showToast("Password updated successfully!", "success");
-                    changePasswordForm.reset();
-                } catch (error) {
-                    console.error("Error updating password:", error);
-                    showToast(getAuthErrorMessage(error.code), "error");
-                } finally {
-                    toggleButtonLoading(savePasswordBtn, false);
+                    const purchaseHistory = state.allSales.filter(sale => sale.customerId === customer.id);
+                    DOM.noPurchaseHistory.classList.toggle('hidden', purchaseHistory.length > 0);
+                    DOM.customerPurchaseHistory.innerHTML = '';
+
+                    if (purchaseHistory.length > 0) {
+                        purchaseHistory.forEach(sale => {
+                            const saleEl = document.createElement('div');
+                            saleEl.className = 'p-3 rounded-lg bg-[var(--bg-color)] text-sm';
+                            saleEl.innerHTML = `
+                                <div class="flex justify-between items-center">
+                                    <span class="font-semibold">${sale.product} - ${sale.plan}</span>
+                                    <span class="font-bold text-green-500">${ui.formatCurrency(sale.price * sale.quantity)}</span>
+                                </div>
+                                <div class="text-xs text-[var(--text-muted-color)] mt-1">${sale.date}</div>
+                            `;
+                            DOM.customerPurchaseHistory.appendChild(saleEl);
+                        });
+                    }
+                    ui.openModal(DOM.customerModal);
+                },
+
+                renderExpensesList: () => {
+                    DOM.expensesListContainer.innerHTML = '';
+                    DOM.noExpensesMessage.classList.toggle('hidden', state.allExpenses.length > 0);
+
+                    state.allExpenses.forEach(expense => {
+                        const item = document.createElement('div');
+                        item.className = 'card rounded-xl p-4 flex items-center justify-between';
+                        item.innerHTML = `
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/50 flex items-center justify-center">
+                                    <i class="fas fa-wallet text-xl text-red-500"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold">${expense.category}</p>
+                                    <p class="text-sm text-[var(--text-muted-color)]">${expense.description || expense.date}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold text-red-500">${ui.formatCurrency(expense.amount)}</p>
+                                <div class="mt-1">
+                                    <button data-id="${expense.id}" class="edit-expense-btn text-indigo-400 hover:text-indigo-600 w-8 h-8 rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900/50"><i class="fas fa-pencil-alt"></i></button>
+                                    <button data-id="${expense.id}" class="delete-expense-btn text-red-400 hover:text-red-600 w-8 h-8 rounded-full hover:bg-red-100 dark:hover:bg-red-900/50"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        `;
+                        DOM.expensesListContainer.appendChild(item);
+                    });
+                },
+
+                renderAnalysisCharts: () => {
+                    if (state.allSales.length === 0 && state.allExpenses.length === 0) {
+                        DOM.analysisView.querySelector('.grid').classList.add('hidden');
+                        DOM.noAnalysisData.classList.remove('hidden');
+                        return;
+                    }
+                    DOM.analysisView.querySelector('.grid').classList.remove('hidden');
+                    DOM.noAnalysisData.classList.add('hidden');
+
+                    const isDark = document.documentElement.classList.contains('dark');
+                    const textColor = isDark ? '#e2e8f0' : '#1a202c';
+                    const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+
+                    // Sales Trend Chart
+                    const salesTrendCtx = document.getElementById('salesTrendChart').getContext('2d');
+                    const salesTrendData = analysis.prepareSalesTrendData(30);
+                    if (state.charts.salesTrend) state.charts.salesTrend.destroy();
+                    state.charts.salesTrend = new Chart(salesTrendCtx, {
+                        type: 'line',
+                        data: {
+                            labels: salesTrendData.labels,
+                            datasets: [{
+                                label: 'ရောင်းရငွေ',
+                                data: salesTrendData.data,
+                                borderColor: 'rgba(79, 70, 229, 1)',
+                                backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                                fill: true,
+                                tension: 0.4,
+                            }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            scales: {
+                                y: { ticks: { color: textColor }, grid: { color: gridColor } },
+                                x: { ticks: { color: textColor }, grid: { color: gridColor } }
+                            },
+                            plugins: { legend: { labels: { color: textColor } } }
+                        }
+                    });
+
+                    // Product Sales Chart
+                    const productSalesCtx = document.getElementById('productSalesChart').getContext('2d');
+                    const productSalesData = analysis.prepareProductSalesData();
+                    if (state.charts.productSales) state.charts.productSales.destroy();
+                    state.charts.productSales = new Chart(productSalesCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: productSalesData.labels,
+                            datasets: [{
+                                label: 'စုစုပေါင်း ရောင်းရငွေ',
+                                data: productSalesData.data,
+                                backgroundColor: ['#4f46e5', '#7c3aed', '#2563eb', '#1d4ed8', '#0ea5e9'],
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                            scales: {
+                                y: { ticks: { color: textColor }, grid: { color: 'transparent' } },
+                                x: { ticks: { color: textColor }, grid: { color: gridColor } }
+                            },
+                            plugins: { legend: { display: false } }
+                        }
+                    });
+
+                    // Monthly Profit Chart
+                    const monthlyProfitCtx = document.getElementById('monthlyProfitChart').getContext('2d');
+                    const monthlyProfitData = analysis.prepareMonthlyProfitData();
+                    if (state.charts.monthlyProfit) state.charts.monthlyProfit.destroy();
+                    state.charts.monthlyProfit = new Chart(monthlyProfitCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: monthlyProfitData.labels,
+                            datasets: [{
+                                label: 'အသားတင်အမြတ်',
+                                data: monthlyProfitData.data,
+                                backgroundColor: '#10b981',
+                            }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            scales: {
+                                y: { ticks: { color: textColor }, grid: { color: gridColor } },
+                                x: { ticks: { color: textColor }, grid: { color: gridColor } }
+                            },
+                            plugins: { legend: { labels: { color: textColor } } }
+                        }
+                    });
+
+                    // Expense Category Chart
+                    const expenseCategoryCtx = document.getElementById('expenseCategoryChart').getContext('2d');
+                    const expenseCategoryData = analysis.prepareExpenseCategoryData();
+                    if (state.charts.expenseCategory) state.charts.expenseCategory.destroy();
+                    state.charts.expenseCategory = new Chart(expenseCategoryCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: expenseCategoryData.labels,
+                            datasets: [{
+                                data: expenseCategoryData.data,
+                                backgroundColor: ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e'],
+                            }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: { legend: { position: 'top', labels: { color: textColor } } }
+                        }
+                    });
                 }
             };
 
-            const handleChangeEmail = async (e) => {
-                e.preventDefault();
-                const user = auth.currentUser;
-                const newEmail = newEmailInput.value;
+            // --- Firestore Module ---
+            const firestore = {
+                setupRealtimeListener: (userId) => {
+                    const salesCollection = collection(db, 'artifacts', state.appId, 'users', userId, 'sales');
+                    if (state.unsubscribeFromSales) state.unsubscribeFromSales();
+                    state.unsubscribeFromSales = onSnapshot(query(salesCollection), (snapshot) => {
+                        ui.updateConnectionStatus(!snapshot.metadata.fromCache);
+                        state.allSales = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        state.allSales.sort((a, b) => (b.timestamp?.toDate() || new Date(b.date)) - (a.timestamp?.toDate() || new Date(a.date)));
+                        ui.updateDashboard();
+                    }, (error) => console.error("Sales listener error:", error));
+                },
 
-                if (!user || user.email === newEmail) return;
+                setupCustomersListener: (userId) => {
+                    const customersCollection = collection(db, 'artifacts', state.appId, 'users', userId, 'customers');
+                    if (state.unsubscribeFromCustomers) state.unsubscribeFromCustomers();
+                    state.unsubscribeFromCustomers = onSnapshot(query(customersCollection), (snapshot) => {
+                        state.allCustomers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        state.allCustomers.sort((a, b) => a.name.localeCompare(b.name));
+                        ui.updateDashboard();
+                    }, (error) => console.error("Customers listener error:", error));
+                },
+                
+                setupExpensesListener: (userId) => {
+                    const expensesCollection = collection(db, 'artifacts', state.appId, 'users', userId, 'expenses');
+                    if (state.unsubscribeFromExpenses) state.unsubscribeFromExpenses();
+                    state.unsubscribeFromExpenses = onSnapshot(query(expensesCollection), (snapshot) => {
+                        state.allExpenses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        state.allExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+                        ui.updateDashboard();
+                    }, (error) => console.error("Expenses listener error:", error));
+                },
 
-                toggleButtonLoading(saveEmailBtn, true);
+                addSale: (saleData) => {
+                    const user = auth.currentUser;
+                    if (!user) throw new Error("User not authenticated");
+                    return addDoc(collection(db, 'artifacts', state.appId, 'users', user.uid, 'sales'), saleData);
+                },
+                updateSale: (saleId, updatedData) => {
+                    const user = auth.currentUser;
+                    if (!user) throw new Error("User not authenticated");
+                    return updateDoc(doc(db, 'artifacts', state.appId, 'users', user.uid, 'sales', saleId), updatedData);
+                },
+                deleteSale: (saleId) => {
+                    const user = auth.currentUser;
+                    if (!user) throw new Error("User not authenticated");
+                    return deleteDoc(doc(db, 'artifacts', state.appId, 'users', user.uid, 'sales', saleId));
+                },
 
-                try {
-                    await updateEmail(user, newEmail);
-                    showToast("Email updated successfully! Please log in again.", "success");
-                    setTimeout(() => signOut(auth), 2000);
-                } catch (error) {
-                    console.error("Error updating email:", error);
-                    showToast(getAuthErrorMessage(error.code), "error");
-                } finally {
-                    toggleButtonLoading(saveEmailBtn, false);
+                addCustomer: (customerData) => {
+                    const user = auth.currentUser;
+                    if (!user) throw new Error("User not authenticated");
+                    return addDoc(collection(db, 'artifacts', state.appId, 'users', user.uid, 'customers'), customerData);
+                },
+                updateCustomer: (customerId, updatedData) => {
+                    const user = auth.currentUser;
+                    if (!user) throw new Error("User not authenticated");
+                    return updateDoc(doc(db, 'artifacts', state.appId, 'users', user.uid, 'customers', customerId), updatedData);
+                },
+                deleteCustomer: async (customerId) => {
+                    const user = auth.currentUser;
+                    if (!user) throw new Error("User not authenticated");
+                    await deleteDoc(doc(db, 'artifacts', state.appId, 'users', user.uid, 'customers', customerId));
+                },
+
+                addExpense: (expenseData) => {
+                    const user = auth.currentUser;
+                    if (!user) throw new Error("User not authenticated");
+                    return addDoc(collection(db, 'artifacts', state.appId, 'users', user.uid, 'expenses'), expenseData);
+                },
+                updateExpense: (expenseId, updatedData) => {
+                    const user = auth.currentUser;
+                    if (!user) throw new Error("User not authenticated");
+                    return updateDoc(doc(db, 'artifacts', state.appId, 'users', user.uid, 'expenses', expenseId), updatedData);
+                },
+                deleteExpense: (expenseId) => {
+                    const user = auth.currentUser;
+                    if (!user) throw new Error("User not authenticated");
+                    return deleteDoc(doc(db, 'artifacts', state.appId, 'users', user.uid, 'expenses', expenseId));
+                },
+            };
+
+            // --- Analysis Module ---
+            const analysis = {
+                prepareSalesTrendData: (days) => {
+                    const salesByDate = {};
+                    const today = new Date();
+                    for (let i = 0; i < days; i++) {
+                        const date = new Date(today);
+                        date.setDate(today.getDate() - i);
+                        const dateString = date.toISOString().split('T')[0];
+                        salesByDate[dateString] = 0;
+                    }
+
+                    state.allSales.forEach(sale => {
+                        if (salesByDate.hasOwnProperty(sale.date)) {
+                            salesByDate[sale.date] += sale.price * sale.quantity;
+                        }
+                    });
+
+                    const sortedDates = Object.keys(salesByDate).sort();
+                    return {
+                        labels: sortedDates.map(date => date.slice(5)), // MM-DD format
+                        data: sortedDates.map(date => salesByDate[date])
+                    };
+                },
+
+                prepareProductSalesData: () => {
+                    const salesByProduct = {};
+                    state.allSales.forEach(sale => {
+                        const productName = sale.product || 'Unknown';
+                        if (!salesByProduct[productName]) {
+                            salesByProduct[productName] = 0;
+                        }
+                        salesByProduct[productName] += sale.price * sale.quantity;
+                    });
+
+                    const sortedProducts = Object.entries(salesByProduct)
+                        .sort(([, a], [, b]) => b - a)
+                        .slice(0, 5); // Top 5 products
+
+                    return {
+                        labels: sortedProducts.map(([name]) => name),
+                        data: sortedProducts.map(([, total]) => total)
+                    };
+                },
+
+                prepareMonthlyProfitData: () => {
+                    const profitByMonth = {};
+                    state.allSales.forEach(sale => {
+                        const month = sale.date.substring(0, 7);
+                        if (!profitByMonth[month]) profitByMonth[month] = 0;
+                        profitByMonth[month] += (sale.price - sale.cost) * sale.quantity;
+                    });
+                    state.allExpenses.forEach(expense => {
+                        const month = expense.date.substring(0, 7);
+                        if (!profitByMonth[month]) profitByMonth[month] = 0;
+                        profitByMonth[month] -= expense.amount;
+                    });
+
+                    const sortedMonths = Object.keys(profitByMonth).sort();
+                    return {
+                        labels: sortedMonths,
+                        data: sortedMonths.map(month => profitByMonth[month])
+                    };
+                },
+
+                prepareExpenseCategoryData: () => {
+                    const expenseByCategory = {};
+                    state.allExpenses.forEach(expense => {
+                        const category = expense.category || 'Uncategorized';
+                        if (!expenseByCategory[category]) expenseByCategory[category] = 0;
+                        expenseByCategory[category] += expense.amount;
+                    });
+
+                    const sortedCategories = Object.entries(expenseByCategory).sort(([,a],[,b]) => b-a);
+                    return {
+                        labels: sortedCategories.map(([name]) => name),
+                        data: sortedCategories.map(([, total]) => total)
+                    };
                 }
+            };
+
+            // --- Event Handlers ---
+            const handlers = {
+                handleLogin: async (e) => {
+                    e.preventDefault();
+                    DOM.authError.textContent = '';
+                    ui.toggleButtonLoading(DOM.loginBtn, true);
+                    try {
+                        await signInWithEmailAndPassword(auth, DOM.emailInput.value, DOM.passwordInput.value);
+                    } catch (error) {
+                        console.error("Login Error:", error.code, error.message);
+                        DOM.authError.textContent = getAuthErrorMessage(error.code);
+                        DOM.authError.classList.add('text-red-500');
+                    } finally {
+                        ui.toggleButtonLoading(DOM.loginBtn, false);
+                    }
+                },
+
+                handleRegister: async () => {
+                    DOM.authError.textContent = '';
+                    ui.toggleButtonLoading(DOM.registerBtn, true);
+                    try {
+                        await createUserWithEmailAndPassword(auth, DOM.emailInput.value, DOM.passwordInput.value);
+                        await signOut(auth);
+                        DOM.authError.textContent = 'Account မှတ်ပုံတင်ခြင်းအောင်မြင်ပါသည်။ Login ဝင်နိုင်ပါပြီ။';
+                        DOM.authError.classList.remove('text-red-500');
+                        DOM.authError.classList.add('text-green-500');
+                        DOM.loginForm.reset();
+                    } catch (error) {
+                        console.error("Registration Error:", error.code, error.message);
+                        DOM.authError.textContent = getAuthErrorMessage(error.code);
+                        DOM.authError.classList.add('text-red-500');
+                    } finally {
+                        ui.toggleButtonLoading(DOM.registerBtn, false);
+                    }
+                },
+
+                handleAddSale: async (e) => {
+                    e.preventDefault();
+                    const requiredFields = [DOM.saleDateInput, DOM.productNameInput, DOM.quantityInput, DOM.priceInput];
+                    if (!validateForm(requiredFields)) return;
+
+                    ui.toggleButtonLoading(DOM.addSaleBtn, true);
+                    
+                    let customerId = null;
+                    let customerName = DOM.saleCustomerInput.value.trim();
+                    if (customerName) {
+                        const existingCustomer = state.allCustomers.find(c => c.name.toLowerCase() === customerName.toLowerCase());
+                        if (existingCustomer) {
+                            customerId = existingCustomer.id;
+                        } else {
+                            try {
+                                const newCustomerRef = await firestore.addCustomer({ name: customerName, phone: '', timestamp: serverTimestamp() });
+                                customerId = newCustomerRef.id;
+                                ui.showToast(`ဝယ်သူအသစ် "${customerName}" ကို ထည့်သွင်းပြီးပါပြီ။`, 'success');
+                            } catch (error) {
+                                console.error("Error creating new customer from sale:", error);
+                            }
+                        }
+                    }
+
+                    const newSale = {
+                        date: DOM.saleDateInput.value,
+                        product: DOM.productNameInput.value.trim() || 'N/A',
+                        plan: DOM.vpnPlanInput.value.trim(),
+                        quantity: parseInt(DOM.quantityInput.value),
+                        price: parseFloat(DOM.priceInput.value),
+                        cost: parseFloat(DOM.costInput.value) || 0,
+                        timestamp: serverTimestamp(),
+                        customerId: customerId,
+                        customerName: customerName || null
+                    };
+
+                    try {
+                        await firestore.addSale(newSale);
+                        ui.showToast("စာရင်းသွင်းခြင်း အောင်မြင်ပါသည်။", "success");
+                        DOM.addSaleForm.reset();
+                        DOM.saleDateInput.value = new Date().toISOString().split('T')[0];
+                        DOM.productNameInput.value = 'VPN'; 
+                        DOM.vpnPlanInput.value = '1 Month';
+                    } catch (error) {
+                        console.error("Error adding document: ", error);
+                        ui.showToast("စာရင်းသွင်းရာတွင် အမှားအယွင်းဖြစ်သွားပါသည်။", "error");
+                    } finally {
+                        ui.toggleButtonLoading(DOM.addSaleBtn, false);
+                    }
+                },
+
+                handleUpdateSale: async (e) => {
+                    e.preventDefault();
+                    ui.toggleButtonLoading(DOM.saveEditBtn, true);
+                    const updatedData = {
+                        date: DOM.editSaleDateInput.value,
+                        product: DOM.editProductNameInput.value.trim() || 'N/A',
+                        plan: DOM.editVpnPlanInput.value.trim(),
+                        quantity: parseInt(DOM.editQuantityInput.value),
+                        price: parseFloat(DOM.editPriceInput.value),
+                        cost: parseFloat(DOM.editCostInput.value) || 0,
+                    };
+                    try {
+                        await firestore.updateSale(DOM.editSaleIdInput.value, updatedData);
+                        ui.showToast("စာရင်းပြင်ဆင်ခြင်း အောင်မြင်ပါသည်။", "success");
+                        ui.closeModal(DOM.editModal);
+                    } catch (error) {
+                        console.error("Error updating document: ", error);
+                        ui.showToast("စာရင်းပြင်ဆင်ရာတွင် အမှားအယွင်းဖြစ်သွားပါသည်။", "error");
+                    } finally {
+                        ui.toggleButtonLoading(DOM.saveEditBtn, false);
+                    }
+                },
+                
+                handleSalesListClick: (e) => {
+                    const button = e.target.closest('button');
+                    if (!button) return;
+                    const saleId = button.dataset.id;
+                    if (!saleId) return;
+
+                    if (button.classList.contains('delete-btn')) {
+                        ui.showConfirmModal('စာရင်းဖျက်ရန်', 'ဤစာရင်းကို ဖျက်ရန်သေချာပါသလား?', async () => {
+                            try {
+                                await firestore.deleteSale(saleId);
+                                ui.showToast("စာရင်းကိုအောင်မြင်စွာဖျက်ပြီးပါပြီ။", "success");
+                            } catch (error) {
+                                ui.showToast("စာရင်းဖျက်ရာတွင် အမှားအယွင်းဖြစ်သွားပါသည်။", "error");
+                            }
+                        });
+                    }
+                    if (button.classList.contains('edit-btn')) {
+                        const saleToEdit = state.allSales.find(sale => sale.id === saleId);
+                        if (saleToEdit) {
+                            DOM.editSaleIdInput.value = saleToEdit.id;
+                            DOM.editSaleDateInput.value = saleToEdit.date;
+                            DOM.editProductNameInput.value = saleToEdit.product || '';
+                            DOM.editVpnPlanInput.value = saleToEdit.plan || '';
+                            DOM.editQuantityInput.value = saleToEdit.quantity;
+                            DOM.editPriceInput.value = saleToEdit.price;
+                            DOM.editCostInput.value = saleToEdit.cost || 0;
+                            ui.openModal(DOM.editModal);
+                        }
+                    }
+                },
+                
+                handleExport: (isAll) => {
+                    const dataSource = isAll ? state.allSales : state.filteredSales;
+                    const type = isAll ? 'all' : 'filtered';
+                    if (dataSource.length === 0) {
+                        ui.showToast(`"${type}" export လုပ်ရန် data မရှိပါ။`, 'error');
+                        return;
+                    }
+                    const headers = ['ID', 'Date', 'Customer', 'Product', 'Plan', 'Quantity', 'Price', 'Cost', 'Total', 'Profit'];
+                    const rows = dataSource.map(sale => {
+                        const total = sale.quantity * sale.price;
+                        const profit = (sale.price - (sale.cost || 0)) * sale.quantity;
+                        return [sale.id, sale.date, sale.customerName, sale.product, sale.plan, sale.quantity, sale.price, sale.cost || 0, total, profit]
+                            .map(val => `"${String(val ?? '').replace(/"/g, '""')}"`).join(',');
+                    });
+                    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows].join('\n');
+                    const link = document.createElement("a");
+                    link.setAttribute("href", encodeURI(csvContent));
+                    link.setAttribute("download", `sales_export_${type}_${new Date().toISOString().split('T')[0]}.csv`);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                },
+
+                handleChangePassword: async (e) => {
+                    e.preventDefault();
+                    const user = auth.currentUser;
+                    if (!user) return;
+
+                    ui.toggleButtonLoading(DOM.savePasswordBtn, true);
+                    try {
+                        const credential = EmailAuthProvider.credential(user.email, DOM.currentPasswordInput.value);
+                        await reauthenticateWithCredential(user, credential);
+                        await updatePassword(user, DOM.newPasswordInput.value);
+                        ui.showToast("Password updated successfully!", "success");
+                        DOM.changePasswordForm.reset();
+                    } catch (error) {
+                        ui.showToast(getAuthErrorMessage(error.code), "error");
+                    } finally {
+                        ui.toggleButtonLoading(DOM.savePasswordBtn, false);
+                    }
+                },
+
+                handleDeleteAccount: async (e) => {
+                    e.preventDefault();
+                    ui.showConfirmModal(
+                        'Account ကို အပြီးတိုင်ဖျက်ရန်?',
+                        'ဤလုပ်ဆောင်ချက်ကို နောက်ပြန်ပြင်၍မရပါ။ သင်၏ data များအားလုံး အပြီးတိုင် ဖျက်သိမ်းသွားပါမည်။ သေချာပါသလား?',
+                        async () => {
+                            const user = auth.currentUser;
+                            const password = DOM.deletePasswordInput.value;
+                            if (!user || !password) {
+                                ui.showToast("အတည်ပြုရန် သင်၏ password ကိုထည့်ပါ။", "error");
+                                return;
+                            }
+                            
+                            ui.toggleButtonLoading(DOM.deleteAccountBtn, true);
+                            try {
+                                const credential = EmailAuthProvider.credential(user.email, password);
+                                await reauthenticateWithCredential(user, credential);
+                                
+                                const salesCollectionRef = collection(db, 'artifacts', state.appId, 'users', user.uid, 'sales');
+                                const customersCollectionRef = collection(db, 'artifacts', state.appId, 'users', user.uid, 'customers');
+                                const expensesCollectionRef = collection(db, 'artifacts', state.appId, 'users', user.uid, 'expenses');
+                                
+                                const salesSnapshot = await getDocs(salesCollectionRef);
+                                const customersSnapshot = await getDocs(customersCollectionRef);
+                                const expensesSnapshot = await getDocs(expensesCollectionRef);
+
+                                const deletePromises = [
+                                    ...salesSnapshot.docs.map(doc => deleteDoc(doc.ref)),
+                                    ...customersSnapshot.docs.map(doc => deleteDoc(doc.ref)),
+                                    ...expensesSnapshot.docs.map(doc => deleteDoc(doc.ref))
+                                ];
+                                await Promise.all(deletePromises);
+                                
+                                await deleteUser(user);
+                                ui.showToast("Account ကို အောင်မြင်စွာဖျက်ပြီးပါပြီ။", "success");
+                                ui.closeModal(DOM.profileModal);
+                            } catch (error) {
+                                ui.showToast(getAuthErrorMessage(error.code), "error");
+                            } finally {
+                                ui.toggleButtonLoading(DOM.deleteAccountBtn, false);
+                            }
+                        }
+                    );
+                },
+
+                handleAddCustomer: async (e) => {
+                    e.preventDefault();
+                    if (!validateForm([DOM.customerNameInput])) return;
+                    
+                    const newCustomer = {
+                        name: DOM.customerNameInput.value.trim(),
+                        phone: DOM.customerPhoneInput.value.trim(),
+                        timestamp: serverTimestamp()
+                    };
+                    
+                    try {
+                        await firestore.addCustomer(newCustomer);
+                        ui.showToast("ဝယ်သူအသစ်ထည့်ခြင်း အောင်မြင်ပါသည်။", "success");
+                        DOM.addCustomerForm.reset();
+                    } catch (error) {
+                        console.error("Error adding customer:", error);
+                        ui.showToast("ဝယ်သူအသစ်ထည့်ရာတွင် အမှားအယွင်းဖြစ်သွားပါသည်။", "error");
+                    }
+                },
+
+                handleCustomersListClick: (e) => {
+                    const card = e.target.closest('.card');
+                    if (!card) return;
+                    const customerId = card.dataset.id;
+                    const customer = state.allCustomers.find(c => c.id === customerId);
+                    if (customer) {
+                        ui.renderCustomerModal(customer);
+                    }
+                },
+
+                handleUpdateCustomer: async (e) => {
+                    e.preventDefault();
+                    const customerId = DOM.editCustomerId.value;
+                    const updatedData = {
+                        name: DOM.editCustomerName.value.trim(),
+                        phone: DOM.editCustomerPhone.value.trim(),
+                    };
+                    try {
+                        await firestore.updateCustomer(customerId, updatedData);
+                        ui.showToast("Customer details updated.", "success");
+                        ui.closeModal(DOM.customerModal);
+                    } catch (error) {
+                        console.error("Error updating customer:", error);
+                        ui.showToast("Failed to update customer.", "error");
+                    }
+                },
+
+                handleDeleteCustomer: () => {
+                    const customerId = DOM.editCustomerId.value;
+                    const customerName = DOM.editCustomerName.value;
+                    ui.showConfirmModal(
+                        `Delete ${customerName}?`,
+                        "This will only delete the customer, not their past sales records. Are you sure?",
+                        async () => {
+                            try {
+                                await firestore.deleteCustomer(customerId);
+                                ui.showToast("Customer deleted.", "success");
+                                ui.closeModal(DOM.customerModal);
+                            } catch (error) {
+                                console.error("Error deleting customer:", error);
+                                ui.showToast("Failed to delete customer.", "error");
+                            }
+                        }
+                    );
+                },
+
+                handleAddExpense: async (e) => {
+                    e.preventDefault();
+                    if (!validateForm([DOM.expenseDateInput, DOM.expenseCategoryInput, DOM.expenseAmountInput])) return;
+
+                    const newExpense = {
+                        date: DOM.expenseDateInput.value,
+                        category: DOM.expenseCategoryInput.value.trim(),
+                        amount: parseFloat(DOM.expenseAmountInput.value),
+                        description: DOM.expenseDescriptionInput.value.trim(),
+                        timestamp: serverTimestamp()
+                    };
+
+                    try {
+                        await firestore.addExpense(newExpense);
+                        ui.showToast("အသုံးစရိတ်ထည့်ခြင်း အောင်မြင်ပါသည်။", "success");
+                        DOM.addExpenseForm.reset();
+                        DOM.expenseDateInput.value = new Date().toISOString().split('T')[0];
+                    } catch(error) {
+                        console.error("Error adding expense:", error);
+                        ui.showToast("အသုံးစရိတ်ထည့်ရာတွင် အမှားအယွင်းဖြစ်သွားပါသည်။", "error");
+                    }
+                },
+
+                handleExpensesListClick: (e) => {
+                    const button = e.target.closest('button');
+                    if (!button) return;
+                    const expenseId = button.dataset.id;
+                    if (!expenseId) return;
+
+                    if (button.classList.contains('delete-expense-btn')) {
+                        ui.showConfirmModal('အသုံးစရိတ်ဖျက်ရန်', 'ဤစာရင်းကို ဖျက်ရန်သေချာပါသလား?', async () => {
+                            try {
+                                await firestore.deleteExpense(expenseId);
+                                ui.showToast("အသုံးစရိတ်ကိုအောင်မြင်စွာဖျက်ပြီးပါပြီ။", "success");
+                            } catch (error) {
+                                ui.showToast("အသုံးစရိတ်ဖျက်ရာတွင် အမှားအယွင်းဖြစ်သွားပါသည်။", "error");
+                            }
+                        });
+                    }
+                    if (button.classList.contains('edit-expense-btn')) {
+                        const expenseToEdit = state.allExpenses.find(exp => exp.id === expenseId);
+                        if (expenseToEdit) {
+                            DOM.editExpenseId.value = expenseToEdit.id;
+                            DOM.editExpenseDate.value = expenseToEdit.date;
+                            DOM.editExpenseCategory.value = expenseToEdit.category;
+                            DOM.editExpenseAmount.value = expenseToEdit.amount;
+                            DOM.editExpenseDescription.value = expenseToEdit.description || '';
+                            ui.openModal(DOM.editExpenseModal);
+                        }
+                    }
+                },
+
+                handleUpdateExpense: async (e) => {
+                    e.preventDefault();
+                    const expenseId = DOM.editExpenseId.value;
+                    const updatedData = {
+                        date: DOM.editExpenseDate.value,
+                        category: DOM.editExpenseCategory.value.trim(),
+                        amount: parseFloat(DOM.editExpenseAmount.value),
+                        description: DOM.editExpenseDescription.value.trim(),
+                    };
+                    try {
+                        await firestore.updateExpense(expenseId, updatedData);
+                        ui.showToast("Expense details updated.", "success");
+                        ui.closeModal(DOM.editExpenseModal);
+                    } catch (error) {
+                        console.error("Error updating expense:", error);
+                        ui.showToast("Failed to update expense.", "error");
+                    }
+                },
             };
             
-            const handleDeleteAccount = async (e) => {
-                e.preventDefault();
-                const user = auth.currentUser;
-                const password = deletePasswordInput.value;
-
-                if (!user || !password) return;
-
-                toggleButtonLoading(deleteAccountBtn, true);
-                
-                try {
-                    // 1. Re-authenticate user
-                    const credential = EmailAuthProvider.credential(user.email, password);
-                    await reauthenticateWithCredential(user, credential);
-
-                    // 2. Delete all user data from Firestore
-                    const salesCollectionRef = collection(db, 'artifacts', appId, 'users', user.uid, 'sales');
-                    const querySnapshot = await getDocs(salesCollectionRef);
-                    const deletePromises = [];
-                    querySnapshot.forEach((doc) => {
-                        deletePromises.push(deleteDoc(doc.ref));
-                    });
-                    await Promise.all(deletePromises);
-                    console.log("All user data deleted from Firestore.");
-
-                    // 3. Delete the user account
-                    await deleteUser(user);
-                    showToast("Account deleted successfully.", "success");
-                    closeModal(profileModal); 
-                } catch (error) {
-                    console.error("Error deleting account:", error);
-                    showToast(getAuthErrorMessage(error.code), "error");
-                } finally {
-                    toggleButtonLoading(deleteAccountBtn, false);
+            // --- Helper Functions ---
+            function getAuthErrorMessage(code) {
+                switch (code) {
+                    case 'auth/invalid-email': return 'Email လိပ်စာ မှားယွင်းနေပါသည်။';
+                    case 'auth/user-not-found': return 'ဤ Email ဖြင့် account မရှိပါ။';
+                    case 'auth/wrong-password': return 'Password မှားယွင်းနေပါသည်။';
+                    case 'auth/weak-password': return 'Password အနည်းဆုံး စာလုံး ၆ လုံးရှိရပါမည်။';
+                    case 'auth/email-already-in-use': return 'ဤ Email ဖြင့် account ဖွင့်ပြီးသားဖြစ်ပါသည်။';
+                    case 'auth/requires-recent-login': return 'လုံခြုံရေးအရ အချိန်အနည်းငယ်အတွင်း ပြန်လည် login ဝင်ရန်လိုအပ်ပါသည်။';
+                    case 'auth/operation-not-allowed': return 'Firebase project တွင် Email/Password sign-in ကို enable မလုပ်ရသေးပါ။';
+                    default: 
+                        console.error(`Unhandled Auth Error Code: ${code}`);
+                        return `An unknown error occurred. (Error: ${code})`;
                 }
-            };
+            }
+
+            function copyToClipboard(text) {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    ui.showToast("User ID ကို copy ကူးပြီးပါပြီ။", "success");
+                } catch (err) {
+                    ui.showToast("User ID ကို copy ကူးမရပါ။", "error");
+                }
+                document.body.removeChild(textArea);
+            }
+
+            function validateForm(fields) {
+                let isValid = true;
+                fields.forEach(input => {
+                    input.classList.remove('invalid');
+                    if (!input.value.trim()) {
+                        input.classList.add('invalid');
+                        isValid = false;
+                    }
+                });
+                if (!isValid) {
+                    ui.showToast("ကျေးဇူးပြု၍ အနီရောင်ပြထားသော အကွက်များကို ဖြည့်စွက်ပါ။", "error");
+                }
+                return isValid;
+            }
+
+            // --- Event Listener Setup ---
+            function initEventListeners() {
+                DOM.authThemeToggle.addEventListener('change', ui.toggleTheme);
+                DOM.appThemeToggle.addEventListener('change', ui.toggleTheme);
+                DOM.loginForm.addEventListener('submit', handlers.handleLogin);
+                DOM.registerBtn.addEventListener('click', handlers.handleRegister);
+                DOM.logoutBtn.addEventListener('click', () => signOut(auth));
+                DOM.addSaleForm.addEventListener('submit', handlers.handleAddSale);
+                DOM.salesListContainer.addEventListener('click', handlers.handleSalesListClick);
+                
+                [DOM.filterStartDateInput, DOM.filterEndDateInput, DOM.searchInput].forEach(el => {
+                    el.addEventListener('input', ui.applyFiltersAndRender);
+                });
+
+                DOM.clearFilterBtn.addEventListener('click', () => { 
+                    DOM.filterStartDateInput.value = ''; 
+                    DOM.filterEndDateInput.value = '';
+                    DOM.searchInput.value = '';
+                    ui.applyFiltersAndRender(); 
+                });
+                
+                DOM.exportCsvBtn.addEventListener('click', () => handlers.handleExport(false));
+                DOM.exportAllCsvBtn.addEventListener('click', () => handlers.handleExport(true));
+                
+                DOM.editSaleForm.addEventListener('submit', handlers.handleUpdateSale);
+                DOM.closeModalBtn.addEventListener('click', () => ui.closeModal(DOM.editModal));
+                DOM.cancelEditBtn.addEventListener('click', () => ui.closeModal(DOM.editModal));
+                DOM.editModal.addEventListener('click', (e) => { if (e.target === DOM.editModal) ui.closeModal(DOM.editModal); });
+
+                DOM.closeProfileModalBtn.addEventListener('click', () => ui.closeModal(DOM.profileModal));
+                DOM.profileModal.addEventListener('click', (e) => { if (e.target === DOM.profileModal) ui.closeModal(DOM.profileModal); });
+                DOM.changePasswordForm.addEventListener('submit', handlers.handleChangePassword);
+                DOM.deleteAccountForm.addEventListener('submit', handlers.handleDeleteAccount);
+                DOM.copyUserIdBtn.addEventListener('click', () => copyToClipboard(DOM.userIdDisplay.value));
+                
+                DOM.moreMenuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    DOM.moreMenuDropdown.classList.toggle('hidden');
+                });
+                document.addEventListener('click', () => DOM.moreMenuDropdown.classList.add('hidden'));
+
+                // Menu items
+                DOM.menuProfileBtn.addEventListener('click', (e) => { e.preventDefault(); ui.openModal(DOM.profileModal); });
+                const simpleModals = [
+                    { btn: DOM.menuAboutBtn, modal: DOM.aboutModal, closeBtn: DOM.closeAboutModalBtn, okBtn: DOM.aboutModalOkBtn },
+                    { btn: DOM.menuSecurityBtn, modal: DOM.securityModal, closeBtn: DOM.closeSecurityModalBtn, okBtn: DOM.securityModalOkBtn },
+                    { btn: DOM.menuPrivacyBtn, modal: DOM.privacyModal, closeBtn: DOM.closePrivacyModalBtn, okBtn: DOM.privacyModalOkBtn },
+                    { btn: DOM.menuDeveloperBtn, modal: DOM.developerModal, closeBtn: DOM.closeDeveloperModalBtn, okBtn: DOM.developerModalOkBtn },
+                ];
+                simpleModals.forEach(({ btn, modal, closeBtn, okBtn }) => {
+                    btn.addEventListener('click', (e) => { e.preventDefault(); ui.openModal(modal); });
+                    closeBtn.addEventListener('click', () => ui.closeModal(modal));
+                    okBtn.addEventListener('click', () => ui.closeModal(modal));
+                });
+                
+                DOM.confirmCancelBtn.addEventListener('click', () => ui.closeModal(DOM.confirmModal));
+                DOM.confirmOkBtn.addEventListener('click', () => {
+                    if (state.confirmCallback) state.confirmCallback();
+                    ui.closeModal(DOM.confirmModal);
+                });
+                DOM.confirmModal.addEventListener('click', (e) => { if (e.target === DOM.confirmModal) ui.closeModal(DOM.confirmModal); });
+
+                // Tab switching logic
+                const tabs = [
+                    { btn: DOM.tabDaily, view: DOM.dailyView },
+                    { btn: DOM.tabMonthly, view: DOM.monthlyView },
+                    { btn: DOM.tabCustomers, view: DOM.customersView },
+                    { btn: DOM.tabExpenses, view: DOM.expensesView },
+                    { btn: DOM.tabAnalysis, view: DOM.analysisView }
+                ];
+                tabs.forEach(tab => {
+                    tab.btn.addEventListener('click', () => {
+                        tabs.forEach(t => {
+                            t.btn.classList.remove('active');
+                            t.view.classList.add('hidden');
+                        });
+                        tab.btn.classList.add('active');
+                        tab.view.classList.remove('hidden');
+                    });
+                });
+
+                // CRM Event Listeners
+                DOM.addCustomerForm.addEventListener('submit', handlers.handleAddCustomer);
+                DOM.customerSearchInput.addEventListener('input', ui.renderCustomersList);
+                DOM.customersListContainer.addEventListener('click', handlers.handleCustomersListClick);
+                DOM.closeCustomerModalBtn.addEventListener('click', () => ui.closeModal(DOM.customerModal));
+                DOM.customerModal.addEventListener('click', (e) => { if (e.target === DOM.customerModal) ui.closeModal(DOM.customerModal); });
+                DOM.editCustomerForm.addEventListener('submit', handlers.handleUpdateCustomer);
+                DOM.deleteCustomerBtn.addEventListener('click', handlers.handleDeleteCustomer);
+
+                // Expense Event Listeners
+                DOM.addExpenseForm.addEventListener('submit', handlers.handleAddExpense);
+                DOM.expensesListContainer.addEventListener('click', handlers.handleExpensesListClick);
+                DOM.closeEditExpenseModalBtn.addEventListener('click', () => ui.closeModal(DOM.editExpenseModal));
+                DOM.cancelEditExpenseBtn.addEventListener('click', () => ui.closeModal(DOM.editExpenseModal));
+                DOM.editExpenseModal.addEventListener('click', (e) => { if (e.target === DOM.editExpenseModal) ui.closeModal(DOM.editExpenseModal); });
+                DOM.editExpenseForm.addEventListener('submit', handlers.handleUpdateExpense);
+
+                window.addEventListener('online', () => ui.updateConnectionStatus(true));
+                window.addEventListener('offline', () => ui.updateConnectionStatus(false));
+            }
 
             // --- Main App Initialization ---
-            const initApp = () => {
-                console.log(`Initializing app with Project ID: ${app.options.projectId} and App ID: ${appId}`);
+            function init() {
+                console.log(`Initializing app with Project ID: ${app.options.projectId} and App ID: ${state.appId}`);
                 
-                // Setup all event listeners
-                authThemeToggle.addEventListener('change', toggleTheme);
-                appThemeToggle.addEventListener('change', toggleTheme);
-                loginForm.addEventListener('submit', handleLogin);
-                registerBtn.addEventListener('click', handleRegister);
-                logoutBtn.addEventListener('click', () => signOut(auth));
-                addSaleForm.addEventListener('submit', handleAddSale);
-                salesListContainer.addEventListener('click', handleListClick);
+                document.addEventListener('contextmenu', event => event.preventDefault());
                 
-                [filterStartDateInput, filterEndDateInput, searchInput].forEach(el => {
-                    el.addEventListener('input', applyFiltersAndRender);
-                });
+                enableIndexedDbPersistence(db).catch(console.warn);
 
-                clearFilterBtn.addEventListener('click', () => { 
-                    filterStartDateInput.value = ''; 
-                    filterEndDateInput.value = '';
-                    searchInput.value = '';
-                    applyFiltersAndRender(); 
-                });
-                
-                exportCsvBtn.addEventListener('click', () => handleExport(filteredSales, 'filtered'));
-                exportAllCsvBtn.addEventListener('click', () => handleExport(allSales, 'all'));
-                
-                editSaleForm.addEventListener('submit', handleUpdateSale);
-                closeModalBtn.addEventListener('click', closeEditModal);
-                cancelEditBtn.addEventListener('click', closeEditModal);
-                editModal.addEventListener('click', (e) => { if (e.target === editModal) closeEditModal(); });
+                initEventListeners();
 
-                // Profile Modal Listeners
-                closeProfileModalBtn.addEventListener('click', () => closeModal(profileModal));
-                profileModal.addEventListener('click', (e) => { if (e.target === profileModal) closeModal(profileModal); });
-                changePasswordForm.addEventListener('submit', handleChangePassword);
-                changeEmailForm.addEventListener('submit', handleChangeEmail);
-                deleteAccountForm.addEventListener('submit', handleDeleteAccount);
+                const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                ui.applyTheme(savedTheme);
+                DOM.saleDateInput.value = new Date().toISOString().split('T')[0];
+                DOM.expenseDateInput.value = new Date().toISOString().split('T')[0];
 
-                // More Menu Dropdown
-                moreMenuBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    moreMenuDropdown.classList.toggle('hidden');
-                });
-                document.addEventListener('click', () => moreMenuDropdown.classList.add('hidden'));
-
-                // New Menu Items
-                menuProfileBtn.addEventListener('click', (e) => { e.preventDefault(); openProfileModal(); });
-                menuAboutBtn.addEventListener('click', (e) => { e.preventDefault(); openModal(aboutModal); });
-                menuSecurityBtn.addEventListener('click', (e) => { e.preventDefault(); openModal(securityModal); });
-                menuPrivacyBtn.addEventListener('click', (e) => { e.preventDefault(); openModal(privacyModal); });
-                menuDeveloperBtn.addEventListener('click', (e) => { e.preventDefault(); openModal(developerModal); });
-
-                // New Modals Close Buttons
-                closeAboutModalBtn.addEventListener('click', () => closeModal(aboutModal));
-                aboutModalOkBtn.addEventListener('click', () => closeModal(aboutModal));
-                closeSecurityModalBtn.addEventListener('click', () => closeModal(securityModal));
-                securityModalOkBtn.addEventListener('click', () => closeModal(securityModal));
-                closePrivacyModalBtn.addEventListener('click', () => closeModal(privacyModal));
-                privacyModalOkBtn.addEventListener('click', () => closeModal(privacyModal));
-                closeDeveloperModalBtn.addEventListener('click', () => closeModal(developerModal));
-                developerModalOkBtn.addEventListener('click', () => closeModal(developerModal));
-
-
-                confirmCancelBtn.addEventListener('click', closeConfirmModal);
-                confirmOkBtn.addEventListener('click', () => {
-                    if (confirmCallback) confirmCallback();
-                    closeConfirmModal();
-                });
-                confirmModal.addEventListener('click', (e) => { if (e.target === confirmModal) closeConfirmModal(); });
-
-                tabDaily.addEventListener('click', () => {
-                    tabDaily.classList.add('active');
-                    tabMonthly.classList.remove('active');
-                    dailyView.classList.remove('hidden');
-                    monthlyView.classList.add('hidden');
-                });
-                tabMonthly.addEventListener('click', () => {
-                    tabMonthly.classList.add('active');
-                    tabDaily.classList.remove('active');
-                    monthlyView.classList.remove('hidden');
-                    dailyView.classList.add('hidden');
-                });
-
-                window.addEventListener('online', () => updateConnectionStatus(true));
-                window.addEventListener('offline', () => updateConnectionStatus(false));
-
-                // Set initial state
-                const savedTheme = localStorage.getItem('theme') || 
-                                  (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-                applyTheme(savedTheme);
-                setDefaultDate();
-
-                // --- Central Auth Handler ---
                 onAuthStateChanged(auth, user => {
-                    console.log("Auth state changed. User:", user ? user.uid : 'No User');
+                    if (!state.isAuthReady) {
+                        state.isAuthReady = true;
+                        DOM.initialLoader.classList.add('hidden');
+                    }
+                    
                     if (user && !user.isAnonymous) {
-                        // User is logged in
-                        console.log(`Authenticated as ${user.email}. Fetching data...`);
-                        authSection.classList.add('hidden');
-                        appSection.classList.remove('hidden');
-                        userEmailDisplay.textContent = user.email;
-                        dropdownUserEmail.textContent = user.email;
-                        setupRealtimeListener(user.uid);
+                        DOM.authSection.classList.add('hidden');
+                        DOM.appSection.classList.remove('hidden');
+                        DOM.userEmailDisplay.textContent = user.email;
+                        DOM.dropdownUserEmail.textContent = user.email;
+                        DOM.userIdDisplay.value = user.uid;
+                        firestore.setupRealtimeListener(user.uid);
+                        firestore.setupCustomersListener(user.uid);
+                        firestore.setupExpensesListener(user.uid);
                     } else {
-                        // User is logged out
-                        console.log("User is logged out. Clearing data and showing login form.");
-                        authSection.classList.remove('hidden');
-                        appSection.classList.add('hidden');
-                        userEmailDisplay.textContent = '';
-                        dropdownUserEmail.textContent = '';
-                        if (unsubscribeFromSales) {
-                            unsubscribeFromSales();
-                        }
-                        allSales = [];
-                        updateDashboardUI();
+                        DOM.authSection.classList.remove('hidden');
+                        DOM.appSection.classList.add('hidden');
+                        if (state.unsubscribeFromSales) state.unsubscribeFromSales();
+                        if (state.unsubscribeFromCustomers) state.unsubscribeFromCustomers();
+                        if (state.unsubscribeFromExpenses) state.unsubscribeFromExpenses();
+                        state.allSales = [];
+                        state.allCustomers = [];
+                        state.allExpenses = [];
+                        ui.updateDashboard();
                     }
                 });
 
-                // Handle initial auth if provided by the environment
-                const attemptInitialSignIn = async () => {
-                    try {
-                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                            console.log("Attempting sign-in with provided token...");
-                            await signInWithCustomToken(auth, __initial_auth_token);
-                        } else {
-                            console.log("No initial auth token found. Waiting for user login.");
-                        }
-                    } catch (error) {
-                        console.error("Automatic sign-in with token failed:", error);
-                        authError.textContent = "Session authentication failed.";
-                    }
-                };
-                
-                attemptInitialSignIn();
-            };
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    signInWithCustomToken(auth, __initial_auth_token).catch(error => {
+                        console.error("Automatic sign-in failed:", error);
+                        DOM.authError.textContent = "Session authentication failed.";
+                    });
+                }
+            }
 
-            // Start the application
-            initApp();
+            init();
         });
     </script>
 </body>
