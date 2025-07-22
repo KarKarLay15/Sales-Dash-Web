@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-beautify@1.14.7/js/lib/beautify-html.js"></script>
     <style>
         :root {
             --bg-color: #f4f7fe;
@@ -108,6 +110,11 @@
             color: #a78bfa;
             border-bottom-color: #a78bfa;
         }
+        .tab.disabled {
+            color: var(--text-muted-color);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
         
         .pagination-btn {
             min-width: 40px;
@@ -157,6 +164,9 @@
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
+        }
+        .pro-feature {
+            display: none; /* Hide Pro features by default */
         }
     </style>
 </head>
@@ -254,11 +264,56 @@
         </div>
     </div>
 
+    <!-- Pricing Section -->
+    <div id="pricing-section" class="min-h-screen bg-[var(--bg-color)] p-4 sm:p-8 flex flex-col items-center justify-center hidden">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4">သင့်အတွက် အသင့်တော်ဆုံး Plan ကိုရွေးချယ်ပါ</h1>
+            <p class="text-lg text-[var(--text-muted-color)] max-w-2xl mx-auto">သင်၏လုပ်ငန်းလိုအပ်ချက်နှင့်ကိုက်ညီမည့် Plan ကို ရွေးချယ်ပြီး SalesDash ၏ အစွမ်းထက် Feature များကို စတင်အသုံးပြုလိုက်ပါ။</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full">
+            <!-- Free Plan -->
+            <div class="card rounded-2xl p-8 flex flex-col">
+                <h2 class="text-2xl font-bold text-center">အခမဲ့ Plan</h2>
+                <p class="text-center text-[var(--text-muted-color)] mb-6">လုပ်ငန်းငယ်များအတွက်</p>
+                <p class="text-4xl font-bold text-center mb-8">0 <span class="text-lg font-medium text-[var(--text-muted-color)]">MMK/month</span></p>
+                <ul class="space-y-4 mb-8 flex-grow">
+                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500"></i> အရောင်း/အဝယ် စာရင်းသွင်းခြင်း</li>
+                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500"></i> အမြတ် တွက်ချက်ခြင်း</li>
+                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500"></i> Cloud Sync & Offline Access</li>
+                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500"></i> အခြေခံ Report များ</li>
+                </ul>
+                <button data-plan="free" class="select-plan-btn btn w-full bg-gray-200 dark:bg-gray-700 font-bold py-3 px-4 rounded-lg">ဤ Plan ကိုရွေးမည်</button>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="card rounded-2xl p-8 flex flex-col border-2 border-[var(--primary-color)] relative">
+                <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-[var(--primary-color)] text-white px-4 py-1 rounded-full text-sm font-semibold">Recommended</div>
+                <h2 class="text-2xl font-bold text-center">Pro Plan</h2>
+                <p class="text-center text-[var(--text-muted-color)] mb-6">လုပ်ငန်းတိုးချဲ့လိုသူများအတွက်</p>
+                <p class="text-4xl font-bold text-center mb-8">10,000 <span class="text-lg font-medium text-[var(--text-muted-color)]">MMK/month</span></p>
+                <ul class="space-y-4 mb-8 flex-grow">
+                    <li class="flex items-center gap-3"><i class="fas fa-star text-yellow-500"></i> အခမဲ့ Plan မှ Feature များအားလုံး</li>
+                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500"></i> ဝန်ထမ်းအကောင့် (Staff Access)</li>
+                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500"></i> အသေးစိတ် Report များ (Advanced)</li>
+                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500"></i> PDF Report တွင် Logo ထည့်သွင်းနိုင်ခြင်း</li>
+                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500"></i> ဦးစားပေး Customer Support</li>
+                </ul>
+                <button data-plan="pro" class="select-plan-btn btn btn-primary-solid w-full text-white font-bold py-3 px-4 rounded-lg">Pro Plan သို့ Upgrade လုပ်မည်</button>
+            </div>
+        </div>
+        <button id="logout-from-pricing-btn" class="mt-8 text-sm text-[var(--text-muted-color)] hover:underline">Logout</button>
+    </div>
+
+
     <!-- App Section -->
     <div id="app" class="container mx-auto p-2 sm:p-4 md:p-6 lg:p-8 max-w-7xl hidden">
         <header class="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-10 gap-4">
             <div>
-                <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary-start-color)] to-[var(--primary-end-color)]">Sales Dashboard</h1>
+                <div class="flex items-center gap-3">
+                    <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary-start-color)] to-[var(--primary-end-color)]">Sales Dashboard</h1>
+                    <span id="plan-badge" class="px-3 py-1 text-xs font-bold text-white rounded-full"></span>
+                </div>
                 <div class="flex items-center gap-2 mt-2">
                     <div id="connection-status" class="w-3 h-3 rounded-full bg-gray-400 transition-colors" title="Connecting..."></div>
                     <p id="user-email-display" class="text-[var(--text-muted-color)] text-sm"></p>
@@ -288,19 +343,16 @@
                             <a href="#" id="menu-profile-btn" class="flex items-center px-4 py-2 text-sm hover:bg-[var(--bg-color)]">
                                 <i class="fas fa-user-cog w-6 text-center mr-2 text-[var(--text-muted-color)]"></i> Profile Settings
                             </a>
-                            <a href="#" id="menu-security-btn" class="flex items-center px-4 py-2 text-sm hover:bg-[var(--bg-color)]">
-                                <i class="fas fa-shield-alt w-6 text-center mr-2 text-[var(--text-muted-color)]"></i> Security
+                            <a href="#" id="menu-subscription-btn" class="flex items-center px-4 py-2 text-sm hover:bg-[var(--bg-color)]">
+                                <i class="fas fa-gem w-6 text-center mr-2 text-[var(--text-muted-color)]"></i> My Subscription
                             </a>
-                            <a href="#" id="menu-privacy-btn" class="flex items-center px-4 py-2 text-sm hover:bg-[var(--bg-color)]">
-                                <i class="fas fa-user-shield w-6 text-center mr-2 text-[var(--text-muted-color)]"></i> Personal Data & Privacy
+                            <a href="#" id="menu-support-btn" class="pro-feature flex items-center px-4 py-2 text-sm hover:bg-[var(--bg-color)] text-green-600 dark:text-green-400 font-semibold">
+                                <i class="fas fa-headset w-6 text-center mr-2"></i> Priority Support
                             </a>
                         </div>
                         <div class="py-2 border-t border-[var(--border-color)]">
                             <a href="#" id="menu-about-btn" class="flex items-center px-4 py-2 text-sm hover:bg-[var(--bg-color)]">
                                 <i class="fas fa-info-circle w-6 text-center mr-2 text-[var(--text-muted-color)]"></i> About SalesDash
-                            </a>
-                             <a href="#" id="menu-developer-btn" class="flex items-center px-4 py-2 text-sm hover:bg-[var(--bg-color)]">
-                                <i class="fas fa-code w-6 text-center mr-2 text-[var(--text-muted-color)]"></i> Developer
                             </a>
                         </div>
                         <div class="p-2 border-t border-[var(--border-color)]">
@@ -350,12 +402,17 @@
                     <button id="tab-customers" class="tab pb-3 pt-4 px-1 font-medium text-sm sm:text-base text-[var(--text-muted-color)] whitespace-nowrap">
                         <i class="fas fa-users mr-2"></i>ဝယ်သူများ
                     </button>
-                    <!-- FEATURE: Expenses Tab -->
                     <button id="tab-expenses" class="tab pb-3 pt-4 px-1 font-medium text-sm sm:text-base text-[var(--text-muted-color)] whitespace-nowrap">
                         <i class="fas fa-file-invoice-dollar mr-2"></i>အသုံးစရိတ်
                     </button>
                     <button id="tab-analysis" class="tab pb-3 pt-4 px-1 font-medium text-sm sm:text-base text-[var(--text-muted-color)] whitespace-nowrap">
                         <i class="fas fa-chart-bar mr-2"></i>သုံးသပ်ချက်
+                    </button>
+                    <button id="tab-staff" class="pro-feature tab pb-3 pt-4 px-1 font-medium text-sm sm:text-base text-[var(--text-muted-color)] whitespace-nowrap">
+                        <i class="fas fa-user-friends mr-2"></i>ဝန်ထမ်းများ
+                    </button>
+                    <button id="tab-goals" class="tab pb-3 pt-4 px-1 font-medium text-sm sm:text-base text-[var(--text-muted-color)] whitespace-nowrap">
+                        <i class="fas fa-flag-checkered mr-2"></i>ရည်မှန်းချက် & Reports
                     </button>
                 </nav>
             </div>
@@ -507,7 +564,7 @@
                 </div>
             </div>
 
-            <!-- FEATURE: Expenses View Content -->
+            <!-- Expenses View Content -->
             <div id="expenses-view" class="hidden fade-in">
                 <!-- Add Expense Form -->
                 <div class="card p-4 sm:p-6 md:p-8 rounded-2xl mb-8">
@@ -558,59 +615,111 @@
 
             <!-- Analysis View Content -->
             <div id="analysis-view" class="hidden fade-in">
-                <!-- FEATURE: New Summary Cards for Analysis -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8">
-                    <div class="card p-4 sm:p-6 rounded-2xl fade-in relative overflow-hidden">
-                        <i class="fa-solid fa-money-bill-wave absolute -right-4 -top-4 text-7xl sm:text-8xl text-red-500/10"></i>
-                        <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-xs sm:text-sm tracking-wider">စုစုပေါင်းအသုံးစရိတ်</h3>
-                        <p id="total-expenses" class="text-xl sm:text-3xl font-bold text-red-500">0 MMK</p>
-                    </div>
-                    <div class="card p-4 sm:p-6 rounded-2xl fade-in relative overflow-hidden" style="animation-delay: 100ms;">
-                        <i class="fa-solid fa-piggy-bank absolute -right-4 -top-4 text-7xl sm:text-8xl text-green-500/10"></i>
-                        <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-xs sm:text-sm tracking-wider">အသားတင်အမြတ်</h3>
-                        <p id="net-profit" class="text-xl sm:text-3xl font-bold text-green-500">0 MMK</p>
-                    </div>
-                    <div class="card p-4 sm:p-6 rounded-2xl fade-in relative overflow-hidden" style="animation-delay: 200ms;">
-                        <i class="fa-solid fa-users absolute -right-4 -top-4 text-7xl sm:text-8xl text-blue-500/10"></i>
-                        <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-xs sm:text-sm tracking-wider">စုစုပေါင်းဝယ်သူ</h3>
-                        <p id="total-customers" class="text-xl sm:text-3xl font-bold text-blue-500">0</p>
-                    </div>
+                <div id="analysis-pro-lock" class="hidden text-center py-16 text-[var(--text-muted-color)] card rounded-2xl">
+                    <i class="fas fa-lock text-5xl mb-4 text-yellow-500"></i>
+                    <p class="text-lg font-semibold">Pro Feature</p>
+                    <p class="text-sm mt-2 max-w-md mx-auto">အသေးစိတ် သုံးသပ်ချက်များနှင့် Chart များကို ကြည့်ရှုရန် Pro Plan သို့ Upgrade လုပ်ရန်လိုအပ်ပါသည်။</p>
+                    <button id="upgrade-from-analysis-btn" class="btn btn-primary-solid text-white font-bold py-2 px-6 rounded-lg mt-6">Pro Plan သို့ Upgrade လုပ်ရန်</button>
                 </div>
+                <div id="analysis-content">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8">
+                        <div class="card p-4 sm:p-6 rounded-2xl fade-in relative overflow-hidden">
+                            <i class="fa-solid fa-money-bill-wave absolute -right-4 -top-4 text-7xl sm:text-8xl text-red-500/10"></i>
+                            <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-xs sm:text-sm tracking-wider">စုစုပေါင်းအသုံးစရိတ်</h3>
+                            <p id="total-expenses" class="text-xl sm:text-3xl font-bold text-red-500">0 MMK</p>
+                        </div>
+                        <div class="card p-4 sm:p-6 rounded-2xl fade-in relative overflow-hidden" style="animation-delay: 100ms;">
+                            <i class="fa-solid fa-piggy-bank absolute -right-4 -top-4 text-7xl sm:text-8xl text-green-500/10"></i>
+                            <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-xs sm:text-sm tracking-wider">အသားတင်အမြတ်</h3>
+                            <p id="net-profit" class="text-xl sm:text-3xl font-bold text-green-500">0 MMK</p>
+                        </div>
+                        <div class="card p-4 sm:p-6 rounded-2xl fade-in relative overflow-hidden" style="animation-delay: 200ms;">
+                            <i class="fas fa-users absolute -right-4 -top-4 text-7xl sm:text-8xl text-blue-500/10"></i>
+                            <h3 class="text-[var(--text-muted-color)] font-semibold mb-2 uppercase text-xs sm:text-sm tracking-wider">စုစုပေါင်းဝယ်သူ</h3>
+                            <p id="total-customers" class="text-xl sm:text-3xl font-bold text-blue-500">0</p>
+                        </div>
+                    </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Sales Trend Chart -->
-                    <div class="card p-4 sm:p-6 rounded-2xl">
-                        <h3 class="text-lg font-bold mb-4">ရောင်းအားပြဇယား (ပြီးခဲ့သည့် ရက် ၃၀)</h3>
-                        <div class="h-80">
-                            <canvas id="salesTrendChart"></canvas>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Sales Trend Chart -->
+                        <div class="card p-4 sm:p-6 rounded-2xl">
+                            <h3 class="text-lg font-bold mb-4">ရောင်းအားပြဇယား (ပြီးခဲ့သည့် ရက် ၃၀)</h3>
+                            <div class="h-80">
+                                <canvas id="salesTrendChart"></canvas>
+                            </div>
+                        </div>
+                        <!-- Top Selling Products Chart -->
+                        <div class="card p-4 sm:p-6 rounded-2xl">
+                            <h3 class="text-lg font-bold mb-4">အရောင်းရဆုံး Product များ</h3>
+                            <div class="h-80">
+                                <canvas id="productSalesChart"></canvas>
+                            </div>
+                        </div>
+                        <!-- Monthly Profit Chart -->
+                        <div class="card p-4 sm:p-6 rounded-2xl">
+                            <h3 class="text-lg font-bold mb-4">လအလိုက် အမြတ်အစွန်း</h3>
+                            <div class="h-80">
+                                 <canvas id="monthlyProfitChart"></canvas>
+                            </div>
+                        </div>
+                        <!-- Expense Category Chart -->
+                        <div class="card p-4 sm:p-6 rounded-2xl">
+                            <h3 class="text-lg font-bold mb-4">အသုံးစရိတ်အမျိုးအစားများ</h3>
+                            <div class="h-80 flex items-center justify-center">
+                                <canvas id="expenseCategoryChart"></canvas>
+                            </div>
                         </div>
                     </div>
-                    <!-- Top Selling Products Chart -->
-                    <div class="card p-4 sm:p-6 rounded-2xl">
-                        <h3 class="text-lg font-bold mb-4">အရောင်းရဆုံး Product များ</h3>
-                        <div class="h-80">
-                            <canvas id="productSalesChart"></canvas>
-                        </div>
-                    </div>
-                    <!-- Monthly Profit Chart -->
-                    <div class="card p-4 sm:p-6 rounded-2xl">
-                        <h3 class="text-lg font-bold mb-4">လအလိုက် အမြတ်အစွန်း</h3>
-                        <div class="h-80">
-                             <canvas id="monthlyProfitChart"></canvas>
-                        </div>
-                    </div>
-                    <!-- Expense Category Chart -->
-                    <div class="card p-4 sm:p-6 rounded-2xl">
-                        <h3 class="text-lg font-bold mb-4">အသုံးစရိတ်အမျိုးအစားများ</h3>
-                        <div class="h-80 flex items-center justify-center">
-                            <canvas id="expenseCategoryChart"></canvas>
-                        </div>
+                     <div id="no-analysis-data" class="text-center py-16 text-[var(--text-muted-color)] card rounded-2xl hidden mt-8">
+                        <i class="fas fa-chart-pie text-5xl mb-4"></i>
+                        <p class="text-lg font-semibold">သုံးသပ်ချက်ပြသရန် Data မလုံလောက်ပါ</p>
+                        <p class="text-sm mt-2">အရောင်းစာရင်းများထည့်သွင်းပြီးနောက် ဤနေရာတွင် Chart များ ပေါ်လာပါမည်</p>
                     </div>
                 </div>
-                 <div id="no-analysis-data" class="text-center py-16 text-[var(--text-muted-color)] card rounded-2xl hidden mt-8">
-                    <i class="fas fa-chart-pie text-5xl mb-4"></i>
-                    <p class="text-lg font-semibold">သုံးသပ်ချက်ပြသရန် Data မလုံလောက်ပါ</p>
-                    <p class="text-sm mt-2">အရောင်းစာရင်းများထည့်သွင်းပြီးနောက် ဤနေရာတွင် Chart များ ပေါ်လာပါမည်</p>
+            </div>
+            
+            <!-- Staff View Content -->
+            <div id="staff-view" class="hidden fade-in">
+                <div class="text-center py-16 text-[var(--text-muted-color)] card rounded-2xl">
+                    <i class="fas fa-users-cog text-5xl mb-4"></i>
+                    <p class="text-lg font-semibold">ဝန်ထမ်းများ စီမံခန့်ခွဲရန်</p>
+                    <p class="text-sm mt-2 max-w-md mx-auto">ဤနေရာတွင် သင်၏ ဝန်ထမ်းအကောင့်များကို ထည့်သွင်းခြင်း၊ ပြင်ဆင်ခြင်းနှင့် ဖယ်ရှားခြင်းများ ပြုလုပ်နိုင်ပါမည်။</p>
+                    <button class="btn btn-primary-solid text-white font-bold py-2 px-6 rounded-lg mt-6">ဝန်ထမ်းအသစ်ထည့်ရန်</button>
+                </div>
+            </div>
+
+            <!-- Goals & Reports View Content -->
+            <div id="goals-view" class="hidden fade-in">
+                <!-- Monthly Sales Goal -->
+                <div class="card p-4 sm:p-6 md:p-8 rounded-2xl mb-8">
+                    <h2 class="text-xl sm:text-2xl font-bold mb-2">လစဉ်ရောင်းအား ရည်မှန်းချက်</h2>
+                    <p class="text-sm text-[var(--text-muted-color)] mb-6">ယခုလအတွက် သင်၏ ရောင်းအားရည်မှန်းချက်ကို သတ်မှတ်ပါ။</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="number" id="sales-target-input" placeholder="ဥပမာ: 500000" class="form-input w-full px-4 py-2 rounded-lg focus:ring-2 md:col-span-2">
+                        <button id="save-target-btn" class="btn btn-primary-solid w-full text-white font-bold py-2 px-4 rounded-lg">ရည်မှန်းချက်သတ်မှတ်မည်</button>
+                    </div>
+                    <div id="target-progress-container" class="mt-8">
+                        <!-- Progress bar will be rendered here by JS -->
+                    </div>
+                </div>
+                
+                <!-- Reports -->
+                <div class="card p-4 sm:p-6 md:p-8 rounded-2xl">
+                    <h2 class="text-xl sm:text-2xl font-bold mb-2">အစီရင်ခံစာများ</h2>
+                    <p class="text-sm text-[var(--text-muted-color)] mb-6">သင်၏ လုပ်ငန်းဆောင်ရွက်မှု အကျဉ်းချုပ်ကို PDF report အဖြစ် download လုပ်ပါ။</p>
+                    
+                    <div class="pro-feature mb-6">
+                        <label for="logo-upload" class="block text-sm font-medium text-[var(--text-muted-color)] mb-2">PDF Report အတွက် Logo ထည့်ရန် (Pro Only)</label>
+                        <div class="flex items-center gap-4">
+                            <input type="file" id="logo-upload" accept="image/png, image/jpeg" class="form-input w-full text-sm">
+                            <img id="logo-preview" src="" alt="Logo Preview" class="w-12 h-12 rounded-md object-contain hidden bg-slate-100 dark:bg-slate-800 p-1">
+                        </div>
+                    </div>
+
+                    <button id="download-pdf-btn" class="btn bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 flex items-center justify-center gap-2">
+                        <i class="fas fa-file-pdf"></i>
+                        <span>ယခုလ Report ကို Download လုပ်ရန်</span>
+                    </button>
                 </div>
             </div>
 
@@ -699,24 +808,6 @@
                     </button>
                 </div>
             </form>
-
-            <div class="border-t border-[var(--border-color)] my-6"></div>
-
-            <!-- Change Email Form -->
-            <form id="change-email-form" class="space-y-4">
-                <h4 class="font-semibold text-lg">Change Email</h4>
-                <p class="text-sm text-[var(--text-muted-color)]">Note: You may be required to log in again after changing your email.</p>
-                <div>
-                    <label for="new-email" class="block text-sm font-medium text-[var(--text-muted-color)]">New Email</label>
-                    <input type="email" id="new-email" class="mt-1 w-full form-input px-4 py-2 rounded-lg focus:ring-2" required>
-                </div>
-                <div class="pt-2 flex justify-end">
-                    <button type="submit" id="save-email-btn" class="btn btn-primary-solid text-white font-bold py-2 px-4 rounded-lg">
-                        <span class="btn-text">Update Email</span>
-                        <i class="fas fa-spinner spinner hidden ml-2"></i>
-                    </button>
-                </div>
-            </form>
             
             <!-- Danger Zone: Delete Account -->
             <div class="border-t border-red-500/30 my-6 pt-6">
@@ -780,7 +871,7 @@
         </div>
     </div>
 
-    <!-- FEATURE: Edit Expense Modal -->
+    <!-- Edit Expense Modal -->
     <div id="edit-expense-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-center justify-center p-4">
         <div class="w-full max-w-lg p-4 sm:p-5 shadow-lg rounded-2xl card border-[var(--border-color)]">
             <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-3 mb-4">
@@ -822,12 +913,11 @@
                  <button id="close-about-modal-btn" class="text-[var(--text-muted-color)] hover:text-[var(--text-color)] text-2xl">&times;</button>
             </div>
             <div class="space-y-4 text-sm">
-                <p><span class="font-semibold">Version:</span> 2.5.0 (Expense Management)</p>
+                <p><span class="font-semibold">Version:</span> 3.1.0 (Manual Payment)</p>
                 <h4 class="font-semibold text-lg mt-4">What's New in SalesDash</h4>
                 <ul class="list-disc list-inside space-y-2 text-[var(--text-muted-color)]">
-                    <li>အသုံးစရိတ်များကို စီမံခန့်ခွဲနိုင်သော feature အသစ်။</li>
-                    <li>အသားတင်အမြတ်ကို တွက်ချက်ပြသပေးခြင်း။</li>
-                    <li>အသုံးစရိတ်အမျိုးအစားများကို Chart ဖြင့် ကြည့်ရှုနိုင်ခြင်း။</li>
+                    <li>Pro Plan အတွက် manual payment flow ထည့်သွင်းထားပါသည်။</li>
+                    <li>Admin approval system အတွက် Security Rules များပြင်ဆင်ထားပါသည်။</li>
                 </ul>
             </div>
              <div class="pt-4 mt-4 flex justify-end">
@@ -836,57 +926,6 @@
         </div>
     </div>
     
-    <!-- Security Modal -->
-    <div id="security-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-center justify-center p-4">
-        <div class="w-full max-w-lg p-4 sm:p-6 shadow-lg rounded-2xl card border-[var(--border-color)]">
-            <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-3 mb-4">
-                 <h3 class="text-xl font-bold">Security</h3>
-                 <button id="close-security-modal-btn" class="text-[var(--text-muted-color)] hover:text-[var(--text-color)] text-2xl">&times;</button>
-            </div>
-            <div class="space-y-4 text-sm text-[var(--text-muted-color)]">
-                <p>သင်၏ account လုံခြုံရေးအတွက် password ကို ပုံမှန်ပြောင်းလဲပေးပါ။ သင်၏ password ကို မည်သူ့ကိုမျှ မမျှဝေပါနှင့်။</p>
-                <p>ကျွန်ုပ်တို့သည် သင်၏အချက်အလက်များကို ကာကွယ်ရန် နောက်ဆုံးပေါ်လုံခြုံရေးစံနှုန်းများကို အသုံးပြုထားပါသည်။</p>
-            </div>
-             <div class="pt-4 mt-4 flex justify-end">
-                <button type="button" id="security-modal-ok-btn" class="btn btn-primary-solid text-white font-bold py-2 px-6 rounded-lg">OK</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Privacy Modal -->
-    <div id="privacy-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-center justify-center p-4">
-        <div class="w-full max-w-lg p-4 sm:p-6 shadow-lg rounded-2xl card border-[var(--border-color)]">
-            <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-3 mb-4">
-                 <h3 class="text-xl font-bold">Personal Data & Privacy</h3>
-                 <button id="close-privacy-modal-btn" class="text-[var(--text-muted-color)] hover:text-[var(--text-color)] text-2xl">&times;</button>
-            </div>
-            <div class="space-y-4 text-sm text-[var(--text-muted-color)]">
-                <p>သင်၏ အချက်အလက်အားလုံးကို သင်၏ account အောက်တွင်သာ Firebase Firestore Database ကို အသုံးပြု၍ လုံခြုံစွာသိမ်းဆည်းထားပါသည်။</p>
-                <p>သင်၏ ခွင့်ပြုချက်မရှိဘဲ သင်၏ data များကို မည်သူတစ်ဦးတစ်ယောက်ကိုမျှ မျှဝေမည်မဟုတ်ပါ။ သင်သည် သင်၏ data များကို အချိန်မရွေး export လုပ်နိုင်ပြီး account ကိုလည်း အပြီးတိုင်ဖျက်ပစ်နိုင်ပါသည်။</p>
-            </div>
-             <div class="pt-4 mt-4 flex justify-end">
-                <button type="button" id="privacy-modal-ok-btn" class="btn btn-primary-solid text-white font-bold py-2 px-6 rounded-lg">OK</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Developer Modal -->
-    <div id="developer-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-center justify-center p-4">
-        <div class="w-full max-w-lg p-4 sm:p-6 shadow-lg rounded-2xl card border-[var(--border-color)]">
-            <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-3 mb-4">
-                 <h3 class="text-xl font-bold">Developer Information</h3>
-                 <button id="close-developer-modal-btn" class="text-[var(--text-muted-color)] hover:text-[var(--text-color)] text-2xl">&times;</button>
-            </div>
-            <div class="space-y-4 text-sm text-[var(--text-muted-color)]">
-                <p>ဤ Sales Dashboard Application ကို KarKar(Unlocker) မှ မူလတည်ဆောက်ခဲ့ပြီး Gemini မှ ပြန်လည်မွမ်းမံထားပါသည်။</p>
-                <p>အကြံပြုချက်များ၊ အကူအညီများလိုအပ်ပါက သို့မဟုတ် လုပ်ဆောင်ချက်အသစ်များထပ်မံတောင်းဆိုလိုပါက ပြောကြားနိုင်ပါသည်။</p>
-            </div>
-             <div class="pt-4 mt-4 flex justify-end">
-                <button type="button" id="developer-modal-ok-btn" class="btn btn-primary-solid text-white font-bold py-2 px-6 rounded-lg">OK</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Confirmation Modal -->
     <div id="confirm-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-center justify-center p-4">
         <div class="w-full max-w-md p-4 sm:p-6 shadow-lg rounded-2xl card border-[var(--border-color)] text-center">
@@ -897,50 +936,96 @@
             <p id="confirm-text" class="text-sm text-[var(--text-muted-color)] mb-6">You won't be able to revert this!</p>
             <div class="flex justify-center gap-4">
                 <button id="confirm-cancel-btn" class="btn bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold py-2 px-6 rounded-lg">Cancel</button>
-                <button id="confirm-ok-btn" class="btn bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">Yes, delete it!</button>
+                <button id="confirm-ok-btn" class="btn bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">Yes, do it!</button>
             </div>
         </div>
     </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-center justify-center p-4">
+        <div class="w-full max-w-2xl p-4 sm:p-6 shadow-lg rounded-2xl card border-[var(--border-color)] max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-3 mb-4">
+                 <h3 class="text-xl font-bold">Pro Plan သို့ Upgrade လုပ်ရန်</h3>
+                 <button id="close-payment-modal-btn" class="text-[var(--text-muted-color)] hover:text-[var(--text-color)] text-2xl">&times;</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Payment Instructions -->
+                <div class="space-y-4">
+                    <h4 class="font-semibold text-lg">၁။ ငွေလွှဲရန်</h4>
+                    <p class="text-sm text-[var(--text-muted-color)]">အောက်ပါ Account များထဲမှ နှစ်သက်ရာသို့ Pro Plan အတွက် ကျသင့်ငွေ (10,000 MMK) ကို လွှဲပေးပါ။</p>
+                    <div class="p-4 rounded-lg bg-[var(--bg-color)]">
+                        <p class="font-bold">KBZ PAY</p>
+                        <p>TUN ARKAR KYAW - <span class="font-mono">09787313137</span></p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-[var(--bg-color)]">
+                        <p class="font-bold">Wave Pay</p>
+                        <p>HNIN THET WAI - <span class="font-mono">09777818691</span></p>
+                    </div>
+                </div>
+                <!-- Submission Form -->
+                <div class="space-y-4">
+                    <h4 class="font-semibold text-lg">၂။ ငွေလွှဲအချက်အလက်ဖြည့်ရန်</h4>
+                    <p class="text-sm text-[var(--text-muted-color)]">ငွေလွှဲပြီးပါက ရရှိလာသော Screenshot နှင့် Transaction အမှတ်စဥ်ကို ဖြည့်သွင်း၍ Submit လုပ်ပါ။</p>
+                    <form id="upgrade-form">
+                        <div>
+                            <label for="transaction-id" class="block text-sm font-medium text-[var(--text-muted-color)] mb-1">လုပ်ငန်းစဥ် အမှတ် နောက်ဆုံး (၆) လုံး</label>
+                            <input type="number" id="transaction-id" class="form-input w-full px-4 py-2 rounded-lg focus:ring-2" required>
+                        </div>
+                        <div>
+                            <label for="screenshot-upload" class="block text-sm font-medium text-[var(--text-muted-color)] mb-1">ငွေလွှဲ Screenshot</label>
+                            <input type="file" id="screenshot-upload" accept="image/png, image/jpeg" class="form-input w-full text-sm" required>
+                        </div>
+                        <div class="pt-4">
+                            <button type="submit" id="submit-upgrade-btn" class="btn btn-primary-solid w-full text-white font-bold py-3 px-4 rounded-lg flex justify-center items-center">
+                                <span class="btn-text">Submit</span>
+                                <i class="fas fa-spinner spinner hidden ml-2"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="mt-6 text-center text-xs text-[var(--text-muted-color)]">
+                <p>သင်၏ ငွေလွှဲအား ကျွန်ုပ်တို့ Team မှ စစ်ဆေးပြီးနောက် အမြန်ဆုံး Premium Member အဖြစ်သို့ တိုးမြှင့်ပေးပါမည်။</p>
+                <p class="mt-1">အသေးစိတ်သိရှိလိုပါက <a href="https://www.salesdash.site" target="_blank" class="text-[var(--primary-color)] hover:underline">www.salesdash.site</a> တွင် ဝင်ရောက်ဖတ်ရှုနိုင်ပါသည်။</p>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-5 right-5 w-80 rounded-lg shadow-lg hidden z-50">
         <!-- Content will be injected by JS -->
     </div>
 
-    <!-- =============================================================== -->
-    <!-- START: Firebase Configuration -->
-    <!-- =============================================================== -->
     <script>
         window.firebaseConfig = {
           apiKey: "AIzaSyDpPITUwHiRlxbC16gR7mBAhubEYtPhENQ",
           authDomain: "sales-dashboard-1100a.firebaseapp.com",
           projectId: "sales-dashboard-1100a",
-          storageBucket: "sales-dashboard-1100a.appspot.com",
+          storageBucket: "sales-dashboard-1100a.appspot.com", // Corrected storage bucket URL
           messagingSenderId: "885128519230",
           appId: "1:885128519230:web:a626fd839f6523fab6bb6f"
         };
     </script>
-    <!-- =============================================================== -->
-    <!-- END: Firebase Configuration -->
-    <!-- =============================================================== -->
-
+    
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInWithCustomToken, updatePassword, EmailAuthProvider, reauthenticateWithCredential, updateEmail, deleteUser } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, doc, deleteDoc, updateDoc, serverTimestamp, enableIndexedDbPersistence, getDocs, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInWithCustomToken, updatePassword, EmailAuthProvider, reauthenticateWithCredential, deleteUser } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, doc, deleteDoc, updateDoc, serverTimestamp, enableIndexedDbPersistence, getDocs, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
         document.addEventListener('DOMContentLoaded', () => {
             // --- Firebase Initialization ---
-            let app, auth, db;
+            let app, auth, db, storage;
             let firebaseConfig;
 
-            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                firebaseConfig = JSON.parse(__firebase_config);
-            } else if (window.firebaseConfig) {
+            if (window.firebaseConfig && window.firebaseConfig.apiKey) {
                 firebaseConfig = window.firebaseConfig;
+            } else if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                firebaseConfig = JSON.parse(__firebase_config);
             } else {
                 console.error("Firebase configuration is missing.");
-                document.body.innerHTML = `<div class="min-h-screen flex items-center justify-center bg-red-100 text-red-700 p-4 text-center"><strong>Application Error:</strong> Firebase configuration is missing. Please add your Firebase project configuration to the script tag in the HTML file.</div>`;
+                document.body.innerHTML = `<div class="min-h-screen flex items-center justify-center bg-red-100 text-red-700 p-4 text-center"><strong>Application Error:</strong> Firebase configuration is missing. Please add your Firebase project configuration to the HTML file.</div>`;
                 return;
             }
 
@@ -948,6 +1033,7 @@
                 app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
+                storage = getStorage(app);
             } catch (error) {
                 console.error("Firebase initialization failed:", error);
                 document.body.innerHTML = `<div class="min-h-screen flex items-center justify-center bg-red-100 text-red-700 p-4 text-center"><strong>Application Error:</strong> Could not initialize Firebase. Check if your configuration is correct.</div>`;
@@ -961,21 +1047,23 @@
                 allExpenses: [],
                 filteredSales: [],
                 filteredCustomers: [],
-                unsubscribeFromSales: null,
-                unsubscribeFromCustomers: null,
-                unsubscribeFromExpenses: null,
+                unsubscribeAll: () => {},
                 confirmCallback: null,
                 currentPage: 1,
                 itemsPerPage: 9,
                 appId: typeof __app_id !== 'undefined' ? __app_id : 'default-app-id',
                 isAuthReady: false,
-                charts: {}, // To hold chart instances
+                charts: {},
+                salesTarget: 0,
+                userPlan: null, // 'free', 'pro', or null if not set
+                logoBase64: null,
             };
 
             // --- DOM Element Cache ---
             const DOM = {
                 initialLoader: document.getElementById('initial-loader'),
                 authSection: document.getElementById('auth-section'),
+                pricingSection: document.getElementById('pricing-section'),
                 appSection: document.getElementById('app'),
                 loginForm: document.getElementById('login-form'),
                 emailInput: document.getElementById('email'),
@@ -983,6 +1071,7 @@
                 loginBtn: document.getElementById('login-btn'),
                 registerBtn: document.getElementById('register-btn'),
                 logoutBtn: document.getElementById('logout-btn'),
+                logoutFromPricingBtn: document.getElementById('logout-from-pricing-btn'),
                 authError: document.getElementById('auth-error'),
                 userEmailDisplay: document.getElementById('user-email-display'),
                 dropdownUserEmail: document.getElementById('dropdown-user-email'),
@@ -1042,33 +1131,29 @@
                 currentPasswordInput: document.getElementById('current-password'),
                 newPasswordInput: document.getElementById('new-password'),
                 savePasswordBtn: document.getElementById('save-password-btn'),
-                changeEmailForm: document.getElementById('change-email-form'),
-                newEmailInput: document.getElementById('new-email'),
-                saveEmailBtn: document.getElementById('save-email-btn'),
                 deleteAccountForm: document.getElementById('delete-account-form'),
                 deletePasswordInput: document.getElementById('delete-password'),
                 deleteAccountBtn: document.getElementById('delete-account-btn'),
                 moreMenuBtn: document.getElementById('more-menu-btn'),
                 moreMenuDropdown: document.getElementById('more-menu-dropdown'),
                 menuProfileBtn: document.getElementById('menu-profile-btn'),
-                menuSecurityBtn: document.getElementById('menu-security-btn'),
-                menuPrivacyBtn: document.getElementById('menu-privacy-btn'),
                 menuAboutBtn: document.getElementById('menu-about-btn'),
-                menuDeveloperBtn: document.getElementById('menu-developer-btn'),
                 aboutModal: document.getElementById('about-modal'),
                 closeAboutModalBtn: document.getElementById('close-about-modal-btn'),
                 aboutModalOkBtn: document.getElementById('about-modal-ok-btn'),
-                securityModal: document.getElementById('security-modal'),
-                closeSecurityModalBtn: document.getElementById('close-security-modal-btn'),
-                securityModalOkBtn: document.getElementById('security-modal-ok-btn'),
-                privacyModal: document.getElementById('privacy-modal'),
-                closePrivacyModalBtn: document.getElementById('close-privacy-modal-btn'),
-                privacyModalOkBtn: document.getElementById('privacy-modal-ok-btn'),
-                developerModal: document.getElementById('developer-modal'),
-                closeDeveloperModalBtn: document.getElementById('close-developer-modal-btn'),
-                developerModalOkBtn: document.getElementById('developer-modal-ok-btn'),
                 userIdDisplay: document.getElementById('user-id-display'),
                 copyUserIdBtn: document.getElementById('copy-user-id-btn'),
+                planBadge: document.getElementById('plan-badge'),
+                menuSubscriptionBtn: document.getElementById('menu-subscription-btn'),
+                upgradeFromAnalysisBtn: document.getElementById('upgrade-from-analysis-btn'),
+
+                // Payment Modal Elements
+                paymentModal: document.getElementById('payment-modal'),
+                closePaymentModalBtn: document.getElementById('close-payment-modal-btn'),
+                upgradeForm: document.getElementById('upgrade-form'),
+                transactionIdInput: document.getElementById('transaction-id'),
+                screenshotUploadInput: document.getElementById('screenshot-upload'),
+                submitUpgradeBtn: document.getElementById('submit-upgrade-btn'),
 
                 // CRM Elements
                 tabCustomers: document.getElementById('tab-customers'),
@@ -1096,6 +1181,8 @@
                 // Analysis Elements
                 tabAnalysis: document.getElementById('tab-analysis'),
                 analysisView: document.getElementById('analysis-view'),
+                analysisContent: document.getElementById('analysis-content'),
+                analysisProLock: document.getElementById('analysis-pro-lock'),
                 noAnalysisData: document.getElementById('no-analysis-data'),
                 totalExpensesEl: document.getElementById('total-expenses'),
                 netProfitEl: document.getElementById('net-profit'),
@@ -1122,6 +1209,20 @@
                 editExpenseDescription: document.getElementById('edit-expense-description'),
                 cancelEditExpenseBtn: document.getElementById('cancel-edit-expense-btn'),
                 saveEditExpenseBtn: document.getElementById('save-edit-expense-btn'),
+
+                // Goals & Reports Elements
+                tabGoals: document.getElementById('tab-goals'),
+                goalsView: document.getElementById('goals-view'),
+                salesTargetInput: document.getElementById('sales-target-input'),
+                saveTargetBtn: document.getElementById('save-target-btn'),
+                targetProgressContainer: document.getElementById('target-progress-container'),
+                downloadPdfBtn: document.getElementById('download-pdf-btn'),
+                logoUpload: document.getElementById('logo-upload'),
+                logoPreview: document.getElementById('logo-preview'),
+
+                // Staff Elements
+                tabStaff: document.getElementById('tab-staff'),
+                staffView: document.getElementById('staff-view'),
             };
 
             // --- UI Module ---
@@ -1158,7 +1259,7 @@
                     setTimeout(() => {
                         DOM.toastEl.classList.remove('toast-in');
                         DOM.toastEl.classList.add('toast-out');
-                    }, 3000);
+                    }, 4000);
                 },
 
                 updateConnectionStatus: (online) => {
@@ -1184,7 +1285,9 @@
                     const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
                     localStorage.setItem('theme', newTheme);
                     ui.applyTheme(newTheme);
-                    ui.renderAnalysisCharts(); // Re-render charts with new theme colors
+                    if (state.userPlan === 'pro') {
+                        ui.renderAnalysisCharts(); // Re-render charts with new theme colors
+                    }
                 },
 
                 openModal: (modal) => modal.classList.remove('hidden'),
@@ -1197,6 +1300,34 @@
                     ui.openModal(DOM.confirmModal);
                 },
 
+                updateFeaturesForPlan: () => {
+                    const isPro = state.userPlan === 'pro';
+                    
+                    document.querySelectorAll('.pro-feature').forEach(el => {
+                        el.style.display = isPro ? '' : 'none';
+                    });
+
+                    if (isPro) {
+                        DOM.planBadge.textContent = 'PRO';
+                        DOM.planBadge.className = 'px-3 py-1 text-xs font-bold text-white rounded-full bg-gradient-to-r from-purple-500 to-indigo-600';
+                    } else {
+                        DOM.planBadge.textContent = 'FREE';
+                        DOM.planBadge.className = 'px-3 py-1 text-xs font-bold text-gray-600 bg-gray-200 rounded-full';
+                    }
+                    DOM.planBadge.style.display = 'inline-block';
+
+                    if (isPro) {
+                        DOM.analysisProLock.classList.add('hidden');
+                        DOM.analysisContent.classList.remove('hidden');
+                        DOM.tabAnalysis.classList.remove('disabled');
+                        ui.renderAnalysisCharts();
+                    } else {
+                        DOM.analysisProLock.classList.remove('hidden');
+                        DOM.analysisContent.classList.add('hidden');
+                        DOM.tabAnalysis.classList.add('disabled');
+                    }
+                },
+
                 updateDashboard: () => {
                     ui.applyFiltersAndRender();
                     ui.updateSummaryCards();
@@ -1204,7 +1335,10 @@
                     ui.updateDatalists();
                     ui.renderCustomersList();
                     ui.renderExpensesList();
-                    ui.renderAnalysisCharts();
+                    ui.renderSalesTargetProgress();
+                    if(state.userPlan === 'pro') {
+                        ui.renderAnalysisCharts();
+                    }
                 },
 
                 applyFiltersAndRender: () => {
@@ -1256,7 +1390,6 @@
                     DOM.monthTotalEl.textContent = ui.formatCurrency(monthTotal);
                     DOM.monthProfitEl.textContent = ui.formatCurrency(monthProfit);
 
-                    // Analysis summary cards
                     const totalExpenses = state.allExpenses.reduce((sum, exp) => sum + exp.amount, 0);
                     const grossProfit = state.allSales.reduce((sum, sale) => sum + (sale.price - sale.cost) * sale.quantity, 0);
                     const netProfit = grossProfit - totalExpenses;
@@ -1582,40 +1715,98 @@
                             plugins: { legend: { position: 'top', labels: { color: textColor } } }
                         }
                     });
+                },
+
+                renderSalesTargetProgress: () => {
+                    const target = state.salesTarget;
+                    if (target <= 0) {
+                        DOM.targetProgressContainer.innerHTML = `<p class="text-center text-[var(--text-muted-color)]">ယခုလအတွက် ရည်မှန်းချက် သတ်မှတ်မထားပါ။</p>`;
+                        return;
+                    }
+                    
+                    const currentMonth = new Date().toISOString().slice(0, 7);
+                    const currentSales = state.allSales
+                        .filter(sale => sale.date.startsWith(currentMonth))
+                        .reduce((sum, sale) => sum + (sale.price * sale.quantity), 0);
+                    
+                    const percentage = Math.min((currentSales / target) * 100, 100);
+
+                    DOM.targetProgressContainer.innerHTML = `
+                        <div class="flex justify-between items-center mb-2 text-sm">
+                            <span class="font-medium">${ui.formatCurrency(currentSales)}</span>
+                            <span class="font-bold text-[var(--text-muted-color)]">Target: ${ui.formatCurrency(target)}</span>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4">
+                            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-4 rounded-full text-center text-white text-xs font-bold" style="width: ${percentage}%">
+                                ${Math.round(percentage)}%
+                            </div>
+                        </div>
+                    `;
                 }
             };
 
             // --- Firestore Module ---
             const firestore = {
-                setupRealtimeListener: (userId) => {
-                    const salesCollection = collection(db, 'artifacts', state.appId, 'users', userId, 'sales');
-                    if (state.unsubscribeFromSales) state.unsubscribeFromSales();
-                    state.unsubscribeFromSales = onSnapshot(query(salesCollection), (snapshot) => {
+                setupListeners: (userId) => {
+                    const unsubSales = onSnapshot(query(collection(db, 'artifacts', state.appId, 'users', userId, 'sales')), (snapshot) => {
                         ui.updateConnectionStatus(!snapshot.metadata.fromCache);
                         state.allSales = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                         state.allSales.sort((a, b) => (b.timestamp?.toDate() || new Date(b.date)) - (a.timestamp?.toDate() || new Date(a.date)));
                         ui.updateDashboard();
                     }, (error) => console.error("Sales listener error:", error));
-                },
 
-                setupCustomersListener: (userId) => {
-                    const customersCollection = collection(db, 'artifacts', state.appId, 'users', userId, 'customers');
-                    if (state.unsubscribeFromCustomers) state.unsubscribeFromCustomers();
-                    state.unsubscribeFromCustomers = onSnapshot(query(customersCollection), (snapshot) => {
+                    const unsubCustomers = onSnapshot(query(collection(db, 'artifacts', state.appId, 'users', userId, 'customers')), (snapshot) => {
                         state.allCustomers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                         state.allCustomers.sort((a, b) => a.name.localeCompare(b.name));
                         ui.updateDashboard();
                     }, (error) => console.error("Customers listener error:", error));
-                },
-                
-                setupExpensesListener: (userId) => {
-                    const expensesCollection = collection(db, 'artifacts', state.appId, 'users', userId, 'expenses');
-                    if (state.unsubscribeFromExpenses) state.unsubscribeFromExpenses();
-                    state.unsubscribeFromExpenses = onSnapshot(query(expensesCollection), (snapshot) => {
+                    
+                    const unsubExpenses = onSnapshot(query(collection(db, 'artifacts', state.appId, 'users', userId, 'expenses')), (snapshot) => {
                         state.allExpenses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                         state.allExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
                         ui.updateDashboard();
                     }, (error) => console.error("Expenses listener error:", error));
+
+                    const unsubSettings = onSnapshot(doc(db, 'artifacts', state.appId, 'users', userId, 'settings', 'monthlyGoal'), (doc) => {
+                        if (doc.exists()) {
+                            state.salesTarget = doc.data().target || 0;
+                            DOM.salesTargetInput.value = state.salesTarget > 0 ? state.salesTarget : '';
+                        } else {
+                            state.salesTarget = 0;
+                        }
+                        ui.renderSalesTargetProgress();
+                    }, (error) => console.error("Settings listener error:", error));
+                    
+                    state.unsubscribeAll = () => {
+                        unsubSales();
+                        unsubCustomers();
+                        unsubExpenses();
+                        unsubSettings();
+                    };
+                },
+
+                checkUserPlan: async (userId) => {
+                    const planDocRef = doc(db, 'artifacts', state.appId, 'users', userId, 'subscription', 'status');
+                    const planDoc = await getDoc(planDocRef);
+                    if (planDoc.exists()) {
+                        return planDoc.data().plan;
+                    }
+                    return null; // No plan set
+                },
+
+                setUserPlan: (userId, plan) => {
+                    const planDocRef = doc(db, 'artifacts', state.appId, 'users', userId, 'subscription', 'status');
+                    return setDoc(planDocRef, {
+                        plan: plan,
+                        updatedAt: serverTimestamp()
+                    });
+                },
+                
+                submitUpgradeRequest: (requestData) => {
+                    const user = auth.currentUser;
+                    if (!user) throw new Error("User not authenticated");
+                    // We store requests in a top-level collection so admins can easily query all of them.
+                    return addDoc(collection(db, 'upgrade_requests'), requestData);
                 },
 
                 addSale: (saleData) => {
@@ -1664,6 +1855,13 @@
                     const user = auth.currentUser;
                     if (!user) throw new Error("User not authenticated");
                     return deleteDoc(doc(db, 'artifacts', state.appId, 'users', user.uid, 'expenses', expenseId));
+                },
+
+                saveSalesTarget: (targetAmount) => {
+                    const user = auth.currentUser;
+                    if (!user) throw new Error("User not authenticated");
+                    const settingsDoc = doc(db, 'artifacts', state.appId, 'users', user.uid, 'settings', 'monthlyGoal');
+                    return setDoc(settingsDoc, { target: targetAmount });
                 },
             };
 
@@ -1769,7 +1967,8 @@
                     DOM.authError.textContent = '';
                     ui.toggleButtonLoading(DOM.registerBtn, true);
                     try {
-                        await createUserWithEmailAndPassword(auth, DOM.emailInput.value, DOM.passwordInput.value);
+                        const userCredential = await createUserWithEmailAndPassword(auth, DOM.emailInput.value, DOM.passwordInput.value);
+                        await firestore.setUserPlan(userCredential.user.uid, 'free');
                         await signOut(auth);
                         DOM.authError.textContent = 'Account မှတ်ပုံတင်ခြင်းအောင်မြင်ပါသည်။ Login ဝင်နိုင်ပါပြီ။';
                         DOM.authError.classList.remove('text-red-500');
@@ -1781,6 +1980,71 @@
                         DOM.authError.classList.add('text-red-500');
                     } finally {
                         ui.toggleButtonLoading(DOM.registerBtn, false);
+                    }
+                },
+                
+                handleSelectPlan: async (e) => {
+                    const plan = e.target.dataset.plan;
+                    const user = auth.currentUser;
+                    if (!user || !plan) return;
+                    
+                    if (plan === 'free') {
+                        try {
+                            await firestore.setUserPlan(user.uid, 'free');
+                            state.userPlan = 'free';
+                            DOM.pricingSection.classList.add('hidden');
+                            DOM.appSection.classList.remove('hidden');
+                            ui.updateFeaturesForPlan();
+                            ui.showToast(`Free Plan ကို ရွေးချယ်ပြီးပါပြီ။`, 'success');
+                        } catch (error) {
+                            console.error("Error setting free plan:", error);
+                            ui.showToast("Plan ရွေးချယ်ရာတွင် အမှားအယွင်းဖြစ်သွားပါသည်။", "error");
+                        }
+                    } else if (plan === 'pro') {
+                        // Open payment modal for pro plan
+                        ui.openModal(DOM.paymentModal);
+                    }
+                },
+                
+                handleUpgradeSubmit: async (e) => {
+                    e.preventDefault();
+                    const user = auth.currentUser;
+                    const transactionId = DOM.transactionIdInput.value;
+                    const screenshotFile = DOM.screenshotUploadInput.files[0];
+
+                    if (!user || !transactionId || !screenshotFile) {
+                        ui.showToast('ကျေးဇူးပြု၍ အချက်အလက်များ အကုန်ဖြည့်စွက်ပါ။', 'error');
+                        return;
+                    }
+
+                    ui.toggleButtonLoading(DOM.submitUpgradeBtn, true);
+
+                    try {
+                        // 1. Upload screenshot to Firebase Storage
+                        const storageRef = ref(storage, `upgrade_requests/${user.uid}/${Date.now()}_${screenshotFile.name}`);
+                        const uploadResult = await uploadBytes(storageRef, screenshotFile);
+                        const screenshotURL = await getDownloadURL(uploadResult.ref);
+
+                        // 2. Create an upgrade request document in Firestore
+                        const requestData = {
+                            userId: user.uid,
+                            userEmail: user.email,
+                            transactionId: transactionId,
+                            screenshotURL: screenshotURL,
+                            status: 'pending', // 'pending', 'approved', 'rejected'
+                            requestedAt: serverTimestamp()
+                        };
+                        await firestore.submitUpgradeRequest(requestData);
+
+                        ui.closeModal(DOM.paymentModal);
+                        DOM.upgradeForm.reset();
+                        ui.showToast('တောင်းဆိုမှုကို လက်ခံရရှိပါသည်။ Admin မှစစ်ဆေးပြီး အကြောင်းပြန်ပါမည်။', 'success');
+
+                    } catch (error) {
+                        console.error("Error submitting upgrade request:", error);
+                        ui.showToast('တောင်းဆိုမှုပြုလုပ်ရာတွင် အမှားအယွင်းဖြစ်သွားပါသည်။', 'error');
+                    } finally {
+                        ui.toggleButtonLoading(DOM.submitUpgradeBtn, false);
                     }
                 },
 
@@ -1949,21 +2213,15 @@
                                 const credential = EmailAuthProvider.credential(user.email, password);
                                 await reauthenticateWithCredential(user, credential);
                                 
-                                const salesCollectionRef = collection(db, 'artifacts', state.appId, 'users', user.uid, 'sales');
-                                const customersCollectionRef = collection(db, 'artifacts', state.appId, 'users', user.uid, 'customers');
-                                const expensesCollectionRef = collection(db, 'artifacts', state.appId, 'users', user.uid, 'expenses');
-                                
-                                const salesSnapshot = await getDocs(salesCollectionRef);
-                                const customersSnapshot = await getDocs(customersCollectionRef);
-                                const expensesSnapshot = await getDocs(expensesCollectionRef);
+                                const collectionsToDelete = ['sales', 'customers', 'expenses', 'settings', 'subscription'];
+                                const deletePromises = [];
 
-                                const deletePromises = [
-                                    ...salesSnapshot.docs.map(doc => deleteDoc(doc.ref)),
-                                    ...customersSnapshot.docs.map(doc => deleteDoc(doc.ref)),
-                                    ...expensesSnapshot.docs.map(doc => deleteDoc(doc.ref))
-                                ];
-                                await Promise.all(deletePromises);
+                                for (const coll of collectionsToDelete) {
+                                    const snapshot = await getDocs(collection(db, 'artifacts', state.appId, 'users', user.uid, coll));
+                                    snapshot.docs.forEach(doc => deletePromises.push(deleteDoc(doc.ref)));
+                                }
                                 
+                                await Promise.all(deletePromises);
                                 await deleteUser(user);
                                 ui.showToast("Account ကို အောင်မြင်စွာဖျက်ပြီးပါပြီ။", "success");
                                 ui.closeModal(DOM.profileModal);
@@ -2112,6 +2370,83 @@
                         ui.showToast("Failed to update expense.", "error");
                     }
                 },
+
+                handleSaveTarget: async () => {
+                    const target = parseFloat(DOM.salesTargetInput.value);
+                    if (isNaN(target) || target < 0) {
+                        ui.showToast("ကျေးဇူးပြု၍ မှန်ကန်သော ကိန်းဂဏန်းတစ်ခုထည့်ပါ။", "error");
+                        return;
+                    }
+                    try {
+                        await firestore.saveSalesTarget(target);
+                        ui.showToast("ရည်မှန်းချက်ကို အောင်မြင်စွာ သိမ်းဆည်းပြီးပါပြီ။", "success");
+                    } catch (error) {
+                        console.error("Error saving sales target:", error);
+                        ui.showToast("ရည်မှန်းချက်ကို သိမ်းဆည်းရာတွင် အမှားအယွင်းဖြစ်သွားပါသည်။", "error");
+                    }
+                },
+
+                handleDownloadPdf: () => {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    const currentMonth = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
+                    const currentMonthISO = new Date().toISOString().slice(0, 7);
+                    
+                    const monthSales = state.allSales.filter(s => s.date.startsWith(currentMonthISO));
+                    const monthExpenses = state.allExpenses.filter(e => e.date.startsWith(currentMonthISO));
+
+                    const totalRevenue = monthSales.reduce((sum, s) => sum + s.price * s.quantity, 0);
+                    const grossProfit = monthSales.reduce((sum, s) => sum + (s.price - s.cost) * s.quantity, 0);
+                    const totalExpenses = monthExpenses.reduce((sum, e) => sum + e.amount, 0);
+                    const netProfit = grossProfit - totalExpenses;
+
+                    if (state.logoBase64) {
+                        try {
+                            doc.addImage(state.logoBase64, 'PNG', 150, 10, 40, 15);
+                        } catch(e) {
+                            console.error("Error adding logo to PDF", e);
+                            ui.showToast("Logo ထည့်သွင်းရာတွင် အမှားအယွင်းဖြစ်သွားပါသည်။", "error");
+                        }
+                    }
+
+                    doc.setFontSize(18);
+                    doc.text(`Monthly Report - ${currentMonth}`, 14, 22);
+                    doc.setFontSize(11);
+                    doc.setTextColor(100);
+                    doc.text(`Report generated on: ${new Date().toLocaleDateString()}`, 14, 28);
+
+                    doc.setFontSize(12);
+                    doc.setTextColor(0);
+                    doc.text("Summary:", 14, 40);
+                    doc.autoTable({
+                        startY: 42,
+                        head: [['Metric', 'Amount']],
+                        body: [
+                            ['Total Revenue', ui.formatCurrency(totalRevenue)],
+                            ['Gross Profit', ui.formatCurrency(grossProfit)],
+                            ['Total Expenses', ui.formatCurrency(totalExpenses)],
+                            [{ content: 'Net Profit', styles: { fontStyle: 'bold' } }, { content: ui.formatCurrency(netProfit), styles: { fontStyle: 'bold' } }],
+                        ],
+                        theme: 'grid',
+                        styles: { cellPadding: 2 },
+                        headStyles: { fillColor: [22, 160, 133] }
+                    });
+                    
+                    doc.save(`Sales_Report_${currentMonthISO}.pdf`);
+                    ui.showToast("PDF Report downloading...", "success");
+                },
+
+                handleLogoUpload: (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        state.logoBase64 = event.target.result;
+                        DOM.logoPreview.src = state.logoBase64;
+                        DOM.logoPreview.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                }
             };
             
             // --- Helper Functions ---
@@ -2123,7 +2458,7 @@
                     case 'auth/weak-password': return 'Password အနည်းဆုံး စာလုံး ၆ လုံးရှိရပါမည်။';
                     case 'auth/email-already-in-use': return 'ဤ Email ဖြင့် account ဖွင့်ပြီးသားဖြစ်ပါသည်။';
                     case 'auth/requires-recent-login': return 'လုံခြုံရေးအရ အချိန်အနည်းငယ်အတွင်း ပြန်လည် login ဝင်ရန်လိုအပ်ပါသည်။';
-                    case 'auth/operation-not-allowed': return 'Firebase project တွင် Email/Password sign-in ကို enable မလုပ်ရသေးပါ။';
+                    case 'auth/operation-not-allowed': return 'Login ပြုလုပ်ခွင့်မရှိပါ။ Firebase Project တွင် Email/Password Sign-in ကို Enable လုပ်ပြီး၊ HTML file ထဲက firebaseConfig မှန်မမှန် သေချာစစ်ဆေးပါ။';
                     default: 
                         console.error(`Unhandled Auth Error Code: ${code}`);
                         return `An unknown error occurred. (Error: ${code})`;
@@ -2168,6 +2503,7 @@
                 DOM.loginForm.addEventListener('submit', handlers.handleLogin);
                 DOM.registerBtn.addEventListener('click', handlers.handleRegister);
                 DOM.logoutBtn.addEventListener('click', () => signOut(auth));
+                DOM.logoutFromPricingBtn.addEventListener('click', () => signOut(auth));
                 DOM.addSaleForm.addEventListener('submit', handlers.handleAddSale);
                 DOM.salesListContainer.addEventListener('click', handlers.handleSalesListClick);
                 
@@ -2202,13 +2538,20 @@
                 });
                 document.addEventListener('click', () => DOM.moreMenuDropdown.classList.add('hidden'));
 
-                // Menu items
                 DOM.menuProfileBtn.addEventListener('click', (e) => { e.preventDefault(); ui.openModal(DOM.profileModal); });
+                DOM.menuSubscriptionBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    DOM.appSection.classList.add('hidden');
+                    DOM.pricingSection.classList.remove('hidden');
+                });
+                DOM.upgradeFromAnalysisBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    DOM.appSection.classList.add('hidden');
+                    DOM.pricingSection.classList.remove('hidden');
+                });
+
                 const simpleModals = [
                     { btn: DOM.menuAboutBtn, modal: DOM.aboutModal, closeBtn: DOM.closeAboutModalBtn, okBtn: DOM.aboutModalOkBtn },
-                    { btn: DOM.menuSecurityBtn, modal: DOM.securityModal, closeBtn: DOM.closeSecurityModalBtn, okBtn: DOM.securityModalOkBtn },
-                    { btn: DOM.menuPrivacyBtn, modal: DOM.privacyModal, closeBtn: DOM.closePrivacyModalBtn, okBtn: DOM.privacyModalOkBtn },
-                    { btn: DOM.menuDeveloperBtn, modal: DOM.developerModal, closeBtn: DOM.closeDeveloperModalBtn, okBtn: DOM.developerModalOkBtn },
                 ];
                 simpleModals.forEach(({ btn, modal, closeBtn, okBtn }) => {
                     btn.addEventListener('click', (e) => { e.preventDefault(); ui.openModal(modal); });
@@ -2223,16 +2566,21 @@
                 });
                 DOM.confirmModal.addEventListener('click', (e) => { if (e.target === DOM.confirmModal) ui.closeModal(DOM.confirmModal); });
 
-                // Tab switching logic
                 const tabs = [
                     { btn: DOM.tabDaily, view: DOM.dailyView },
                     { btn: DOM.tabMonthly, view: DOM.monthlyView },
                     { btn: DOM.tabCustomers, view: DOM.customersView },
                     { btn: DOM.tabExpenses, view: DOM.expensesView },
-                    { btn: DOM.tabAnalysis, view: DOM.analysisView }
+                    { btn: DOM.tabAnalysis, view: DOM.analysisView },
+                    { btn: DOM.tabStaff, view: DOM.staffView },
+                    { btn: DOM.tabGoals, view: DOM.goalsView }
                 ];
                 tabs.forEach(tab => {
                     tab.btn.addEventListener('click', () => {
+                        if (tab.btn.classList.contains('disabled')) {
+                            ui.showToast("ဤ Feature ကို အသုံးပြုရန် Pro Plan သို့ Upgrade လုပ်ပါ။", "error");
+                            return;
+                        }
                         tabs.forEach(t => {
                             t.btn.classList.remove('active');
                             t.view.classList.add('hidden');
@@ -2242,7 +2590,14 @@
                     });
                 });
 
-                // CRM Event Listeners
+                DOM.pricingSection.querySelectorAll('.select-plan-btn').forEach(btn => {
+                    btn.addEventListener('click', handlers.handleSelectPlan);
+                });
+
+                DOM.closePaymentModalBtn.addEventListener('click', () => ui.closeModal(DOM.paymentModal));
+                DOM.paymentModal.addEventListener('click', (e) => { if (e.target === DOM.paymentModal) ui.closeModal(DOM.paymentModal); });
+                DOM.upgradeForm.addEventListener('submit', handlers.handleUpgradeSubmit);
+
                 DOM.addCustomerForm.addEventListener('submit', handlers.handleAddCustomer);
                 DOM.customerSearchInput.addEventListener('input', ui.renderCustomersList);
                 DOM.customersListContainer.addEventListener('click', handlers.handleCustomersListClick);
@@ -2251,7 +2606,6 @@
                 DOM.editCustomerForm.addEventListener('submit', handlers.handleUpdateCustomer);
                 DOM.deleteCustomerBtn.addEventListener('click', handlers.handleDeleteCustomer);
 
-                // Expense Event Listeners
                 DOM.addExpenseForm.addEventListener('submit', handlers.handleAddExpense);
                 DOM.expensesListContainer.addEventListener('click', handlers.handleExpensesListClick);
                 DOM.closeEditExpenseModalBtn.addEventListener('click', () => ui.closeModal(DOM.editExpenseModal));
@@ -2259,11 +2613,53 @@
                 DOM.editExpenseModal.addEventListener('click', (e) => { if (e.target === DOM.editExpenseModal) ui.closeModal(DOM.editExpenseModal); });
                 DOM.editExpenseForm.addEventListener('submit', handlers.handleUpdateExpense);
 
+                DOM.saveTargetBtn.addEventListener('click', handlers.handleSaveTarget);
+                DOM.downloadPdfBtn.addEventListener('click', handlers.handleDownloadPdf);
+                DOM.logoUpload.addEventListener('change', handlers.handleLogoUpload);
+
                 window.addEventListener('online', () => ui.updateConnectionStatus(true));
                 window.addEventListener('offline', () => ui.updateConnectionStatus(false));
             }
 
             // --- Main App Initialization ---
+            async function handleAuthState(user) {
+                if (user && !user.isAnonymous) {
+                    DOM.userEmailDisplay.textContent = user.email;
+                    DOM.dropdownUserEmail.textContent = user.email;
+                    DOM.userIdDisplay.value = user.uid;
+
+                    const plan = await firestore.checkUserPlan(user.uid);
+                    state.userPlan = plan;
+
+                    DOM.initialLoader.classList.add('hidden');
+
+                    if (plan) {
+                        DOM.authSection.classList.add('hidden');
+                        DOM.pricingSection.classList.add('hidden');
+                        DOM.appSection.classList.remove('hidden');
+                        ui.updateFeaturesForPlan();
+                        firestore.setupListeners(user.uid);
+                    } else {
+                        DOM.authSection.classList.add('hidden');
+                        DOM.appSection.classList.add('hidden');
+                        DOM.pricingSection.classList.remove('hidden');
+                    }
+                } else {
+                    state.unsubscribeAll();
+                    state.allSales = [];
+                    state.allCustomers = [];
+                    state.allExpenses = [];
+                    state.salesTarget = 0;
+                    state.userPlan = null;
+                    
+                    DOM.initialLoader.classList.add('hidden');
+                    DOM.appSection.classList.add('hidden');
+                    DOM.pricingSection.classList.add('hidden');
+                    DOM.authSection.classList.remove('hidden');
+                    ui.updateDashboard();
+                }
+            }
+
             function init() {
                 console.log(`Initializing app with Project ID: ${app.options.projectId} and App ID: ${state.appId}`);
                 
@@ -2281,29 +2677,8 @@
                 onAuthStateChanged(auth, user => {
                     if (!state.isAuthReady) {
                         state.isAuthReady = true;
-                        DOM.initialLoader.classList.add('hidden');
                     }
-                    
-                    if (user && !user.isAnonymous) {
-                        DOM.authSection.classList.add('hidden');
-                        DOM.appSection.classList.remove('hidden');
-                        DOM.userEmailDisplay.textContent = user.email;
-                        DOM.dropdownUserEmail.textContent = user.email;
-                        DOM.userIdDisplay.value = user.uid;
-                        firestore.setupRealtimeListener(user.uid);
-                        firestore.setupCustomersListener(user.uid);
-                        firestore.setupExpensesListener(user.uid);
-                    } else {
-                        DOM.authSection.classList.remove('hidden');
-                        DOM.appSection.classList.add('hidden');
-                        if (state.unsubscribeFromSales) state.unsubscribeFromSales();
-                        if (state.unsubscribeFromCustomers) state.unsubscribeFromCustomers();
-                        if (state.unsubscribeFromExpenses) state.unsubscribeFromExpenses();
-                        state.allSales = [];
-                        state.allCustomers = [];
-                        state.allExpenses = [];
-                        ui.updateDashboard();
-                    }
+                    handleAuthState(user).catch(console.error);
                 });
 
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
