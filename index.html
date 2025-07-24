@@ -1,211 +1,689 @@
 <!DOCTYPE html>
-<html lang="my">
+<html lang="my" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25'
+ y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23667eea'/%3E%3Cstop offset='100%25' style='stop-
+color:%23764ba2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='45' fill='url(%23grad)'/%3E%3Cpath d='M30 35 L45 50 L70 30' stroke='white' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Cpath d='M30 55 L70 55' stroke='white' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cpath d='M30 65 L60 65' stroke='white' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+    
+    <!-- SEO Meta Tags -->
     <title>Sales Dash - သင့်လုပ်ငန်းအတွက် အကောင်းဆုံး ငွေစာရင်း App</title>
+    <meta name="description" content="Sales Dash သည် မြန်မာနိုင်ငံရှိ အသေးစားလုပ်ငန်းများနှင့် online shop များအတွက် ရိုးရှင်းလွယ်ကူသော ငွေစာရင်း၊ အရောင်းစာရင်းမှတ် App ဖြစ်သည်။">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Sales Dash - သင့်လုပ်ငန်းအတွက် အကောင်းဆုံး ငွေစာရင်း App">
+    <meta property="og:description" content="အသေးစားလုပ်ငန်းရှင်များနဲ့ online shop ပိုင်ရှင်များအတွက် ရိုးရှင်းပြီး စွမ်းဆောင်ရည်မြင့်မားတဲ့ အရောင်းစာရင်းမှတ် App။">
+    <meta property="og:image" content="https://i.postimg.cc/L5k7G5SQ/Screenshot-2025-07-22-at-3-35-24-PM.png">
+
+    <!-- Fonts & Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Noto+Sans+Myanmar:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Noto+Sans+Myanmar:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    
     <style>
+        :root {
+            --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        * { box-sizing: border-box; }
+
         body {
-            font-family: 'Noto Sans Myanmar', sans-serif;
+            font-family: 'Noto Sans Myanmar', 'Poppins', sans-serif;
+            background: #0a0a0f;
+            color: #e5e7eb;
+            line-height: 1.6;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
-        .font-poppins {
-            font-family: 'Poppins', sans-serif;
-        }
+
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Poppins', 'Noto Sans Myanmar', sans-serif;
+            color: #f8fafc;
+            font-weight: 700;
+            line-height: 1.2;
         }
-        .gradient-text {
-            background-image: linear-gradient(to right, #7c3aed, #db2777);
+
+        .text-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradientFlow 4s ease infinite;
         }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
         .btn-primary {
-            background-image: linear-gradient(to right, #7c3aed, #db2777);
-            transition: all 0.3s ease;
+            background: var(--primary);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
         }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .btn-primary:hover::before { left: 0; }
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px -5px rgba(124, 58, 237, 0.4);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 40px -10px rgba(102, 126, 234, 0.4);
         }
-        .feature-card {
-            background-color: #1e293b; /* slate-800 */
-            border: 1px solid #334155; /* slate-700 */
-            transition: all 0.3s ease;
-        }
-        .feature-card:hover {
-            transform: translateY(-8px);
-            border-color: #7c3aed;
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-        }
+
         .hero-bg {
-            background-color: #ffffff;
-            background-image: radial-gradient(#e0e7ff 1px, transparent 1px);
-            background-size: 20px 20px;
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #16213e 50%, #0a0a0f 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.15) 0px, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.15) 0px, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        .glass-effect {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(55, 65, 81, 0.3);
+        }
+
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-progress {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 4px;
+            background: rgba(17, 24, 39, 0.5);
+            z-index: 9999;
+        }
+
+        .scroll-bar {
+            height: 100%; background: var(--primary);
+            transition: width 0.2s ease;
+        }
+
+        .pricing-popular {
+            position: relative; border: 2px solid transparent;
+            background: linear-gradient(#111827, #111827) padding-box, var(--primary) border-box;
+        }
+
+        .faq-answer {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        #carousel::-webkit-scrollbar { display: none; }
+        #carousel { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        .mobile-menu.open { transform: translateX(0); }
+
+        /* Feature Tab Styles */
+        .feature-tab {
+             color: #9ca3af; /* gray-400 */
+        }
+        .feature-tab.active-tab {
+            background: var(--primary);
+            color: #fff;
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px -5px rgba(102, 126, 234, 0.3);
+        }
+        .feature-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            will-change: opacity, transform;
+        }
+        .feature-content.active-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .hero-bg::before { animation: none; }
+            .text-4xl { font-size: 2rem; }
+            .text-7xl { font-size: 3rem; }
+            .min-h-\[500px\] { min-height: auto; }
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800">
 
-    <!-- Header / Navigation -->
-    <header class="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-50">
+<body>
+    <!-- Scroll Progress -->
+    <div class="scroll-progress">
+        <div class="scroll-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="glass-effect sticky top-0 z-50 border-b border-gray-800/50">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <!-- Logo -->
-            <a href="#" class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center shadow-md">
+            <a href="#" class="flex items-center space-x-3 group">
+                <div class="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg transition-transform group-hover:scale-110">
                     <i class="fas fa-chart-pie text-white text-xl"></i>
                 </div>
-                <span class="text-2xl font-bold font-poppins text-slate-900">Sales Dash</span>
+                <span class="text-2xl font-bold font-poppins text-white">Sales Dash</span>
             </a>
-            <!-- CTA Button -->
-            <a href="#download-section" class="btn-primary text-white font-bold py-2 px-6 rounded-full hidden md:inline-block">
-                Download ရယူရန်
-            </a>
+            
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#features" class="text-gray-300 hover:text-white font-medium transition-all hover:scale-105">Features</a>
+                <a href="#testimonials" class="text-gray-300 hover:text-white font-medium transition-all hover:scale-105">Reviews</a>
+                <a href="#pricing" class="text-gray-300 hover:text-white font-medium transition-all hover:scale-105">ဈေးနှုန်း</a>
+                <a href="#faq" class="text-gray-300 hover:text-white font-medium transition-all hover:scale-105">FAQ</a>
+            </nav>
+            
+            <div class="flex items-center space-x-4">
+                <a href="#download" class="btn-primary text-white font-bold py-2 px-6 rounded-full hidden md:inline-block">
+                    Download
+                </a>
+                <button id="menuBtn" class="md:hidden text-white">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 h-full w-64 glass-effect md:hidden z-50">
+            <div class="p-6">
+                <button id="closeMenu" class="text-white float-right">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+                <nav class="mt-12 space-y-6">
+                    <a href="#features" class="block text-gray-300 hover:text-white font-medium transition-colors">Features</a>
+                    <a href="#testimonials" class="block text-gray-300 hover:text-white font-medium transition-colors">Reviews</a>
+                    <a href="#pricing" class="block text-gray-300 hover:text-white font-medium transition-colors">ဈေးနှုန်း</a>
+                    <a href="#faq" class="block text-gray-300 hover:text-white font-medium transition-colors">FAQ</a>
+                    <a href="#download" class="btn-primary text-white font-bold py-3 px-6 rounded-full mt-6 inline-block">Download</a>
+                </nav>
+            </div>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <main>
-        <section class="py-24 md:py-32 hero-bg">
-            <div class="container mx-auto px-6 text-center">
-                <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 leading-tight" style="text-shadow: 0px 2px 4px rgba(0,0,0,0.05);">
-                    Manage your business's finances anytime, anywhere.
-                </h1>
-                <p class="mt-6 text-lg text-slate-600 max-w-2xl mx-auto">
-                    အသေးစားလုပ်ငန်းရှင်များနဲ့ online shop ပိုင်ရှင်များအတွက် အထူးထုတ်လုပ်ထားတဲ့ ရိုးရှင်းပြီး စွမ်းဆောင်ရည်မြင့်မားတဲ့ အရောင်းစာရင်းမှတ် App။
-                </p>
-                <div class="mt-10">
-                    <a href="#download-section" class="btn-primary text-white font-bold py-4 px-10 rounded-full text-lg">
-                        အခမဲ့ စတင်သုံးစွဲကြည့်ပါ
-                    </a>
-                </div>
-                <div class="mt-16">
-                    <img src="https://i.postimg.cc/4yH13Pkb/Screenshot-2025-07-20-at-10-41-26-PM.png" alt="Sales Dashboard App Screenshot" class="mx-auto rounded-2xl shadow-2xl max-w-4xl w-full border-4 border-white" onerror="this.onerror=null;this.src='https://placehold.co/1200x675/e2e8f0/718096?text=Image+Not+Found';">
-                </div>
+    <section class="py-24 md:py-40 hero-bg">
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold leading-tight mb-6">
+                Manage your business's finances anytime, anywhere.<span class="text-gradient"></span><br>
+            </h1>
+            <p class="text-base md:text-xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed">
+                အသေးစားလုပ်ငန်းရှင်များနဲ့ online shop ပိုင်ရှင်များအတွက် အထူးထုတ်လုပ်ထားတဲ့ ရိုးရှင်းပြီး စွမ်းဆောင်ရည်မြင့်မားတဲ့ အရောင်းစာရင်းမှတ် App။
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#download" class="btn-primary text-white font-bold py-4 px-10 rounded-full text-lg shadow-2xl">
+                    <i class="fas fa-rocket mr-2"></i>
+                    အခမဲ့ စတင်သုံးစွဲကြည့်ပါ
+                </a>
+                <a href="#features" class="glass-effect text-white font-semibold py-4 px-8 rounded-full text-lg hover:bg-white/10 transition-all">
+                    <i class="fas fa-play mr-2"></i>
+                    Features ကြည့်ရန်
+                </a>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Features Section -->
-        <section class="py-20 bg-slate-900">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white">လုပ်ငန်းရှင်တိုင်းအတွက် အဓိက Feature များ</h2>
-                    <p class="mt-4 text-slate-400">သင့်လုပ်ငန်းကို ပိုမိုလွယ်ကူစေမယ့် စွမ်းဆောင်ရည်များ</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <!-- Feature 1: Cloud Sync -->
-                    <div class="p-8 rounded-2xl text-center feature-card">
-                        <div class="w-16 h-16 bg-purple-500/10 rounded-full mx-auto flex items-center justify-center ring-8 ring-purple-500/20">
-                            <i class="fas fa-cloud-arrow-up text-3xl text-purple-400"></i>
-                        </div>
-                        <h3 class="mt-6 text-xl font-bold text-white">Cloud Sync</h3>
-                        <p class="mt-2 text-slate-400">ဖုန်းပြောင်းသုံးရင်တောင် data မပျောက်အောင် အလိုအလျောက် သိမ်းဆည်းပေးခြင်း။</p>
-                    </div>
-                    <!-- Feature 2: Offline Access -->
-                    <div class="p-8 rounded-2xl text-center feature-card">
-                        <div class="w-16 h-16 bg-orange-500/10 rounded-full mx-auto flex items-center justify-center ring-8 ring-orange-500/20">
-                            <i class="fas fa-wifi-slash text-3xl text-orange-400"></i>
-                        </div>
-                        <h3 class="mt-6 text-xl font-bold text-white">Offline Access</h3>
-                        <p class="mt-2 text-slate-400">အင်တာနက်မရှိချိန်မှာတောင် စာရင်းသွင်းနိုင်ပြီး online ပြန်ဖြစ်ချိန်တွင် sync လုပ်ပေးခြင်း။</p>
-                    </div>
-                    <!-- Feature 3: PDF Report -->
-                    <div class="p-8 rounded-2xl text-center feature-card">
-                        <div class="w-16 h-16 bg-pink-500/10 rounded-full mx-auto flex items-center justify-center ring-8 ring-pink-500/20">
-                            <i class="fas fa-file-invoice-dollar text-3xl text-pink-400"></i>
-                        </div>
-                        <h3 class="mt-6 text-xl font-bold text-white">PDF Report</h3>
-                        <p class="mt-2 text-slate-400">လချုပ်စာရင်းတွေကို PDF အဖြစ် အလွယ်တကူ ထုတ်ယူနိုင်ခြင်း။</p>
-                    </div>
-                    <!-- Feature 4: Profit Calculation -->
-                    <div class="p-8 rounded-2xl text-center feature-card">
-                        <div class="w-16 h-16 bg-green-500/10 rounded-full mx-auto flex items-center justify-center ring-8 ring-green-500/20">
-                            <i class="fas fa-magnifying-glass-dollar text-3xl text-green-400"></i>
-                        </div>
-                        <h3 class="mt-6 text-xl font-bold text-white">အမြတ်တွက်ချက်ခြင်း</h3>
-                        <p class="mt-2 text-slate-400">ရောင်းဈေးနဲ့ မတည်ဈေးထည့်ရုံဖြင့် အမြတ်ကို ချက်ချင်းသိနိုင်ခြင်း။</p>
-                    </div>
-                </div>
+    <!-- App Screenshot -->
+    <section class="container mx-auto px-6 -mt-20 fade-in">
+        <div class="glass-effect p-4 rounded-3xl shadow-2xl relative">
+            <img src="https://i.postimg.cc/L5k7G5SQ/Screenshot-2025-07-22-at-3-35-24-PM.png" alt="Sales Dashboard App Screenshot" class="mx-auto rounded-2xl w-full max-w-4xl">
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-900/20 to-transparent rounded-3xl pointer-events-none"></div>
+        </div>
+    </section>
+
+    <!-- Features Section with Icons -->
+    <section id="features" class="py-20 md:py-32 fade-in">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6">လုပ်ငန်းတိုင်းအတွက် စွမ်းဆောင်ရည်များ</h2>
+                <p class="text-gray-400 max-w-3xl mx-auto text-lg">သင့်ရဲ့ နေ့စဉ်လုပ်ငန်းဆောင်တာတွေကို ပိုမိုလွယ်ကူစေပြီး အချိန်ကုန်သက်သာစေမယ့် အဓိက Feature များ။</p>
             </div>
-        </section>
 
-        <!-- Download Section -->
-        <section id="download-section" class="py-20 bg-white">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900">ဘယ်နေရာမှာမဆို အသုံးပြုနိုင်ပါပြီ</h2>
-                    <p class="mt-4 text-slate-600">သင့်အတွက် အဆင်ပြေဆုံး platform မှာ Sales Dash ကို အသုံးပြုလိုက်ပါ။</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-                    <!-- Web App -->
-                    <div class="bg-gradient-to-br from-indigo-50 to-purple-100 p-8 rounded-2xl text-center border border-slate-200 transition-transform hover:scale-105">
-                        <i class="fas fa-globe text-5xl text-indigo-500"></i>
-                        <h3 class="mt-6 text-2xl font-bold">Web Application</h3>
-                        <p class="mt-2 text-slate-600 mb-6">မည်သည့် browser ကမဆို တိုက်ရိုက်အသုံးပြုရန်။</p>
-                        <a href="https://salesdash.site/dashboard.html" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-full inline-block hover:bg-indigo-700 transition-colors">
-                            Launch App
-                        </a>
-                    </div>
-                    <!-- Android App -->
-                    <div class="bg-gradient-to-br from-green-50 to-teal-100 p-8 rounded-2xl text-center border border-slate-200 transition-transform hover:scale-105">
-                        <i class="fab fa-android text-5xl text-green-500"></i>
-                        <h3 class="mt-6 text-2xl font-bold">Android App</h3>
-                        <p class="mt-2 text-slate-600 mb-6">Google Play Store မှ download ရယူရန်။</p>
-                        <a href="https://firebasestorage.googleapis.com/v0/b/kkfile-data.firebasestorage.app/o/Sales-Dash%20(1).apk?alt=media&token=0754e2ce-9284-40c0-9c8c-1932d5f43989" target="_blank" class="bg-slate-800 text-white font-bold py-3 px-6 rounded-full inline-flex items-center gap-3 hover:bg-slate-900 transition-colors">
-                            <i class="fab fa-google-play text-xl"></i>
-                            <div>
-                                <p class="text-xs -mb-1">GET IT ON</p>
-                                <p class="text-lg font-semibold">Google Play</p>
+            <!-- Tab Buttons -->
+            <div class="flex flex-col sm:flex-row justify-center mb-12 space-y-2 sm:space-y-0 sm:space-x-2 md:space-x-4 p-2 glass-effect rounded-full max-w-2xl mx-auto">
+                <button data-tab="tab1" class="feature-tab active-tab w-full text-center font-semibold py-3 px-4 rounded-full transition-all duration-300">
+                    <i class="fas fa-cloud-upload-alt mr-2"></i> Data Sync
+                </button>
+                <button data-tab="tab2" class="feature-tab w-full text-center font-semibold py-3 px-4 rounded-full transition-all duration-300">
+                    <i class="fas fa-chart-line mr-2"></i> Report များ
+                </button>
+                <button data-tab="tab3" class="feature-tab w-full text-center font-semibold py-3 px-4 rounded-full transition-all duration-300">
+                    <i class="fas fa-magic mr-2"></i> လွယ်ကူစွာသုံးနိုင်
+                </button>
+            </div>
+
+            <!-- Tab Content Panels -->
+            <div class="relative min-h-[500px]">
+                <!-- Panel 1: Cloud Sync -->
+                <div id="tab1" class="feature-content active-content absolute w-full">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <div class="pr-0 lg:pr-8">
+                            <span class="font-semibold text-indigo-400 bg-indigo-500/10 py-2 px-4 rounded-full text-sm">အဆက်မပြတ်</span>
+                            <h3 class="mt-6 text-3xl md:text-4xl font-bold mb-6">Data မပျောက်၊ အင်တာနက်မလို</h3>
+                            <p class="text-gray-400 text-lg leading-relaxed mb-8">အင်တာနက်မရှိတဲ့အချိန်မှာတောင် စာရင်းသွင်းနိုင်ပြီး လိုင်းပြန်ရချိန်မှာ Cloud ကို အလိုအလျောက် Sync လုပ်ပေးတာကြောင့် သင့်လုပ်ငန်း Data တွေ လုံခြုံစိတ်ချရပါတယ်။</p>
+                            <ul class="space-y-4">
+                                <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-indigo-400 mr-4 text-xl"></i>ဖုန်းပျက်သွားလည်း Data မပျောက်</li>
+                                <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-indigo-400 mr-4 text-xl"></i>Device မျိုးစုံကနေ တပြိုင်နက်သုံးနိုင်</li>
+                                <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-indigo-400 mr-4 text-xl"></i>အလိုအလျောက် Backup လုပ်ပေးခြင်း</li>
+                            </ul>
+                        </div>
+                        <div class="glass-effect card-hover rounded-3xl p-8 shadow-2xl">
+                            <div class="bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-2xl h-[300px] flex items-center justify-center">
+                                <i class="fas fa-cloud-arrow-up text-9xl text-indigo-300 opacity-80"></i>
                             </div>
-                        </a>
+                        </div>
                     </div>
-                    <!-- iOS App -->
-                    <div class="bg-gradient-to-br from-slate-100 to-gray-200 p-8 rounded-2xl text-center border border-slate-200 transition-transform hover:scale-105">
-                        <i class="fab fa-apple text-5xl text-slate-500"></i>
-                        <h3 class="mt-6 text-2xl font-bold">iOS App</h3>
-                        <p class="mt-2 text-slate-600 mb-6">App Store မှ download ရယူရန်။</p>
-                        <a href="https://www.apple.com/app-store/" target="_blank" class="bg-black text-white font-bold py-3 px-6 rounded-full inline-flex items-center gap-3 hover:bg-gray-800 transition-colors">
+                </div>
+
+                <!-- Panel 2: Reports -->
+                <div id="tab2" class="feature-content hidden absolute w-full">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <div class="pr-0 lg:pr-8">
+                            <span class="font-semibold text-purple-400 bg-purple-500/10 py-2 px-4 rounded-full text-sm">အချက်အလက်ပြည့်စုံ</span>
+                            <h3 class="mt-6 text-3xl md:text-4xl font-bold mb-6">ရှင်းလင်းတိကျတဲ့ Report များ</h3>
+                            <p class="text-gray-400 text-lg leading-relaxed mb-8">သင့်လုပ်ငန်းရဲ့ အရောင်းအဝယ်၊ အရှုံးအမြတ် စာရင်းတွေကို ရှင်းလင်းတဲ့ Chart တွေ၊ Report တွေနဲ့ ကြည့်ရှုနိုင်ပါတယ်။ လချုပ်စာရင်းတွေကို PDF အဖြစ် အလွယ်တကူ Export လုပ်နိုင်ပါတယ်။</p>
+                            <ul class="space-y-4">
+                                <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-purple-400 mr-4 text-xl"></i>အမြတ်ငွေကို ချက်ချင်းသိနိုင်</li>
+                                <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-purple-400 mr-4 text-xl"></i>ရောင်းအားအကောင်းဆုံး ပစ္စည်းများကြည့်နိုင်</li>
+                                <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-purple-400 mr-4 text-xl"></i>PDF Report အလွယ်တကူ Export လုပ်ခြင်း</li>
+                            </ul>
+                        </div>
+                        <div class="glass-effect card-hover rounded-3xl p-8 shadow-2xl">
+                            <div class="bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl h-[300px] flex items-center justify-center">
+                                <i class="fas fa-chart-pie text-9xl text-purple-300 opacity-80"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel 3: Easy to Use -->
+                <div id="tab3" class="feature-content hidden absolute w-full">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <div class="pr-0 lg:pr-8">
+                            <span class="font-semibold text-green-400 bg-green-500/10 py-2 px-4 rounded-full text-sm">ရိုးရှင်းလွယ်ကူ</span>
+                            <h3 class="mt-6 text-3xl md:text-4xl font-bold mb-6">မည်သူမဆို လွယ်ကူစွာ သုံးနိုင်</h3>
+                            <p class="text-gray-400 text-lg leading-relaxed mb-8">ရှုပ်ထွေးတဲ့ Function တွေမရှိပဲ လိုအပ်တဲ့ Feature တွေကိုပဲ ရိုးရှင်းစွာ ပေါင်းစပ်ထားတာကြောင့် computer မတတ်သူတောင် အလွယ်တကူ သုံးနိုင်ပါတယ်။</p>
+                            <ul class="space-y-4">
+                                <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-green-400 mr-4 text-xl"></i>Myanmar ဘာသာဖြင့် အပြည့်အစုံ ပံ့ပိုး</li>
+                                <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-green-400 mr-4 text-xl"></i>အသုံးပြုရလွယ်ကူတဲ့ Interface</li>
+                                <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-green-400 mr-4 text-xl"></i>တစ်ခြားမှ အချက်အလက် Import လုပ်ခြင်း</li>
+                            </ul>
+                        </div>
+                        <div class="glass-effect card-hover rounded-3xl p-8 shadow-2xl">
+                            <div class="bg-gradient-to-br from-green-500/20 to-blue-500/20 rounded-2xl h-[300px] flex items-center justify-center">
+                                <i class="fas fa-mobile-screen-button text-9xl text-green-300 opacity-80"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 md:py-32 border-y border-gray-800/50 overflow-hidden fade-in">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-20">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6">သုံးစွဲသူများရဲ့ အသံ</h2>
+                <p class="text-gray-400 text-lg">တကယ်သုံးပြီး အဆင်ပြေနေသူတွေရဲ့ မှတ်ချက်များ</p>
+            </div>
+        </div>
+        
+        <div class="relative">
+            <div id="carousel" class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth pb-8 -mx-4 px-4 gap-6">
+                <div class="flex-shrink-0 w-full sm:w-96 snap-center">
+                    <div class="glass-effect card-hover rounded-3xl p-8 h-full flex flex-col shadow-2xl">
+                        <div class="flex items-center mb-6 text-yellow-400">
+                            <i class="fas fa-star text-lg"></i><i class="fas fa-star ml-1 text-lg"></i><i class="fas fa-star ml-1 text-lg"></i><i class="fas fa-star ml-1 text-lg"></i><i class="fas fa-star ml-1 text-lg"></i>
+                        </div>
+                        <p class="text-gray-300 mb-8 flex-grow text-lg leading-relaxed">"ဒီ App သုံးပြီးမှ စာရင်းတွေကွက်တိဖြစ်တော့တယ်။ အရင်လို စာအုပ်တွေနဲ့ ရှုပ်မနေတော့ဘူး။ အမြတ်ဘယ်လောက်ရှိလဲ ချက်ချင်းကြည့်လို့ရတာ အရမ်းအဆင်ပြေတယ်။"</p>
+                        <div class="flex items-center mt-auto">
+                            <img class="w-14 h-14 rounded-full object-cover border-2 border-indigo-500/30" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&auto=format" alt="မစုစု">
+                            <div class="ml-4"><p class="font-bold text-white text-lg">မစုစု</p><p class="text-gray-400">Beauty & Cosmetic Online Shop</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-shrink-0 w-full sm:w-96 snap-center">
+                    <div class="glass-effect card-hover rounded-3xl p-8 h-full flex flex-col shadow-2xl">
+                        <div class="flex items-center mb-6 text-yellow-400">
+                            <i class="fas fa-star text-lg"></i><i class="fas fa-star ml-1 text-lg"></i><i class="fas fa-star ml-1 text-lg"></i><i class="fas fa-star ml-1 text-lg"></i><i class="fas fa-star ml-1 text-lg"></i>
+                        </div>
+                        <p class="text-gray-300 mb-8 flex-grow text-lg leading-relaxed">"Offline လည်းသုံးလို့ရတော့ အင်တာနက်လိုင်းမကောင်းတဲ့အချိန်တောင် အရောင်းစာရင်းသွင်းလို့ရတယ်။ Cloud Sync ကြောင့် ဖုန်းပျက်သွားမှာလည်း မပူရတော့ဘူး။"</p>
+                        <div class="flex items-center mt-auto">
+                            <img class="w-14 h-14 rounded-full object-cover border-2 border-indigo-500/30" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&auto=format" alt="ကိုအောင်အောင်">
+                            <div class="ml-4"><p class="font-bold text-white text-lg">ကိုအောင်အောင်</p><p class="text-gray-400">Electronic Accessories Shop</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-shrink-0 w-full sm:w-96 snap-center">
+                    <div class="glass-effect card-hover rounded-3xl p-8 h-full flex flex-col shadow-2xl">
+                        <div class="flex items-center mb-6 text-yellow-400">
+                            <i class="fas fa-star text-lg"></i><i class="fas fa-star ml-1 text-lg"></i><i class="fas fa-star ml-1 text-lg"></i><i class="fas fa-star ml-1 text-lg"></i><i class="fas fa-star ml-1 text-lg"></i>
+                        </div>
+                        <p class="text-gray-300 mb-8 flex-grow text-lg leading-relaxed">"အရင်ကဆို လကုန်မှ စာရင်းတွေပြန်ပေါင်းရတာ ခေါင်းကိုက်တယ်။ အခုတော့ လချုပ် Report ကို PDF နဲ့ တန်းထုတ်လိုက်ရုံပဲ။ အချိန်အရမ်းသက်သာတယ်။"</p>
+                        <div class="flex items-center mt-auto">
+                            <img class="w-14 h-14 rounded-full object-cover border-2 border-indigo-500/30" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&auto=format" alt="မချိုသဲ">
+                            <div class="ml-4"><p class="font-bold text-white text-lg">မချိုသဲ</p><p class="text-gray-400">Fashion & Clothing Store</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-shrink-0 w-full sm:w-96 snap-center">
+                    <div class="glass-effect card-hover rounded-3xl p-8 h-full flex flex-col shadow-2xl">
+                        <div class="flex items-center mb-6 text-yellow-400">
+                            <i class="fas fa-star text-lg"></i><i class="fas fa-star ml-1 text-lg"></i><i class="fas fa-star ml-1 text-lg"></i><i class="fas fa-star ml-1 text-lg"></i><i class="fas fa-star-half-alt text-lg"></i>
+                        </div>
+                        <p class="text-gray-300 mb-8 flex-grow text-lg leading-relaxed">"Pro Plan မှာ Staff Account ပေးသုံးလို့ရတာ အရမ်းအသုံးဝင်တယ်။ ကိုယ်တိုင် အချိန်တိုင်းကြည့်နေစရာမလိုတော့ဘူး။"</p>
+                        <div class="flex items-center mt-auto">
+                            <img class="w-14 h-14 rounded-full object-cover border-2 border-indigo-500/30" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&auto=format" alt="ကိုဇော်ဇော်">
+                            <div class="ml-4"><p class="font-bold text-white text-lg">ကိုဇော်ဇော်</p><p class="text-gray-400">Mini Mart</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 md:py-32 fade-in">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-20">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6">သင့်လုပ်ငန်းအတွက် အသင့်တော်ဆုံး Plan</h2>
+                <p class="text-gray-400 text-lg">ရိုးရှင်းပြီး ပွင့်လင်းမြင်သာတဲ့ ဈေးနှုန်းများ</p>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row justify-center items-center gap-8 max-w-5xl mx-auto">
+                <!-- Free Plan -->
+                <div class="w-full lg:w-1/2 glass-effect card-hover rounded-3xl p-8 shadow-2xl">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold mb-2 text-white">အခမဲ့</h3>
+                        <p class="text-gray-400 mb-6">တစ်ကိုယ်တော် လုပ်ငန်းရှင်များအတွက်</p>
+                        <div class="mb-6"><span class="text-5xl font-extrabold text-white">0</span><span class="text-lg font-medium text-gray-400"> ကျပ်</span></div>
+                    </div>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-gray-500 mr-4 text-xl flex-shrink-0"></i><span>အရောင်း/အဝယ် စာရင်းသွင်းခြင်း</span></li>
+                        <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-gray-500 mr-4 text-xl flex-shrink-0"></i><span>အမြတ် တွက်ချက်ခြင်း</span></li>
+                        <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-gray-500 mr-4 text-xl flex-shrink-0"></i><span>Cloud Sync & Offline Access</span></li>
+                        <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-gray-500 mr-4 text-xl flex-shrink-0"></i><span>အခြေခံ Report များ</span></li>
+                    </ul>
+                    <a href="#download" class="block w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-xl transition-all hover:scale-105">စတင်အသုံးပြုရန်</a>
+                </div>
+                
+                <!-- Pro Plan -->
+                <div class="w-full lg:w-1/2 pricing-popular glass-effect card-hover rounded-3xl p-8 shadow-2xl relative">
+                    <div class="absolute -top-4 right-8 font-bold bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-full py-2 px-6 text-sm shadow-lg">Most Popular</div>
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold mb-2 text-white">Pro</h3>
+                        <p class="text-gray-400 mb-6">လုပ်ငန်းတိုးချဲ့လိုသူများအတွက်</p>
+                        <div class="mb-6"><span class="text-5xl font-extrabold text-white">9,900</span><span class="text-lg font-medium text-gray-400"> ကျပ် / လ</span></div>
+                    </div>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-indigo-400 mr-4 text-xl flex-shrink-0"></i><span>အခမဲ့ Plan မှ Feature များအားလုံး</span></li>
+                        <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-indigo-400 mr-4 text-xl flex-shrink-0"></i><span>ဝန်ထမ်းအကောင့် (Staff Access)</span></li>
+                        <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-indigo-400 mr-4 text-xl flex-shrink-0"></i><span>အသေးစိတ် Report များ (Advanced)</span></li>
+                        <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-indigo-400 mr-4 text-xl flex-shrink-0"></i><span>ဦးစားပေး Customer Support</span></li>
+                        <li class="flex items-center text-gray-300 text-lg"><i class="fas fa-check-circle text-indigo-400 mr-4 text-xl flex-shrink-0"></i><span>Inventory Management</span></li>
+                    </ul>
+                    <a href="#download" class="block w-full text-center btn-primary text-white font-bold py-4 px-6 rounded-xl">Pro Plan ရယူရန်</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 md:py-32 border-t border-gray-800/50 fade-in">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <div class="text-center mb-20">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6">အမေးများသော မေးခွန်းများ</h2>
+                <p class="text-gray-400 text-lg">သိလိုသမျှကို တစ်နေရာတည်းတွင် ရှာဖွေလိုက်ပါ</p>
+            </div>
+            
+            <div class="space-y-6">
+                <div class="glass-effect card-hover rounded-2xl">
+                    <button class="faq-btn w-full flex justify-between items-center text-left p-8 font-semibold text-lg">
+                        <span class="text-white">ကျွန်ုပ်၏ Data များ လုံခြုံမှုရှိပါသလား?</span>
+                        <i class="fas fa-chevron-down transition-transform text-gray-400 text-xl"></i>
+                    </button>
+                    <div class="faq-answer"><p class="px-8 pb-8 pt-0 text-gray-400 text-lg leading-relaxed">ရှိပါတယ်။ သင့်ရဲ့ Data အားလုံးကို နိုင်ငံတကာအဆင့်မီ လုံခြုံရေးစနစ်သုံး Cloud Server တွေပေါ်မှာ သိမ်းဆည်းထားတာကြောင့် လုံခြုံစိတ်ချရပါတယ်။ Cloud Sync feature ကြောင့် သင့်ဖုန်း ပျောက်ဆုံး/ပျက်စီးသွားရင်တောင် စာရင်းတွေ လုံးဝမပျောက်ပျက်နိုင်ပါဘူး။</p></div>
+                </div>
+                <div class="glass-effect card-hover rounded-2xl">
+                    <button class="faq-btn w-full flex justify-between items-center text-left p-8 font-semibold text-lg">
+                        <span class="text-white">အင်တာနက်မရှိရင် သုံးလို့ရလား?</span>
+                        <i class="fas fa-chevron-down transition-transform text-gray-400 text-xl"></i>
+                    </button>
+                    <div class="faq-answer"><p class="px-8 pb-8 pt-0 text-gray-400 text-lg leading-relaxed">ရပါတယ်။ Offline Access feature ကြောင့် အင်တာနက်လိုင်းမရှိတဲ့အချိန်မှာလည်း အရောင်းအဝယ်စာရင်းတွေကို ပုံမှန်အတိုင်း မှတ်သားနိုင်ပါတယ်။ အင်တာနက်ပြန်လည်ရရှိချိန်မှာ App က အလိုအလျောက် Cloud Server နဲ့ Sync ပြန်လုပ်ပေးမှာဖြစ်ပါတယ်။</p></div>
+                </div>
+                <div class="glass-effect card-hover rounded-2xl">
+                    <button class="faq-btn w-full flex justify-between items-center text-left p-8 font-semibold text-lg">
+                        <span class="text-white">ဝန်ထမ်းကို အကောင့်ခွဲပေးလို့ရလား?</span>
+                        <i class="fas fa-chevron-down transition-transform text-gray-400 text-xl"></i>
+                    </button>
+                    <div class="faq-answer"><p class="px-8 pb-8 pt-0 text-gray-400 text-lg leading-relaxed">ရပါတယ်။ Pro Plan မှာဆိုရင် သင့်ဝန်ထမ်းအတွက် Staff Account ဖွင့်ပေးပြီး လုပ်ဆောင်နိုင်မယ့် အခွင့်အရေးတွေကို (ဥပမာ - စာရင်းသွင်းခွင့်သာပေးပြီး Report ကြည့်ခွင့်မပေးခြင်း) ကန့်သတ်ထားနိုင်တဲ့ feature ပါဝင်ပါတယ်။</p></div>
+                </div>
+                <div class="glass-effect card-hover rounded-2xl">
+                    <button class="faq-btn w-full flex justify-between items-center text-left p-8 font-semibold text-lg">
+                        <span class="text-white">အခမဲ့ Plan ကနေ Pro Plan ကို အလွယ်တကူ ပြောင်းလို့ရလား?</span>
+                        <i class="fas fa-chevron-down transition-transform text-gray-400 text-xl"></i>
+                    </button>
+                    <div class="faq-answer"><p class="px-8 pb-8 pt-0 text-gray-400 text-lg leading-relaxed">ရပါတယ်။ App အတွင်းမှာပဲ Plan Upgrade လုပ်နိုင်ပြီး သင့်ရဲ့ Data အားလုံး သိမ်းဆည်းပြီးသား အတိုင်းပဲ ရှိနေမှာဖြစ်တာကြောင့် စာရင်းတွေ ပြန်လည်သွင်းစရာ မလိုပါဘူး။</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="py-20 md:py-32 fade-in">
+        <div class="container mx-auto px-6">
+            <div class="relative rounded-3xl p-12 md:p-20 text-center overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 opacity-90"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                <div class="relative z-10">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">လုပ်ငန်းကို အခုပဲ အဆင့်မြှင့်တင်ပါ</h2>
+                    <p class="text-purple-100 max-w-3xl mx-auto text-lg leading-relaxed mb-12">သင့်အတွက် အဆင်ပြေဆုံး platform မှာ Sales Dash ကို အခမဲ့စတင်အသုံးပြုပြီး လုပ်ငန်းကို စမတ်ကျကျ စီမံခန့်ခွဲလိုက်ပါ။</p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                        <a href="https://firebasestorage.googleapis.com/v0/b/kkfile-data.firebasestorage.app/o/Sales-Dash.apk?alt=media&token=9132fb4a-f3dd-4983-981d-3e8382b8529c" class="bg-white text-indigo-600 font-bold py-4 px-8 rounded-2xl inline-flex items-center gap-3 hover:bg-indigo-50 transition-all shadow-2xl hover:scale-105 w-full sm:w-auto justify-center">
+                            <i class="fab fa-google-play text-2xl"></i>
+                            <span class="text-lg">Google Play Store</span>
+                        </a>
+                        <a href="#" class="bg-white/20 backdrop-blur-sm text-white font-bold py-4 px-8 rounded-2xl inline-flex items-center gap-3 hover:bg-white/30 transition-all w-full sm:w-auto justify-center">
                             <i class="fab fa-apple text-2xl"></i>
-                            <div>
-                                <p class="text-xs -mb-1">Download on the</p>
-                                <p class="text-xl font-semibold">App Store</p>
-                            </div>
+                            <span class="text-lg">App Store</span>
                         </a>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <!-- About Section -->
-        <section class="py-20">
-            <div class="container mx-auto px-6">
-                <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-12 rounded-2xl shadow-2xl text-center">
-                    <div class="w-24 h-24 bg-white/20 rounded-full mx-auto flex items-center justify-center">
-                        <i class="fas fa-handshake-angle text-5xl text-white"></i>
-                    </div>
-                    <h2 class="mt-8 text-3xl md:text-4xl font-bold">ကျွန်ုပ်တို့၏ ရည်မှန်းချက်</h2>
-                    <p class="mt-4 text-purple-200 max-w-2xl mx-auto text-lg">
-                        ကျွန်ုပ်တို့သည် မြန်မာနိုင်ငံရှိ အသေးစားနှင့် အလတ်စားလုပ်ငန်းရှင်များအတွက် နည်းပညာကို အသုံးပြု၍ သူတို့၏နေ့စဉ်လုပ်ငန်းဆောင်တာများကို ပိုမိုလွယ်ကူစေရန် ရည်ရွယ်ပါသည်။ Sales Dash သည် ရှုပ်ထွေးသော စာရင်းအင်းများကို ရိုးရှင်းလွယ်ကူစွာ စီမံခန့်ခွဲနိုင်ရန် ဖန်တီးထားသော ကျွန်ုပ်တို့၏ ပထမဆုံးခြေလှမ်းဖြစ်ပါသည်။
-                    </p>
-                </div>
-            </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
     <!-- Footer -->
-    <footer class="bg-slate-800 text-white">
-        <div class="container mx-auto px-6 py-8 text-center">
-            <p>&copy; 2025 Sales Dash. All rights reserved.</p>
-            <p class="text-sm text-slate-400 mt-2">သင့်လုပ်ငန်းအတွက် အကောင်းဆုံး စာရင်းကိုင်</p>
+    <footer class="glass-effect border-t border-gray-800/50">
+        <div class="container mx-auto px-6 py-16 text-center">
+            <a href="#" class="flex items-center justify-center space-x-3 mb-8 group">
+                <div class="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg transition-transform group-hover:scale-110">
+                    <i class="fas fa-chart-pie text-white text-xl"></i>
+                </div>
+                <span class="text-2xl font-bold font-poppins text-white">Sales Dash</span>
+            </a>
+            <div class="flex justify-center space-x-8 my-8">
+                <a href="#features" class="text-gray-400 hover:text-white transition-all hover:scale-105">Features</a>
+                <a href="#pricing" class="text-gray-400 hover:text-white transition-all hover:scale-105">Pricing</a>
+                <a href="#faq" class="text-gray-400 hover:text-white transition-all hover:scale-105">FAQ</a>
+                <a href="#testimonials" class="text-gray-400 hover:text-white transition-all hover:scale-105">Reviews</a>
+            </div>
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="#" class="text-gray-500 hover:text-indigo-400 transition-all hover:scale-110"><i class="fab fa-facebook text-2xl"></i></a>
+                <a href="#" class="text-gray-500 hover:text-indigo-400 transition-all hover:scale-110"><i class="fab fa-viber text-2xl"></i></a>
+                <a href="#" class="text-gray-500 hover:text-indigo-400 transition-all hover:scale-110"><i class="fab fa-telegram text-2xl"></i></a>
+            </div>
+            <p class="text-gray-500">© 2025 Sales Dash. All rights reserved.</p>
         </div>
     </footer>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Scroll Progress
+            const progressBar = document.getElementById('progressBar');
+            window.addEventListener('scroll', () => {
+                const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                progressBar.style.width = scrollPercent + '%';
+            });
+
+            // Intersection Observer for animations
+            const fadeElements = document.querySelectorAll('.fade-in');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            fadeElements.forEach(el => observer.observe(el));
+
+            // Mobile Menu
+            const menuBtn = document.getElementById('menuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const closeMenu = document.getElementById('closeMenu');
+            menuBtn?.addEventListener('click', () => mobileMenu.classList.add('open'));
+            closeMenu?.addEventListener('click', () => mobileMenu.classList.remove('open'));
+            mobileMenu?.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+            });
+
+            // FAQ Toggle
+            const faqBtns = document.querySelectorAll('.faq-btn');
+            faqBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const answer = btn.nextElementSibling;
+                    const icon = btn.querySelector('i');
+                    const isOpen = answer.style.maxHeight && answer.style.maxHeight !== '0px';
+                    faqBtns.forEach(otherBtn => {
+                        if (otherBtn !== btn) {
+                            otherBtn.nextElementSibling.style.maxHeight = null;
+                            otherBtn.querySelector('i').classList.remove('rotate-180');
+                        }
+                    });
+                    if (isOpen) {
+                        answer.style.maxHeight = null;
+                        icon.classList.remove('rotate-180');
+                    } else {
+                        answer.style.maxHeight = answer.scrollHeight + "px";
+                        icon.classList.add('rotate-180');
+                    }
+                });
+            });
+
+            // Smooth Scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+
+            // Carousel Touch Support
+            const carousel = document.getElementById('carousel');
+            if (carousel) {
+                let isDown = false, startX, scrollLeft;
+                const start = (e) => { isDown = true; startX = (e.pageX || e.touches[0].pageX) - carousel.offsetLeft; scrollLeft = carousel.scrollLeft; };
+                const end = () => { isDown = false; };
+                const move = (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = (e.pageX || e.touches[0].pageX) - carousel.offsetLeft;
+                    const walk = (x - startX) * 2;
+                    carousel.scrollLeft = scrollLeft - walk;
+                };
+                carousel.addEventListener('mousedown', start);
+                carousel.addEventListener('mouseleave', end);
+                carousel.addEventListener('mouseup', end);
+                carousel.addEventListener('mousemove', move);
+                carousel.addEventListener('touchstart', start);
+                carousel.addEventListener('touchend', end);
+                carousel.addEventListener('touchmove', move);
+            }
+
+            // Feature Tabs Logic
+            const tabs = document.querySelectorAll('.feature-tab');
+            const contents = document.querySelectorAll('.feature-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Deactivate all tabs and contents
+                    tabs.forEach(item => item.classList.remove('active-tab'));
+                    contents.forEach(content => {
+                        content.classList.add('hidden');
+                        content.classList.remove('active-content');
+                    });
+
+                    // Activate the clicked tab
+                    tab.classList.add('active-tab');
+                    
+                    // Activate the corresponding content
+                    const targetId = tab.dataset.tab;
+                    const targetContent = document.getElementById(targetId);
+                    if (targetContent) {
+                        targetContent.classList.remove('hidden');
+                        setTimeout(() => {
+                            targetContent.classList.add('active-content');
+                        }, 50); 
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
