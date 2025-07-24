@@ -11,6 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-beautify@1.14.7/js/lib/beautify-html.js"></script>
     <style>
         :root {
@@ -264,48 +265,6 @@
         </div>
     </div>
 
-    <!-- Pricing Section -->
-    <div id="pricing-section" class="min-h-screen bg-[var(--bg-color)] p-4 sm:p-8 flex flex-col items-center justify-center hidden">
-        <div class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-extrabold mb-4">သင့်အတွက် အသင့်တော်ဆုံး Plan ကိုရွေးချယ်ပါ</h1>
-            <p class="text-lg text-[var(--text-muted-color)] max-w-2xl mx-auto">သင်၏လုပ်ငန်းလိုအပ်ချက်နှင့်ကိုက်ညီမည့် Plan ကို ရွေးချယ်ပြီး SalesDash ၏ အစွမ်းထက် Feature များကို စတင်အသုံးပြုလိုက်ပါ။</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full">
-            <!-- Free Plan -->
-            <div class="card rounded-2xl p-8 flex flex-col">
-                <h2 class="text-2xl font-bold text-center">အခမဲ့ Plan</h2>
-                <p class="text-center text-[var(--text-muted-color)] mb-6">လုပ်ငန်းငယ်များအတွက်</p>
-                <p class="text-4xl font-bold text-center mb-8">0 <span class="text-lg font-medium text-[var(--text-muted-color)]">MMK/month</span></p>
-                <ul class="space-y-4 mb-8 flex-grow">
-                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500"></i> အရောင်း/အဝယ် စာရင်းသွင်းခြင်း</li>
-                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500"></i> အမြတ် တွက်ချက်ခြင်း</li>
-                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500"></i> Cloud Sync & Offline Access</li>
-                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500"></i> အခြေခံ Report များ</li>
-                </ul>
-                <button data-plan="free" class="select-plan-btn btn w-full bg-gray-200 dark:bg-gray-700 font-bold py-3 px-4 rounded-lg">ဤ Plan ကိုရွေးမည်</button>
-            </div>
-
-            <!-- Pro Plan -->
-            <div class="card rounded-2xl p-8 flex flex-col border-2 border-[var(--primary-color)] relative">
-                <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-[var(--primary-color)] text-white px-4 py-1 rounded-full text-sm font-semibold">Recommended</div>
-                <h2 class="text-2xl font-bold text-center">Pro Plan</h2>
-                <p class="text-center text-[var(--text-muted-color)] mb-6">လုပ်ငန်းတိုးချဲ့လိုသူများအတွက်</p>
-                <p class="text-4xl font-bold text-center mb-8">10,000 <span class="text-lg font-medium text-[var(--text-muted-color)]">MMK/month</span></p>
-                <ul class="space-y-4 mb-8 flex-grow">
-                    <li class="flex items-center gap-3"><i class="fas fa-star text-yellow-500"></i> အခမဲ့ Plan မှ Feature များအားလုံး</li>
-                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500"></i> ဝန်ထမ်းအကောင့် (Staff Access)</li>
-                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500"></i> အသေးစိတ် Report များ (Advanced)</li>
-                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500"></i> PDF Report တွင် Logo ထည့်သွင်းနိုင်ခြင်း</li>
-                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500"></i> ဦးစားပေး Customer Support</li>
-                </ul>
-                <button data-plan="pro" class="select-plan-btn btn btn-primary-solid w-full text-white font-bold py-3 px-4 rounded-lg">Pro Plan သို့ Upgrade လုပ်မည်</button>
-            </div>
-        </div>
-        <button id="logout-from-pricing-btn" class="mt-8 text-sm text-[var(--text-muted-color)] hover:underline">Logout</button>
-    </div>
-
-
     <!-- App Section -->
     <div id="app" class="container mx-auto p-2 sm:p-4 md:p-6 lg:p-8 max-w-7xl hidden">
         <header class="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-10 gap-4">
@@ -514,11 +473,11 @@
                     <div id="monthly-summary-table-container" class="card rounded-2xl overflow-x-auto">
                         <!-- Monthly summary table will be here -->
                     </div>
-                 </div>
+                </div>
                  <div id="no-monthly-data-message" class="text-center py-16 text-[var(--text-muted-color)] card rounded-2xl hidden mt-8">
-                        <i class="fas fa-chart-area text-5xl mb-4"></i>
-                        <p class="text-lg font-semibold">လချုပ်စာရင်း မရှိသေးပါ</p>
-                    </div>
+                    <i class="fas fa-chart-area text-5xl mb-4"></i>
+                    <p class="text-lg font-semibold">လချုပ်စာရင်း မရှိသေးပါ</p>
+                </div>
             </div>
             
             <!-- Customers View Content -->
@@ -913,11 +872,11 @@
                  <button id="close-about-modal-btn" class="text-[var(--text-muted-color)] hover:text-[var(--text-color)] text-2xl">&times;</button>
             </div>
             <div class="space-y-4 text-sm">
-                <p><span class="font-semibold">Version:</span> 3.1.0 (Manual Payment)</p>
+                <p><span class="font-semibold">Version:</span> 3.3.0 (Integrated Subscription View)</p>
                 <h4 class="font-semibold text-lg mt-4">What's New in SalesDash</h4>
                 <ul class="list-disc list-inside space-y-2 text-[var(--text-muted-color)]">
-                    <li>Pro Plan အတွက် manual payment flow ထည့်သွင်းထားပါသည်။</li>
-                    <li>Admin approval system အတွက် Security Rules များပြင်ဆင်ထားပါသည်။</li>
+                    <li>Pricing page ကို ဖယ်ရှားပြီး "My Subscription" menu အောက်တွင် ပေါင်းစည်းထားပါသည်။</li>
+                    <li>Pro Plan သို့ အဆင့်မြှင့်တင်ခြင်းကို Admin မှ တိုက်ရိုက်ပြုလုပ်ပေးမည့် စနစ်သို့ပြောင်းလဲထားပါသည်။</li>
                 </ul>
             </div>
              <div class="pt-4 mt-4 flex justify-end">
@@ -941,56 +900,18 @@
         </div>
     </div>
 
-    <!-- Payment Modal -->
-    <div id="payment-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-center justify-center p-4">
-        <div class="w-full max-w-2xl p-4 sm:p-6 shadow-lg rounded-2xl card border-[var(--border-color)] max-h-[90vh] overflow-y-auto">
+    <!-- My Subscription Modal -->
+    <div id="subscription-modal" class="modal fixed inset-0 bg-black bg-opacity-50 h-full w-full hidden z-50 flex items-center justify-center p-4">
+        <div class="w-full max-w-lg p-5 sm:p-6 shadow-lg rounded-2xl card border-[var(--border-color)]">
             <div class="flex justify-between items-center border-b border-[var(--border-color)] pb-3 mb-4">
-                 <h3 class="text-xl font-bold">Pro Plan သို့ Upgrade လုပ်ရန်</h3>
-                 <button id="close-payment-modal-btn" class="text-[var(--text-muted-color)] hover:text-[var(--text-color)] text-2xl">&times;</button>
+                <h3 class="text-xl font-bold">My Subscription</h3>
+                <button id="close-subscription-modal-btn" class="text-[var(--text-muted-color)] hover:text-[var(--text-color)] text-2xl">&times;</button>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Payment Instructions -->
-                <div class="space-y-4">
-                    <h4 class="font-semibold text-lg">၁။ ငွေလွှဲရန်</h4>
-                    <p class="text-sm text-[var(--text-muted-color)]">အောက်ပါ Account များထဲမှ နှစ်သက်ရာသို့ Pro Plan အတွက် ကျသင့်ငွေ (10,000 MMK) ကို လွှဲပေးပါ။</p>
-                    <div class="p-4 rounded-lg bg-[var(--bg-color)]">
-                        <p class="font-bold">KBZ PAY</p>
-                        <p>TUN ARKAR KYAW - <span class="font-mono">09787313137</span></p>
-                    </div>
-                    <div class="p-4 rounded-lg bg-[var(--bg-color)]">
-                        <p class="font-bold">Wave Pay</p>
-                        <p>HNIN THET WAI - <span class="font-mono">09777818691</span></p>
-                    </div>
-                </div>
-                <!-- Submission Form -->
-                <div class="space-y-4">
-                    <h4 class="font-semibold text-lg">၂။ ငွေလွှဲအချက်အလက်ဖြည့်ရန်</h4>
-                    <p class="text-sm text-[var(--text-muted-color)]">ငွေလွှဲပြီးပါက ရရှိလာသော Screenshot နှင့် Transaction အမှတ်စဥ်ကို ဖြည့်သွင်း၍ Submit လုပ်ပါ။</p>
-                    <form id="upgrade-form">
-                        <div>
-                            <label for="transaction-id" class="block text-sm font-medium text-[var(--text-muted-color)] mb-1">လုပ်ငန်းစဥ် အမှတ် နောက်ဆုံး (၆) လုံး</label>
-                            <input type="number" id="transaction-id" class="form-input w-full px-4 py-2 rounded-lg focus:ring-2" required>
-                        </div>
-                        <div>
-                            <label for="screenshot-upload" class="block text-sm font-medium text-[var(--text-muted-color)] mb-1">ငွေလွှဲ Screenshot</label>
-                            <input type="file" id="screenshot-upload" accept="image/png, image/jpeg" class="form-input w-full text-sm" required>
-                        </div>
-                        <div class="pt-4">
-                            <button type="submit" id="submit-upgrade-btn" class="btn btn-primary-solid w-full text-white font-bold py-3 px-4 rounded-lg flex justify-center items-center">
-                                <span class="btn-text">Submit</span>
-                                <i class="fas fa-spinner spinner hidden ml-2"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="mt-6 text-center text-xs text-[var(--text-muted-color)]">
-                <p>သင်၏ ငွေလွှဲအား ကျွန်ုပ်တို့ Team မှ စစ်ဆေးပြီးနောက် အမြန်ဆုံး Premium Member အဖြစ်သို့ တိုးမြှင့်ပေးပါမည်။</p>
-                <p class="mt-1">အသေးစိတ်သိရှိလိုပါက <a href="https://www.salesdash.site" target="_blank" class="text-[var(--primary-color)] hover:underline">www.salesdash.site</a> တွင် ဝင်ရောက်ဖတ်ရှုနိုင်ပါသည်။</p>
+            <div id="subscription-modal-content">
+                <!-- Content will be injected by JS -->
             </div>
         </div>
     </div>
-
 
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-5 right-5 w-80 rounded-lg shadow-lg hidden z-50">
@@ -1063,7 +984,6 @@
             const DOM = {
                 initialLoader: document.getElementById('initial-loader'),
                 authSection: document.getElementById('auth-section'),
-                pricingSection: document.getElementById('pricing-section'),
                 appSection: document.getElementById('app'),
                 loginForm: document.getElementById('login-form'),
                 emailInput: document.getElementById('email'),
@@ -1071,7 +991,6 @@
                 loginBtn: document.getElementById('login-btn'),
                 registerBtn: document.getElementById('register-btn'),
                 logoutBtn: document.getElementById('logout-btn'),
-                logoutFromPricingBtn: document.getElementById('logout-from-pricing-btn'),
                 authError: document.getElementById('auth-error'),
                 userEmailDisplay: document.getElementById('user-email-display'),
                 dropdownUserEmail: document.getElementById('dropdown-user-email'),
@@ -1146,14 +1065,9 @@
                 planBadge: document.getElementById('plan-badge'),
                 menuSubscriptionBtn: document.getElementById('menu-subscription-btn'),
                 upgradeFromAnalysisBtn: document.getElementById('upgrade-from-analysis-btn'),
-
-                // Payment Modal Elements
-                paymentModal: document.getElementById('payment-modal'),
-                closePaymentModalBtn: document.getElementById('close-payment-modal-btn'),
-                upgradeForm: document.getElementById('upgrade-form'),
-                transactionIdInput: document.getElementById('transaction-id'),
-                screenshotUploadInput: document.getElementById('screenshot-upload'),
-                submitUpgradeBtn: document.getElementById('submit-upgrade-btn'),
+                subscriptionModal: document.getElementById('subscription-modal'),
+                closeSubscriptionModalBtn: document.getElementById('close-subscription-modal-btn'),
+                subscriptionModalContent: document.getElementById('subscription-modal-content'),
 
                 // CRM Elements
                 tabCustomers: document.getElementById('tab-customers'),
@@ -1482,8 +1396,8 @@
                         monthlyData[month].profit += (sale.price - sale.cost) * sale.quantity;
                     });
                     const summaryData = Object.entries(monthlyData)
-                                 .map(([month, data]) => ({ month, ...data }))
-                                 .sort((a, b) => b.month.localeCompare(a.month));
+                                .map(([month, data]) => ({ month, ...data }))
+                                .sort((a, b) => b.month.localeCompare(a.month));
 
                     const hasData = summaryData.length > 0;
                     DOM.monthlyView.querySelector('.w-full').classList.toggle('hidden', !hasData);
@@ -1742,6 +1656,46 @@
                             </div>
                         </div>
                     `;
+                },
+                renderSubscriptionModal: () => {
+                    const user = auth.currentUser;
+                    if (!user) return;
+
+                    if (state.userPlan === 'pro') {
+                        DOM.subscriptionModalContent.innerHTML = `
+                            <div class="text-center">
+                                <i class="fas fa-gem text-5xl text-purple-500 mb-4"></i>
+                                <h4 class="text-xl font-bold mb-2">You are a PRO User!</h4>
+                                <p class="text-[var(--text-muted-color)]">သင်သည် Pro Plan ၏ အကျိုးကျေးဇူးများအားလုံးကို အသုံးပြုနိုင်ပါပြီ။</p>
+                            </div>
+                        `;
+                    } else {
+                        DOM.subscriptionModalContent.innerHTML = `
+                            <div>
+                                <h4 class="text-xl font-bold mb-2 text-center text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-start-color)] to-[var(--primary-end-color)]">Pro Plan သို့ အဆင့်မြှင့်တင်ရန်</h4>
+                                <p class="text-center text-sm text-[var(--text-muted-color)] mb-6">သင်၏လုပ်ငန်းကို ပိုမိုအဆင်ပြေချောမွေ့စေမည့် Feature များစွာကို ရယူလိုက်ပါ။</p>
+                                <ul class="space-y-3 mb-6 text-sm">
+                                    <li class="flex items-center gap-3"><i class="fas fa-star text-yellow-500 w-5 text-center"></i> <strong>အခမဲ့ Plan</strong> မှ Feature များအားလုံး</li>
+                                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500 w-5 text-center"></i> <strong>ဝန်ထမ်းအကောင့် (Staff Access)</strong> - ဝန်ထမ်းများအတွက် အကောင့်များဖွင့်ပေးနိုင်ခြင်း။</li>
+                                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500 w-5 text-center"></i> <strong>အသေးစိတ် Report များ (Advanced)</strong> - Chart များ၊ သုံးသပ်ချက်များဖြင့် လုပ်ငန်းကို ပိုမိုကောင်းမွန်အောင် စီမံနိုင်ခြင်း။</li>
+                                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500 w-5 text-center"></i> <strong>PDF Report တွင် Logo ထည့်သွင်းနိုင်ခြင်း</strong> - မိမိ Brand Logo ဖြင့် Professional Report များထုတ်ယူနိုင်ခြင်း။</li>
+                                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-green-500 w-5 text-center"></i> <strong>ဦးစားပေး Customer Support</strong> - အကူအညီလိုအပ်ပါက ဦးစားပေး ဝန်ဆောင်မှုရရှိခြင်း။</li>
+                                </ul>
+                                <div class="border-t border-[var(--border-color)] pt-4">
+                                    <p class="text-center font-semibold">အဆင့်မြှင့်တင်ရန်</p>
+                                    <p class="text-center text-sm text-[var(--text-muted-color)] mt-1 mb-4">Pro Plan သို့ အဆင့်မြှင့်တင်လိုပါက အောက်ပါသင်၏ User ID ကို Copy ကူးယူပြီး Admin ကို ဆက်သွယ်ပေးပါ။</p>
+                                    <div class="flex items-center gap-2 p-2 rounded-lg bg-[var(--bg-color)]">
+                                        <input type="text" id="sub-modal-user-id" readonly class="flex-grow bg-transparent text-sm text-[var(--text-muted-color)] outline-none" value="${user.uid}">
+                                        <button id="copy-sub-modal-user-id-btn" class="btn text-sm py-1 px-3 bg-[var(--card-bg-color)] hover:bg-gray-200 dark:hover:bg-gray-600">
+                                            <i class="fas fa-copy mr-1"></i> Copy
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        // Re-add event listener for the new copy button
+                        document.getElementById('copy-sub-modal-user-id-btn').addEventListener('click', () => copyToClipboard(user.uid));
+                    }
                 }
             };
 
@@ -1777,11 +1731,29 @@
                         ui.renderSalesTargetProgress();
                     }, (error) => console.error("Settings listener error:", error));
                     
+                    // REAL-TIME PLAN CHANGE LISTENER
+                    const unsubPlan = onSnapshot(doc(db, 'artifacts', state.appId, 'users', userId, 'subscription', 'status'), (planDoc) => {
+                        const newPlan = planDoc.exists() ? planDoc.data().plan : 'free';
+                        // Check if the plan has actually changed to avoid unnecessary re-renders
+                        if (newPlan !== state.userPlan) {
+                            console.log(`Plan changed from ${state.userPlan} to ${newPlan}`);
+                            const oldPlan = state.userPlan;
+                            state.userPlan = newPlan;
+                            ui.updateFeaturesForPlan();
+
+                            // Show toast only on an actual upgrade from another plan
+                            if (newPlan === 'pro' && oldPlan && oldPlan !== 'pro') {
+                                ui.showToast('Congratulations! Your plan has been upgraded to PRO.', 'success');
+                            }
+                        }
+                    }, (error) => console.error("Subscription listener error:", error));
+
                     state.unsubscribeAll = () => {
                         unsubSales();
                         unsubCustomers();
                         unsubExpenses();
                         unsubSettings();
+                        unsubPlan(); // Detach the new plan listener on logout
                     };
                 },
 
@@ -1791,7 +1763,7 @@
                     if (planDoc.exists()) {
                         return planDoc.data().plan;
                     }
-                    return null; // No plan set
+                    return 'free'; // Default to free if no plan is set
                 },
 
                 setUserPlan: (userId, plan) => {
@@ -1800,13 +1772,6 @@
                         plan: plan,
                         updatedAt: serverTimestamp()
                     });
-                },
-                
-                submitUpgradeRequest: (requestData) => {
-                    const user = auth.currentUser;
-                    if (!user) throw new Error("User not authenticated");
-                    // We store requests in a top-level collection so admins can easily query all of them.
-                    return addDoc(collection(db, 'upgrade_requests'), requestData);
                 },
 
                 addSale: (saleData) => {
@@ -1980,71 +1945,6 @@
                         DOM.authError.classList.add('text-red-500');
                     } finally {
                         ui.toggleButtonLoading(DOM.registerBtn, false);
-                    }
-                },
-                
-                handleSelectPlan: async (e) => {
-                    const plan = e.target.dataset.plan;
-                    const user = auth.currentUser;
-                    if (!user || !plan) return;
-                    
-                    if (plan === 'free') {
-                        try {
-                            await firestore.setUserPlan(user.uid, 'free');
-                            state.userPlan = 'free';
-                            DOM.pricingSection.classList.add('hidden');
-                            DOM.appSection.classList.remove('hidden');
-                            ui.updateFeaturesForPlan();
-                            ui.showToast(`Free Plan ကို ရွေးချယ်ပြီးပါပြီ။`, 'success');
-                        } catch (error) {
-                            console.error("Error setting free plan:", error);
-                            ui.showToast("Plan ရွေးချယ်ရာတွင် အမှားအယွင်းဖြစ်သွားပါသည်။", "error");
-                        }
-                    } else if (plan === 'pro') {
-                        // Open payment modal for pro plan
-                        ui.openModal(DOM.paymentModal);
-                    }
-                },
-                
-                handleUpgradeSubmit: async (e) => {
-                    e.preventDefault();
-                    const user = auth.currentUser;
-                    const transactionId = DOM.transactionIdInput.value;
-                    const screenshotFile = DOM.screenshotUploadInput.files[0];
-
-                    if (!user || !transactionId || !screenshotFile) {
-                        ui.showToast('ကျေးဇူးပြု၍ အချက်အလက်များ အကုန်ဖြည့်စွက်ပါ။', 'error');
-                        return;
-                    }
-
-                    ui.toggleButtonLoading(DOM.submitUpgradeBtn, true);
-
-                    try {
-                        // 1. Upload screenshot to Firebase Storage
-                        const storageRef = ref(storage, `upgrade_requests/${user.uid}/${Date.now()}_${screenshotFile.name}`);
-                        const uploadResult = await uploadBytes(storageRef, screenshotFile);
-                        const screenshotURL = await getDownloadURL(uploadResult.ref);
-
-                        // 2. Create an upgrade request document in Firestore
-                        const requestData = {
-                            userId: user.uid,
-                            userEmail: user.email,
-                            transactionId: transactionId,
-                            screenshotURL: screenshotURL,
-                            status: 'pending', // 'pending', 'approved', 'rejected'
-                            requestedAt: serverTimestamp()
-                        };
-                        await firestore.submitUpgradeRequest(requestData);
-
-                        ui.closeModal(DOM.paymentModal);
-                        DOM.upgradeForm.reset();
-                        ui.showToast('တောင်းဆိုမှုကို လက်ခံရရှိပါသည်။ Admin မှစစ်ဆေးပြီး အကြောင်းပြန်ပါမည်။', 'success');
-
-                    } catch (error) {
-                        console.error("Error submitting upgrade request:", error);
-                        ui.showToast('တောင်းဆိုမှုပြုလုပ်ရာတွင် အမှားအယွင်းဖြစ်သွားပါသည်။', 'error');
-                    } finally {
-                        ui.toggleButtonLoading(DOM.submitUpgradeBtn, false);
                     }
                 },
 
@@ -2503,7 +2403,6 @@
                 DOM.loginForm.addEventListener('submit', handlers.handleLogin);
                 DOM.registerBtn.addEventListener('click', handlers.handleRegister);
                 DOM.logoutBtn.addEventListener('click', () => signOut(auth));
-                DOM.logoutFromPricingBtn.addEventListener('click', () => signOut(auth));
                 DOM.addSaleForm.addEventListener('submit', handlers.handleAddSale);
                 DOM.salesListContainer.addEventListener('click', handlers.handleSalesListClick);
                 
@@ -2539,16 +2438,17 @@
                 document.addEventListener('click', () => DOM.moreMenuDropdown.classList.add('hidden'));
 
                 DOM.menuProfileBtn.addEventListener('click', (e) => { e.preventDefault(); ui.openModal(DOM.profileModal); });
-                DOM.menuSubscriptionBtn.addEventListener('click', (e) => {
+                
+                const openSubscriptionModal = (e) => {
                     e.preventDefault();
-                    DOM.appSection.classList.add('hidden');
-                    DOM.pricingSection.classList.remove('hidden');
-                });
-                DOM.upgradeFromAnalysisBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    DOM.appSection.classList.add('hidden');
-                    DOM.pricingSection.classList.remove('hidden');
-                });
+                    ui.renderSubscriptionModal();
+                    ui.openModal(DOM.subscriptionModal);
+                };
+                DOM.menuSubscriptionBtn.addEventListener('click', openSubscriptionModal);
+                DOM.upgradeFromAnalysisBtn.addEventListener('click', openSubscriptionModal);
+                DOM.closeSubscriptionModalBtn.addEventListener('click', () => ui.closeModal(DOM.subscriptionModal));
+                DOM.subscriptionModal.addEventListener('click', (e) => { if (e.target === DOM.subscriptionModal) ui.closeModal(DOM.subscriptionModal); });
+
 
                 const simpleModals = [
                     { btn: DOM.menuAboutBtn, modal: DOM.aboutModal, closeBtn: DOM.closeAboutModalBtn, okBtn: DOM.aboutModalOkBtn },
@@ -2590,14 +2490,6 @@
                     });
                 });
 
-                DOM.pricingSection.querySelectorAll('.select-plan-btn').forEach(btn => {
-                    btn.addEventListener('click', handlers.handleSelectPlan);
-                });
-
-                DOM.closePaymentModalBtn.addEventListener('click', () => ui.closeModal(DOM.paymentModal));
-                DOM.paymentModal.addEventListener('click', (e) => { if (e.target === DOM.paymentModal) ui.closeModal(DOM.paymentModal); });
-                DOM.upgradeForm.addEventListener('submit', handlers.handleUpgradeSubmit);
-
                 DOM.addCustomerForm.addEventListener('submit', handlers.handleAddCustomer);
                 DOM.customerSearchInput.addEventListener('input', ui.renderCustomersList);
                 DOM.customersListContainer.addEventListener('click', handlers.handleCustomersListClick);
@@ -2628,24 +2520,20 @@
                     DOM.dropdownUserEmail.textContent = user.email;
                     DOM.userIdDisplay.value = user.uid;
 
+                    // Fetch the plan and set up listeners
                     const plan = await firestore.checkUserPlan(user.uid);
                     state.userPlan = plan;
-
+                    firestore.setupListeners(user.uid);
+                    
                     DOM.initialLoader.classList.add('hidden');
+                    DOM.authSection.classList.add('hidden');
+                    DOM.appSection.classList.remove('hidden');
+                    ui.updateFeaturesForPlan();
 
-                    if (plan) {
-                        DOM.authSection.classList.add('hidden');
-                        DOM.pricingSection.classList.add('hidden');
-                        DOM.appSection.classList.remove('hidden');
-                        ui.updateFeaturesForPlan();
-                        firestore.setupListeners(user.uid);
-                    } else {
-                        DOM.authSection.classList.add('hidden');
-                        DOM.appSection.classList.add('hidden');
-                        DOM.pricingSection.classList.remove('hidden');
-                    }
                 } else {
-                    state.unsubscribeAll();
+                    if (typeof state.unsubscribeAll === 'function') {
+                        state.unsubscribeAll();
+                    }
                     state.allSales = [];
                     state.allCustomers = [];
                     state.allExpenses = [];
@@ -2654,7 +2542,6 @@
                     
                     DOM.initialLoader.classList.add('hidden');
                     DOM.appSection.classList.add('hidden');
-                    DOM.pricingSection.classList.add('hidden');
                     DOM.authSection.classList.remove('hidden');
                     ui.updateDashboard();
                 }
